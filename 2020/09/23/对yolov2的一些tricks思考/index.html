@@ -5,15 +5,24 @@
   
 
   
-  <title>Hexo</title>
+  <title>对yolov2的一些tricks思考 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://yoursite.com/index.html">
+  <meta name="description" content="对yolov2的一些tricks思考1、Direct location prediction（绝对位置预测）Yolo中的位置预测方法很清晰，就是相对于左上角的格点坐标预测偏移量。这里的Direct具体含义，应该是和其他算法框架对比后得到的。比如其他流行的位置预测公式如下（原文中是减号，应该是加号，无伤大雅）：  神经网络预测tx, ty ，而tx, ty又需要与先验框的宽高相乘才能得到相较于xa,">
+<meta property="og:type" content="article">
+<meta property="og:title" content="对yolov2的一些tricks思考">
+<meta property="og:url" content="http://yoursite.com/2020/09/23/%E5%AF%B9yolov2%E7%9A%84%E4%B8%80%E4%BA%9Btricks%E6%80%9D%E8%80%83/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="对yolov2的一些tricks思考1、Direct location prediction（绝对位置预测）Yolo中的位置预测方法很清晰，就是相对于左上角的格点坐标预测偏移量。这里的Direct具体含义，应该是和其他算法框架对比后得到的。比如其他流行的位置预测公式如下（原文中是减号，应该是加号，无伤大雅）：  神经网络预测tx, ty ，而tx, ty又需要与先验框的宽高相乘才能得到相较于xa,">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://yoursite.com/images/tt.jpg">
+<meta property="og:image" content="http://yoursite.com/images/ss.jpg">
+<meta property="og:image" content="http://yoursite.com/images/qq/jpg">
+<meta property="og:image" content="http://yoursite.com/images/vv.png">
+<meta property="article:published_time" content="2020-09-23T06:34:55.415Z">
+<meta property="article:modified_time" content="2020-09-23T06:51:42.943Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yoursite.com/images/tt.jpg">
   
     <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -62,9 +71,7 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main">
-  
-    <article id="post-对yolov2的一些tricks思考" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-对yolov2的一些tricks思考" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/09/23/%E5%AF%B9yolov2%E7%9A%84%E4%B8%80%E4%BA%9Btricks%E6%80%9D%E8%80%83/" class="article-date">
   <time datetime="2020-09-23T06:34:55.415Z" itemprop="datePublished">2020-09-23</time>
@@ -77,8 +84,8 @@
       <header class="article-header">
         
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/09/23/%E5%AF%B9yolov2%E7%9A%84%E4%B8%80%E4%BA%9Btricks%E6%80%9D%E8%80%83/">对yolov2的一些tricks思考</a>
+    <h1 class="article-title" itemprop="name">
+      对yolov2的一些tricks思考
     </h1>
   
 
@@ -116,53 +123,19 @@
     </footer>
   </div>
   
-</article>
-
-
+    
+<nav id="article-nav">
   
-    <article id="post-对于yolo的理解" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/07/29/%E5%AF%B9%E4%BA%8Eyolo%E7%9A%84%E7%90%86%E8%A7%A3/" class="article-date">
-  <time datetime="2020-07-29T08:22:03.084Z" itemprop="datePublished">2020-07-29</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/07/29/%E5%AF%B9%E4%BA%8Eyolo%E7%9A%84%E7%90%86%E8%A7%A3/">对于yolo的理解</a>
-    </h1>
+    <a href="/2020/07/29/%E5%AF%B9%E4%BA%8Eyolo%E7%9A%84%E7%90%86%E8%A7%A3/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">对于yolo的理解</div>
+    </a>
   
+</nav>
 
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="对于yolo的理解"><a href="#对于yolo的理解" class="headerlink" title="对于yolo的理解"></a>对于yolo的理解</h1><h2 id="1、非极大抑制（Non-Maximum-Suppression）"><a href="#1、非极大抑制（Non-Maximum-Suppression）" class="headerlink" title="1、非极大抑制（Non-Maximum Suppression）"></a>1、非极大抑制（Non-Maximum Suppression）</h2><p><strong>绝大多数低分值的框都被淘汰，而对于某些网格来说，可能存在多个框在描述同一个类别对象，这些框都没有被淘汰，因为得分都不错，此时选择多个框中得分最高的框，并计算该框和其他较高得分的框计算交并比，如果交并比值高于一定阈值，就淘汰该框。</strong></p>
-<h2 id="2、边界框（以及锚框概念）"><a href="#2、边界框（以及锚框概念）" class="headerlink" title="2、边界框（以及锚框概念）"></a>2、边界框（以及锚框概念）</h2><p>YOLO 模型的第一个迭代版本是直接预测描述一个边界框的所有 4 个值。每个边界框的 x 和 y 坐标都是相对每个网格单元的左上角定义的，并且根据单元尺寸进行了归一化，以便这些坐标值的范围在 0 到 1 之间。我们定义框宽度和高度的方式让我们的模型预测的是平方根宽度和高度；通过平方根值的形式定义框的宽度和高度，大数值之间的差会没有小数值之间的差那样显著（看看平方根函数的图就能确定这一点）。Redmond 选择这个形式是因为「小偏差在大框中的重要性比在小框中小」，因此，当我们计算我们的损失函数时，我们希望将重点放在更准确地得到小框上面。边界框的宽度和高度根据图像的宽和高进行归一化，因此取值也在 0 到 1 之间。训练过程中使用 L2 损失。</p>
-<h5 id="平方根函数随增大斜率变小。"><a href="#平方根函数随增大斜率变小。" class="headerlink" title="平方根函数随增大斜率变小。"></a>平方根函数随增大斜率变小。</h5><p>这种形式后来进行了修改，引入了边界框先验（bounding box prior）的概念。我们不再期望模型为每张新图像直接生成唯一的边界框描述量，而是定义一个边界框集合，其中的边界框有不同的宽高比，这些宽高比嵌入了某些关于我们预计会检测到的目标的形状的先验信息。Redmond 提供了一种用于发现最佳宽高比的方法，即在你的训练数据集中的所有边界框上执行 k-均值聚类（使用一个自定义的距离度量）。</p>
-<h5 id="边界框集合是事先定义好的，通过对训练数据集中所有边界框执行k-均值聚类来获得的，这样就不必直接预测边界框坐标值，而是预测预测与我们的边界框先验尺寸的偏移量，这样我们就可以优化我们的预测边界框尺寸了。这种处理方式能让这一预测任务更容易学习。"><a href="#边界框集合是事先定义好的，通过对训练数据集中所有边界框执行k-均值聚类来获得的，这样就不必直接预测边界框坐标值，而是预测预测与我们的边界框先验尺寸的偏移量，这样我们就可以优化我们的预测边界框尺寸了。这种处理方式能让这一预测任务更容易学习。" class="headerlink" title="边界框集合是事先定义好的，通过对训练数据集中所有边界框执行k-均值聚类来获得的，这样就不必直接预测边界框坐标值，而是预测预测与我们的边界框先验尺寸的偏移量，这样我们就可以优化我们的预测边界框尺寸了。这种处理方式能让这一预测任务更容易学习。"></a>边界框集合是事先定义好的，通过对训练数据集中所有边界框执行k-均值聚类来获得的，这样就不必直接预测边界框坐标值，而是预测预测与我们的边界框先验尺寸的偏移量，这样我们就可以优化我们的预测边界框尺寸了。这种处理方式能让这一预测任务更容易学习。</h5><h2 id="3、骨干网络"><a href="#3、骨干网络" class="headerlink" title="3、骨干网络"></a>3、骨干网络</h2><p>通常以图像分类器的形式进行了预训练，可以更便宜地学习从图像中提取特征的方式。这么做的原因是用于图像分类的数据更易于标准（因此成本更低），因为其仅需单个标签，而不需要为每张图像都定义边界框标注。</p>
-<p>在以图像分类器的形式预训练了骨干架构之后，我们将移除网络的最后几层，以便我们的骨干网络能输出堆叠的特征图集合，它们以更低的空间分辨率描述了原图像，尽管它们有更高的特征（通道）分辨率。</p>
-<p>源自<a href="https://mp.weixin.qq.com/s?__biz=MzA3MzI4MjgzMw==&amp;mid=2650746575&amp;idx=2&amp;sn=68b1417873c4f0a819e112a7b8033b0b&amp;scene=21#wechat_redirect" target="_blank" rel="noopener">https://mp.weixin.qq.com/s?__biz=MzA3MzI4MjgzMw==&amp;mid=2650746575&amp;idx=2&amp;sn=68b1417873c4f0a819e112a7b8033b0b&amp;scene=21#wechat_redirect</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/07/29/%E5%AF%B9%E4%BA%8Eyolo%E7%9A%84%E7%90%86%E8%A7%A3/" data-id="ckd73p9va0000hku345d76imn" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
   
 </article>
-
-
-  
-
 
 </section>
         
