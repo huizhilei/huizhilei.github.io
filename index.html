@@ -64,6 +64,53 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-神经网络量化概念" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/01/21/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E9%87%8F%E5%8C%96%E6%A6%82%E5%BF%B5/" class="article-date">
+  <time datetime="2021-01-21T09:18:05.297Z" itemprop="datePublished">2021-01-21</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/01/21/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E9%87%8F%E5%8C%96%E6%A6%82%E5%BF%B5/">神经网络量化概念</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="神经网络量化（Neural-Network-Quantization）"><a href="#神经网络量化（Neural-Network-Quantization）" class="headerlink" title="神经网络量化（Neural Network Quantization）"></a><strong>神经网络量化（Neural Network Quantization）</strong></h1><p>我们通常会将一张 uint8 类型、数值范围在 0<del>255 的图片归一成 float32 类型、数值范围在 0.0</del>1.0 的张量，这个过程就是<strong>反量化</strong>。类似地，我们经常将网络输出的范围在 0.0<del>1.0 之间的张量调整成数值为 0</del>255、uint8 类型的图片数据，这个过程就是<strong>量化</strong>。<strong>所以量化本质上只是对数值范围的重新调整</strong>，可以「粗略」理解为是一种线性映射。(之所以加「粗略」二字，是因为有些论文会用非线性量化，但目前在工业界落地的还都是线性量化，所以本文只讨论线性量化的方案)。</p>
+<h2 id="为什么需要量化"><a href="#为什么需要量化" class="headerlink" title="为什么需要量化?"></a><strong>为什么需要量化?</strong></h2><p>深度学习已被证明在包括图像分类（Image Classification），目标检测（Object Detection），自然语言处理（Natural Language Processing）等任务上效果很好。大量的应用程序都配备了图像（计算机视觉）相关的深度学习算法。而人们使用这些应用程序甚至不知道这种技术的存在。</p>
+<p><img src="/images/20210121-1.jpg" alt="20210121-1"></p>
+<p>自 AlexNet 伊始，基于 ImageNet 的深度学习算法（或模型）改进都和模型大小相关。<strong>在上图中，垂直方向是网络在给定任务上的效果，横向是网络的大小。</strong>通过对比图中 AlexNet，GoogleNet 和 VGG 的趋势不难看出，当模型变大时网络的准确度（accuracy）可能更高。 虽然精心设计的 MobileNet 能在保持较小的体积时仍然具有与 GoogleNet 相当的准确度，不同大小的 MobileNet 本身就表明——<strong>也许一个好的模型设计可以改进准确度，但在同类模型中仍然是更大的网络，更好的效果!</strong></p>
+<p>随着模型预测（predication）越来越准确，网络越来越深，神经网络消耗的内存大小成为问题，尤其是在移动设备上。通常情况下，目前（2019年初）的手机一般配备 4GB 内存来支持多个应用程序的同时运行。而三个模型运行一次通常就要占用1GB内存。</p>
+<p>模型大小不仅是内存容量问题，也是内存带宽问题。模型在每次预测时都会使用模型的权重（weights），图像相关的应用程序通常需要实时处理数据，这意味着至少 30 FPS（Frame per Second，每秒帧数）。因此，如果部署相对较小的 ResNet-50 网络来分类，运行网络模型就需要 3GB/s 的内存带宽。网络运行时，内存，CPU 和电池会都在飞速消耗，我们无法为了让设备变得智能一点点就负担如此昂贵的代价。</p>
+<p>因此，深度学习领域对这些问题投入大量的研究资源，主要有两个方面：<br>1、<strong>设计更有效的网络架构</strong>，用相对较小的模型尺寸达到可接受准确度，例如 MobileNet 和 SequeezeNet。<br>2、通过压缩、编码等方式减小网络规模。<strong>量化是最广泛采用的压缩方法之一。*</strong><u><strong>量化就是将神经网络的浮点算法转换为定点</strong></u>*。这可以在移动手机上实现网络的实时运行，对云计算的部署也有帮助。</p>
+<p>这两个方面有时可以共同使用并取得令人瞩目的成果。例如，TensorFlow 量化的MobileNetV1 仅为 4.8MB，这甚至比大多数 GIF 动图还要小，从而可以轻松地部署在任何移动平台上。</p>
+<p>学术界的工作<br>量化有若干相似的术语。<strong>低精度</strong>（Low precision）可能是最通用的概念。常规精度一般使用 FP32（32位浮点，单精度）存储模型权重；低精度则表示 FP16（半精度浮点），INT8（8位的定点整数）等等数值格式。不过目前低精度往往指代 INT8。<br><strong>混合精度</strong>（Mixed precision）在模型中使用 FP32 和 FP16 。 FP16 减少了一半的内存大小，但有些参数或操作符必须采用 FP32 格式才能保持准确度。</p>
+<p><strong>量化一般指 INT8 。</strong>不过，根据存储一个权重元素所需的位数，还可以包括：<br><strong>二值神经网络：在运行时权重和激活只取两种值（例如 +1，-1）的神经网络，以及在训练时计算参数的梯度。</strong><br>三元权重网络：权重约束为+1,0和-1的神经网络。<br>XNOR网络：过滤器和卷积层的输入是二进制的。 XNOR 网络主要使用二进制运算来近似卷积。</p>
+<p>工业界的工作<br>理论是一回事，实践是另一回事。如果一种技术方法难以推广到通用场景，则需要进行大量的额外支持。花哨的研究往往是过于棘手或前提假设过强，以至几乎无法引入工业界的软件栈。<br>工业界最终选择了 INT8 量化—— FP32 在推理（inference）期间被 INT8 取代，而训练（training）仍然是 FP32。TensorRT，TensorFlow，PyTorch，MxNet 和许多其他深度学习软件都已启用（或正在启用）量化。<br>通常，可以根据 FP32 和 INT8 的转换机制对解决方案进行分类。一些框架简单地引入了 Quantize 和 Dequantize 层，当从卷积或全链接层送入或取出时，它将 FP32 转换为 INT8 或相反。在这种情况下，如图四的上半部分所示，模型本身和输入/输出采用 FP32 格式。深度学习框架加载模型，重写网络以插入<strong>Quantize 和 Dequantize 层</strong>，并将权重转换为 INT8 格式。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2021/01/21/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E9%87%8F%E5%8C%96%E6%A6%82%E5%BF%B5/" data-id="ckk6nej7h0000u8u31tqiewb2" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-yolov2 joint train" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/09/23/yolov2%20joint%20train/" class="article-date">
@@ -226,7 +273,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li></ul>
     </div>
   </div>
 
@@ -237,6 +284,10 @@
     <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2021/01/21/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E9%87%8F%E5%8C%96%E6%A6%82%E5%BF%B5/">神经网络量化概念</a>
+          </li>
         
           <li>
             <a href="/2020/09/23/yolov2%20joint%20train/">yolov2 joint train</a>
@@ -262,7 +313,7 @@
   
   <div class="outer">
     <div id="footer-info" class="inner">
-      &copy; 2020 John Doe<br>
+      &copy; 2021 John Doe<br>
       Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
     </div>
   </div>
