@@ -5,7 +5,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="keywords" content="paragraph-vector论文, 寂寞沙洲冷">
-    <meta name="description" content="paragraph-vector论文 | 寂寞沙洲冷">
+    <meta name="description" content="Distributed Representations of Sentences and Documents(只经验上理解，不注重数学推导)Abstract​    很多机器学习算法需要输入为fixed-length的feature vec">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -428,9 +428,13 @@
             <div class="row tag-cate">
                 <div class="col s7">
                     
-                          <div class="article-tag">
-                            <span class="chip bg-color">无标签</span>
-                          </div>
+                    <div class="article-tag">
+                        
+                            <a href="/tags/Distributed-Representations-of-Sentences-and-Documents/">
+                                <span class="chip bg-color">Distributed Representations of Sentences and Documents</span>
+                            </a>
+                        
+                    </div>
                     
                 </div>
                 <div class="col s5 right-align">
@@ -463,7 +467,33 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                
+                <h1 id="Distributed-Representations-of-Sentences-and-Documents"><a href="#Distributed-Representations-of-Sentences-and-Documents" class="headerlink" title="Distributed Representations of Sentences and Documents"></a><strong>Distributed Representations of Sentences and Documents</strong></h1><h3 id="只经验上理解，不注重数学推导"><a href="#只经验上理解，不注重数学推导" class="headerlink" title="(只经验上理解，不注重数学推导)"></a>(只经验上理解，不注重数学推导)</h3><h2 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h2><p>​    很多机器学习算法需要输入为fixed-length的feature vector。对于文本，大多数fixed-length的feature 都采用了bag-of-words模型。虽然这种做法很常用，但有两大弱点：1、未考虑order of words；2、忽视了semantics of words。</p>
+<p>​    Paragraph Vector，非监督算法，可以学习任意长度的文本（sentence/document）的fixed-length feature representations，该算法用一个dense vector去表示每一个文本，去预测文本中的word。该算法的构造形式克服了bag-of-words的缺陷。</p>
+<h2 id="1-Introduction"><a href="#1-Introduction" class="headerlink" title="1. Introduction"></a>1. Introduction</h2><p>​    对于text classification 或者clustering 等任务来说，算法需要输入文本转化为fixed-length vector。最常见的办法是BOW或者bag-of-n-grams。</p>
+<p>​    可是，BOW不考虑order of words，因此不同的sentence可能会有相同的representation，只要使用相同的words即可。n-gram虽然考虑了短上下文的词序，但其存在数据稀疏和维度过高的问题。此外，它们未考虑semantics of words（distances between words）。</p>
+<p>​    本篇paper提出的模型中，将paragraph vector和paragraph内的几个words的word-vector拼接起来，以之预测下一个word。不同段之间paragraph vector不同，但word vector全局共享。</p>
+<h2 id="2-Algorithm"><a href="#2-Algorithm" class="headerlink" title="2. Algorithm"></a>2. Algorithm</h2><h5 id="先讨论word-vector的方法，以此为灵感产生了paragraph-vector-method。"><a href="#先讨论word-vector的方法，以此为灵感产生了paragraph-vector-method。" class="headerlink" title="先讨论word vector的方法，以此为灵感产生了paragraph vector method。"></a>先讨论word vector的方法，以此为灵感产生了paragraph vector method。</h5><h3 id="2-1Learning-Vector-Representation-of-Words"><a href="#2-1Learning-Vector-Representation-of-Words" class="headerlink" title="2.1Learning Vector Representation of Words"></a>2.1<strong>Learning Vector Representation of Words</strong></h3><p>​    在word vector架构中，每一个单词被映射到唯一的向量（矩阵W中的某一列），具体某一列由word在vocabulary中的位置来决定。然后对某些列，拼接或者求均值，来预测句子中的下一个word。</p>
+<p>​    训练收敛后，有相似含义（多维度相似）的word将会被映射到vector space中相似的位置。</p>
+<p><img src="0.jpg"></p>
+<h3 id="2-2-Paragraph-Vector-A-distributed-memory-model"><a href="#2-2-Paragraph-Vector-A-distributed-memory-model" class="headerlink" title="2.2. Paragraph Vector: A distributed memory model"></a><strong>2.2. Paragraph Vector: A distributed memory model</strong></h3><h4 id="灵感在此，仔细体会：word-vectors用来预测句子中下一个word：虽然word-vector是随机初始化的，在预测任务中，它们最终能够捕获语义信息。（有数据决定的，语料库中连续的几个单词预测出下一个单词，连续的几个词之间具有一定的语义信息，这种信息被在预测任务中不断被word-vector吸收学习。）"><a href="#灵感在此，仔细体会：word-vectors用来预测句子中下一个word：虽然word-vector是随机初始化的，在预测任务中，它们最终能够捕获语义信息。（有数据决定的，语料库中连续的几个单词预测出下一个单词，连续的几个词之间具有一定的语义信息，这种信息被在预测任务中不断被word-vector吸收学习。）" class="headerlink" title="灵感在此，仔细体会：word vectors用来预测句子中下一个word：虽然word vector是随机初始化的，在预测任务中，它们最终能够捕获语义信息。（有数据决定的，语料库中连续的几个单词预测出下一个单词，连续的几个词之间具有一定的语义信息，这种信息被在预测任务中不断被word vector吸收学习。）"></a>灵感在此，仔细体会：word vectors用来预测句子中下一个word：虽然word vector是随机初始化的，在预测任务中，它们最终能够捕获语义信息。（有数据决定的，语料库中连续的几个单词预测出下一个单词，连续的几个词之间具有一定的语义信息，这种信息被在预测任务中不断被word vector吸收学习。）</h4><p><strong><u><em>因为词向量被用于预测下一个词，所以其能够学习到语义信息。（有种感觉：这是由数据决定的，多而好的数据所包含的语义信息都能够被模型记录下来）</em></u></strong></p>
+<p> The paragraph vectors are also asked to contribute to the prediction task of the next word given many contexts sampled from the paragraph.</p>
+<p><img src="1.jpg"></p>
+<p>​    在上图的架构中，每一paragraph都被映射到一个唯一的vector，用矩阵D中的column来表示；每一个word也都被映射到一个唯一的vector，用矩阵W中的column来表示。paragraph vector和word vector进行concat或者average操作。</p>
+<p>​    paragraph token 可以理解为另一个word。其相当于记住了当前文本中缺失的内容（或者是段落主题），故，这个模型也称为the Distributed Memory Model of Paragraph Vectors (PV-DM).</p>
+<p>​    The paragraph vector is shared across all contexts generated from the same paragraph but not across paragraphs. The word vector matrix W, however, is shared across paragraphs. I.e., the vector for “powerful” is the same for all paragraphs. </p>
+<p><u><em><strong>训练过程中新增了paragraph-id，即训练语料中每个句子都有一个唯一的id。paragraph-id和普通的word一样，也是先映射成一个向量，即paragraph-vector。paragraph-vector与word-vector的维数虽一样，但是来自于两个不同的向量空间。在之后的计算里，paragraph-vector和word-vector累加或者连接起来，作为输出层softmax的输入。在一个句子或者文档的训练过程中，paragraph-id保持不变，共享着同一个paragraph-vector，相当于每次在预测单词的概率时，都利用了整个句子的语义。</strong></em></u></p>
+<p>（小思考，用一个向量就表示一整段的内容，是不是可以理解为为该段的单词预测增加了一个约束条件，或者是增加了一个标记，一个主题，通过训练，NN能够学习该paragraph的中心思想/关键features/感情色彩，并且将paragraph这种极其精炼的核心含义/关键信息蕴藏在paragraph vector中，但其具体每一维度代表什么，人类暂时无法理解。）</p>
+<p>训练后，paragraph vectors 可以作为paragraph内容的feature，然后就可以直接feed这些features给机器学习算法，比如逻辑回归，SVM，K-means。</p>
+<p><strong>Advantages of paragraph vectors:</strong></p>
+<p>​    1、非监督学习，可以从无标签数据学习。</p>
+<p>​    2、克服了BOW模型的缺点，继承了word vector的语义属性，且考虑了词序（paragraph的天生属性）。</p>
+<h2 id="3-Experiments"><a href="#3-Experiments" class="headerlink" title="3. Experiments"></a><strong>3. Experiments</strong></h2><p><strong>Dataset:</strong> This dataset was first proposed by (Pang &amp; Lee, 2005) and subsequently extended by (Socher et al., 2013b) as a benchmark for sentiment analysis. It has 11855 sentences taken from the movie review site Rotten Tomatoes. </p>
+<p>The dataset consists of three sets: 8544 sentences for training, 2210 sentences for test and 1101 sentences for validation (or development). </p>
+<p>Every sentence in the dataset has a label which goes from very negative to very positive in the scale from 0.0 to 1.0. The labels are generated by human annotators using Amazon Mechanical Turk. </p>
+<p>Results abstract：</p>
+<p>Simply averaging the word vectors (in a bag-of-words fashion) does not improve the results. This is </p>
+<p>because bag-of-words models do not consider how each sentence is composed (e.g., word ordering) and therefore fail to recognize many sophisticated linguistic phenomena, for instance sarcasm.</p>
+<h2 id="实验结果、相关工作、总结等此处不再详叙，上文中关于各种模型的经验思想总结更有价值。有需要可以细读原论文。"><a href="#实验结果、相关工作、总结等此处不再详叙，上文中关于各种模型的经验思想总结更有价值。有需要可以细读原论文。" class="headerlink" title="实验结果、相关工作、总结等此处不再详叙，上文中关于各种模型的经验思想总结更有价值。有需要可以细读原论文。"></a>实验结果、相关工作、总结等此处不再详叙，上文中关于各种模型的经验思想总结更有价值。有需要可以细读原论文。</h2>
                 
             </div>
             <hr/>
@@ -526,7 +556,11 @@
                 <div class="post-meta__tag-list" style="display: inline-block;">
                     
                         <div class="article-tag">
-                            <span class="chip bg-color">无标签</span>
+                            
+                                <a href="/tags/Distributed-Representations-of-Sentences-and-Documents/">
+                                    <span class="chip bg-color">Distributed Representations of Sentences and Documents</span>
+                                </a>
+                            
                         </div>
                     
                 </div>
@@ -730,6 +764,14 @@
                 </div>
 
                 
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/Distributed-Representations-of-Sentences-and-Documents/">
+                        <span class="chip bg-color">Distributed Representations of Sentences and Documents</span>
+                    </a>
+                    
+                </div>
+                
             </div>
         </div>
         
@@ -739,13 +781,13 @@
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2021/11/06/paragraph-vector/">
+                <a href="/2021/11/06/word2vec%E8%AE%BA%E6%96%87/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/14.jpg" class="responsive-img" alt="paragraph-vector">
+                        <img src="/medias/featureimages/17.jpg" class="responsive-img" alt="word2vec论文">
                         
-                        <span class="card-title">paragraph-vector</span>
+                        <span class="card-title">word2vec论文</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -765,6 +807,14 @@
                             
                         </span>
                     </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/Efficient-Estimation-of-Word-Representations-in-Vector-Space/">
+                        <span class="chip bg-color">Efficient Estimation of Word Representations in Vector Space</span>
+                    </a>
+                    
                 </div>
                 
             </div>
