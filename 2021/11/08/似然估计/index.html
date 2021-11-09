@@ -5,10 +5,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="keywords" content="似然估计, 寂寞沙洲冷">
-    <meta name="description" content="概率模型：可以理解为就是概率分布情况。
-似然值：真实情况已经发生（先进行实验），在某个概率模型下发生实验出现的情况的可能性。
-最大似然估计法：根据实验结果，去反推产生这个结果的概率模型。（挑出似然值最大的概率模型）
-注意，挑出来的模型并不一">
+    <meta name="description" content="极大似然估计是神经网络和很多复杂模型得以优化求解的理论基础, 我们今天来学习并试着深入理解极大似然估计的原理和推导, 建立一种直观的认识.
+要理解极大似然估计是什么, 首先要明白概率密度(质量)函数是什么, 如果你不知道的话, 那就简短解释">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -470,11 +468,40 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <p>概率模型：可以理解为就是概率分布情况。</p>
-<p>似然值：真实情况已经发生（先进行实验），在某个概率模型下发生实验出现的情况的可能性。</p>
-<p>最大似然估计法：根据实验结果，去反推产生这个结果的概率模型。（挑出似然值最大的概率模型）</p>
-<p>注意，挑出来的模型并不一定就是实验本来的模型，只能说可能性最大。</p>
-<p>可以把神经网络理解成一个概率模型，参数为W，b，如何找到最接近真实情况的概率模型？用最大似然估计法。</p>
+                <p><strong>极大似然估计</strong>是神经网络和很多复杂模型得以优化求解的理论基础, 我们今天来学习并试着深入理解极大似然估计的原理和推导, 建立一种直观的认识.</p>
+<p>要理解<strong>极大似然估计</strong>是什么, 首先要明白<strong>概率密度(质量)函数</strong>是什么, 如果你不知道的话, 那就简短解释一下：<br>概率密度函数用来描述某个随机变量取某个值的时候，取值点所对应的的<strong>概率</strong><img src="https://render.githubusercontent.com/render/math?math=(probability)&mode=inline" alt="$(probability)$">的函数.<br>如下图, 我们现在有一个<strong>概率分布</strong>, 属于<strong>正态分布</strong>:<img src="https://render.githubusercontent.com/render/math?math=X%20%5Csim%20N(%5Cmu,%5Csigma%5E2),%20%5Cquad%20%20f(x;%5Cmu,%5Csigma)=%5Cfrac%7B1%7D%7B%5Csigma%5Csqrt%7B2%5Cpi%7D%7D%20%5C,%20%5Cexp%20%5Cleft(%20-%5Cfrac%7B(x-%20%5Cmu)%5E2%7D%7B2%5Csigma%5E2%7D%20%5Cright)&mode=display" alt="$$X \sim N(\mu,\sigma^2), \quad  f(x;\mu,\sigma)=\frac{1}{\sigma\sqrt{2\pi}} \, \exp \left( -\frac{(x- \mu)^2}{2\sigma^2} \right)$$"></p>
+<p>其中<img src="https://render.githubusercontent.com/render/math?math=%5Cmu&mode=inline" alt="$\mu$">是均值, <img src="https://render.githubusercontent.com/render/math?math=%5Csigma&mode=inline" alt="$\sigma$">是标准差. 如果你不熟悉正态分布, 我们简单回顾一下<img src="https://render.githubusercontent.com/render/math?math=%5Cmu&mode=inline" alt="$\mu$">指的是均值, 在下图中, 均值是<img src="https://render.githubusercontent.com/render/math?math=0&mode=inline" alt="$0$">则正态分布的概率在均值处概率最高, 以均值为中心两边是对称的, <img src="https://render.githubusercontent.com/render/math?math=%5Csigma&mode=inline" alt="$\sigma$">是标准差, 标准差控制着概率分布偏离均值的程度, 标准差越大概率分布越扁平, 越小的话, 概率分布越集中于均值.</p>
+<p>我们另有一个<strong>数据点</strong>, 是一个<strong>随机变量</strong>, 取值<img src="https://render.githubusercontent.com/render/math?math=2.5&mode=inline" alt="$2.5$">, 我们将<img src="https://render.githubusercontent.com/render/math?math=x=2.5&mode=inline" alt="$x=2.5$">代入<img src="https://render.githubusercontent.com/render/math?math=f(x;%5Cmu=5,%5Csigma=2)&mode=inline" alt="$f(x;\mu=5,\sigma=2)$">得出下图出中绿色直线的长度, 也就是得到了<img src="https://render.githubusercontent.com/render/math?math=P(x=2.5%20%5Cmid%20%5Cmu=5,%20%5Csigma=2)&mode=inline" alt="$P(x=2.5 \mid \mu=5, \sigma=2)$"><br>意义为<img src="https://render.githubusercontent.com/render/math?math=x=2.5&mode=inline" alt="$x=2.5$">在上面定义的正态分布中的概率, 也就是给定一个概率分布, 随机变量在这个概率分布中出现的可能性, 而<img src="https://render.githubusercontent.com/render/math?math=f(x;%5Cmu,%5Csigma)=%5Cfrac%7B1%7D%7B%5Csigma%5Csqrt%7B2%5Cpi%7D%7D%20%5C,%20%5Cexp%20%5Cleft(%20-%5Cfrac%7B(x-%20%5Cmu)%5E2%7D%7B2%5Csigma%5E2%7D%20%5Cright)&mode=inline" alt="$f(x;\mu,\sigma)=\frac{1}{\sigma\sqrt{2\pi}} \, \exp \left( -\frac{(x- \mu)^2}{2\sigma^2} \right)$">就是概率密度函数.<br>概率质量函数是离散的, 概率密度函数是连续的, 意义相同, 为了可视化的方便, 今天用概率密度函数来讲解极大似然估计.</p>
+<p><img src="0.jpg"></p>
+<p><strong>概率</strong>和<strong>似然</strong>的区别:<br><strong>概率</strong>，是在已知一些概率分布参数的情况下，预测观测的结果；<br><strong>似然</strong>，则是用于在已知某些观测所得到的结果时，对观测结果所属于的的概率分布的参数进行估值。</p>
+<p><strong>极大似然估计</strong>的目的在于找到一个最符合当前观测数据的概率分布.</p>
+<ol>
+<li>我们先理解似然函数是什么 例如下面两图中: <strong>红色圆点</strong>指的是观测到的随机变量, <strong>蓝色的线</strong>是概率密度函数的图像, <strong>绿色的直线</strong>的<strong>长度</strong>所对应的<img src="https://render.githubusercontent.com/render/math?math=y&mode=inline" alt="$y$">轴的值指的是是观测的数据出现在当前概率分布中的可能性, 也就是概率, 概率是介于<img src="https://render.githubusercontent.com/render/math?math=%5B0,1%5D&mode=inline" alt="$[0，1]$">之间的实数, 我们用<img src="https://render.githubusercontent.com/render/math?math=P(x%20%5Cmid%20%5Cmu,%5Csigma)&mode=inline" alt="$P(x \mid \mu,\sigma)$">来表示绿色线的长度, 也就是概率.</li>
+</ol>
+<p><img src="1.jpg"></p>
+<ol>
+<li>我们假设有一组观测到的数据, 一共有<img src="https://render.githubusercontent.com/render/math?math=N&mode=inline" alt="$N$">个, <img src="https://render.githubusercontent.com/render/math?math=X_%7Bobservation%7D%20=%20%5C%7B%20x_1,%20x_2,%20...%20,%20x_N%5C%7D&mode=inline" alt="$X_{observation} = \{ x_1, x_2, ... , x_N\}$"><br>我们推断这一组数据属于一个概率分布, 是一个正态分布, 它的概率密度函数为<img src="https://render.githubusercontent.com/render/math?math=f(x;%5Cmu,%5Csigma)&mode=inline" alt="$f(x;\mu,\sigma)$">, 我们将<img src="https://render.githubusercontent.com/render/math?math=X_%7Bobservation%7D&mode=inline" alt="$X_{observation}$">里的数据点带入到<img src="https://render.githubusercontent.com/render/math?math=f(x;%5Cmu,%5Csigma)&mode=inline" alt="$f(x;\mu,\sigma)$">里, 得到每个数据点在我们假设的概率分布中的出现的可能性, 注意我们接下来简写<img src="https://render.githubusercontent.com/render/math?math=X_%7Bobservation%7D&mode=inline" alt="$X_{observation}$">为<img src="https://render.githubusercontent.com/render/math?math=X&mode=inline" alt="$X$">:<img src="https://render.githubusercontent.com/render/math?math=P(x_1%20%5Cmid%20%5Cmu,%5Csigma),%20%5C,P(x_2%20%5Cmid%20%5Cmu,%5Csigma)%5C,%20,%20...%20%5C,%20,%5C,P(x_N%20%5Cmid%20%5Cmu,%5Csigma)&mode=display" alt="$$P(x_1 \mid \mu,\sigma), \,P(x_2 \mid \mu,\sigma)\, , ... \, ,\,P(x_N \mid \mu,\sigma)$$"></li>
+<li>那么这一组数据<img src="https://render.githubusercontent.com/render/math?math=X_%7Bobservation%7D%20=%20%5C%7B%20x_1,%20x_2,%20...%20,%20x_N%5C%7D&mode=inline" alt="$X_{observation} = \{ x_1, x_2, ... , x_N\}$">在假设的概率分布中的出现的可能性就是他们概率的乘积:<img src="https://render.githubusercontent.com/render/math?math=L(%5Cmu%20,%5Csigma%20%5Cmid%20X)=P(X%20%5Cmid%20%5Cmu%20,%5Csigma)=%5Cprod%20_%7Bi=1%7D%5E%7BN%7DP(x_%7Bi%7D%5Cmid%20%5Cmu,%5Csigma)&mode=display" alt="$$L(\mu ,\sigma \mid X)=P(X \mid \mu ,\sigma)=\prod _{i=1}^{N}P(x_{i}\mid \mu,\sigma)$$">上式中, 我们用<img src="https://render.githubusercontent.com/render/math?math=L(%5Cmu%20,%5Csigma%20%5Cmid%20X)&mode=inline" alt="$L(\mu ,\sigma \mid X)$">来表示似然函数, 已知的观测到的数据点<img src="https://render.githubusercontent.com/render/math?math=X&mode=inline" alt="$X$">, 用似然函数<img src="https://render.githubusercontent.com/render/math?math=L(%5Cmu%20,%5Csigma%20%5Cmid%20X)&mode=inline" alt="$L(\mu ,\sigma \mid X)$">来估计参数<img src="https://render.githubusercontent.com/render/math?math=%5Cmu%20,%5Csigma&mode=inline" alt="$\mu ,\sigma$">的可能性, 由此可见，似然函数也是一种条件概率函数，但我们关注的变量改变了.</li>
+<li>从下面两图可得, 上图图中所假设的概率分布求出的似然函数取值显然比下面的小, 因为有很接近于<img src="https://render.githubusercontent.com/render/math?math=0&mode=inline" alt="$0$">的数值, 这让似然函数乘积的结果变得非常小. 我们可以得出结论, 下图的概率分布参数更符合观测到的数据点的概率分布,而<strong>最大似然估计</strong>的目的就是找到一个最符合当前数据的分布的参数.</li>
+</ol>
+<p>我们做个试验:</p>
+<ol>
+<li>先从均值为<img src="https://render.githubusercontent.com/render/math?math=0&mode=inline" alt="$0$">, 标准差为<img src="https://render.githubusercontent.com/render/math?math=4&mode=inline" alt="$4$">正态分布中随机抽取<img src="https://render.githubusercontent.com/render/math?math=200&mode=inline" alt="$200$">个数据点, 作为我们观测到的数据; 之后我们定义一个估计参数的取值范围, 均值在<img src="https://render.githubusercontent.com/render/math?math=(-0.5,%200.5)&mode=inline" alt="$(-0.5, 0.5)$">之间, 标准差在<img src="https://render.githubusercontent.com/render/math?math=(3.5,%204.5)&mode=inline" alt="$(3.5, 4.5)$">之间;</li>
+<li>然后我们将所有的数据点和我们估计的每一组参数代入似然函数, 也就是<img src="https://render.githubusercontent.com/render/math?math=L(%5Cmu%20,%5Csigma%20%5Cmid%20X)=%5Cprod%20_%7Bi=1%7D%5E%7BN%7DP(x_%7Bi%7D%5Cmid%20%5Cmu,%5Csigma)&mode=inline" alt="$L(\mu ,\sigma \mid X)=\prod _{i=1}^{N}P(x_{i}\mid \mu,\sigma)$">中, 求得每一组参数的似然值, 3.下图可见, 似然函数的值约在<img src="https://render.githubusercontent.com/render/math?math=%5Cmu=0,%20%5C%20%5Csigma=4&mode=inline" alt="$\mu=0, \ \sigma=4$">时取得极大值(因为数据点太少有些误差);</li>
+<li>我们发现似然函数的图像是凸函数, 我们就可以用很多优化的方法求它的极大值了.</li>
+<li>找到似然函数极大值的过程就是极大似然估计的过程.</li>
+</ol>
+<p><img src="2.jpg"></p>
+<p>我们看到上图中的最高点<img src="https://render.githubusercontent.com/render/math?math=%5Cmu%20%5Capprox%200,%20%5C%20%5Csigma%20%5Capprox%204&mode=inline" alt="$\mu \approx 0, \ \sigma \approx 4$">, 是产生观测数据的真实概率分布的参数, 但是似然函数输出的值极小, 最高的值仅有<img src="https://render.githubusercontent.com/render/math?math=1*10%5E%7B-245%7D&mode=inline" alt="$1*10^{-245}$"></p>
+<p>对数似然值<img src="https://render.githubusercontent.com/render/math?math=(log%20%5C%20likelihood)&mode=inline" alt="$(log \ likelihood)$">: 我们对似然函数取<img src="https://render.githubusercontent.com/render/math?math=%5Clog&mode=inline" alt="$\log$">, 就得到了对数似然函数:<br><img src="https://render.githubusercontent.com/render/math?math=%5Cmathcal%20%7BL%7D(%5Cmu%20,%5Csigma%20%5Cmid%20X)=%5Csum%20_%7Bi=1%7D%5E%7BN%7D%5Clog%20P(x_%7Bi%7D%5Cmid%20%5Cmu,%5Csigma)&mode=display" alt="$$\mathcal {L}(\mu ,\sigma \mid X)=\sum _{i=1}^{N}\log P(x_{i}\mid \mu,\sigma)$$">为什么要对似然函数取对数?</p>
+<ol>
+<li>首先原本的似然函数是很多条件概率的乘积, 我们在找极大值的时候需要求似然函数的导数, 而乘积的导数不方便计算, 取对数可以吧乘除变成加减;</li>
+<li>对似然函数取对数, 原本函数的极大值的位置没有改变;</li>
+<li>如果观测到的数据点比较多, 原始似然函数的乘积可能非常接近于0, 甚至超出计算机的储存位数限制, 这样就全变成0了, 取对数可以把接近于<img src="https://render.githubusercontent.com/render/math?math=0&mode=inline" alt="$0$">的数变成很大的负数, 也就是把原本似然函数的取值范围从<img src="https://render.githubusercontent.com/render/math?math=0&mode=inline" alt="$0$">到<img src="https://render.githubusercontent.com/render/math?math=1&mode=inline" alt="$1$">扩展到了<img src="https://render.githubusercontent.com/render/math?math=-%5Cinfty&mode=inline" alt="$-\infty$">到<img src="https://render.githubusercontent.com/render/math?math=0&mode=inline" alt="$0$">, 方便了计算.</li>
+</ol>
+<p>我们下面对<img src="https://render.githubusercontent.com/render/math?math=log%20%5C%20likelihood&mode=inline" alt="$log \ likelihood$">进行3D可视化, 可看到原始的似然函数和对数似然函数的最高点是一样的位置.</p>
+<p><strong>对数函数单调递增，不改变极值点</strong></p>
+<p><img src="3.jpg"></p>
 
                 
             </div>
