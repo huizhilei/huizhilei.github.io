@@ -4,10 +4,8 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="动手学深度学习2021-11-23, 寂寞沙洲冷">
-    <meta name="description" content="数值稳定性和模型初始化初始化方案的选择在神经网络学习中起着非常重要的作用，它对保持数值稳定性至关重要。 
-我们选择哪个函数以及如何初始化参数可以决定优化算法收敛的速度有多快。糟糕选择可能会导致我们在训练时遇到梯度爆炸或梯度消失。
-梯度消失（">
+    <meta name="keywords" content="动手学深度学习2021-11-24, 寂寞沙洲冷">
+    <meta name="description" content="层与块在正向传播函数中执行代码** Sequential类使模型构造变得简单，允许我们组合新的结构，而不必定义自己的类。然而，并不是所有的架构都是简单的顺序结构。当需要更大的灵活性时，我们需要定义自己的块。例如，我们可能希望在正向传播函数中">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -19,7 +17,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>动手学深度学习2021-11-23 | 寂寞沙洲冷</title>
+    <title>动手学深度学习2021-11-24 | 寂寞沙洲冷</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.min.css">
@@ -311,12 +309,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/0.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/23.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">动手学深度学习2021-11-23</h1>
+                    <h1 class="description center-align post-title">动手学深度学习2021-11-24</h1>
                 </div>
             </div>
         </div>
@@ -432,8 +430,8 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/%E6%9D%A5%E8%87%AA%E5%8A%A8%E6%89%8B%E5%AD%A6%E4%B9%A0%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">
-                                <span class="chip bg-color">来自动手学习深度学习</span>
+                            <a href="/tags/%E5%B1%82%E4%B8%8E%E5%9D%97/">
+                                <span class="chip bg-color">层与块</span>
                             </a>
                         
                     </div>
@@ -469,19 +467,20 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h3 id="数值稳定性和模型初始化"><a href="#数值稳定性和模型初始化" class="headerlink" title="数值稳定性和模型初始化"></a>数值稳定性和模型初始化</h3><p>初始化方案的选择在神经网络学习中起着非常重要的作用，它对保持数值稳定性至关重要。 </p>
-<p>我们选择哪个函数以及如何初始化参数可以决定优化算法收敛的速度有多快。糟糕选择可能会导致我们在训练时遇到梯度爆炸或梯度消失。</p>
-<h3 id="梯度消失（参考原文）"><a href="#梯度消失（参考原文）" class="headerlink" title="梯度消失（参考原文）"></a>梯度消失（参考原文）</h3><p> 导致梯度消失问题的一个常见的原因是跟在每层的线性运算之后的激活函数σ。 </p>
-<p> <img src="0.jpg"></p>
-<p> 当它的输入很大或是很小时，sigmoid函数的梯度都会消失。此外，当反向传播通过许多层时，除非我们在刚刚好的地方，这些地方sigmoid函数的输入接近于零，否则整个乘积的梯度可能会消失。当我们的网络有很多层时，除非我们很小心，否则在某一层可能会切断梯度。事实上，这个问题曾经困扰着深度网络的训练。因此，更稳定（但在神经科学的角度看起来不太合理）的ReLU系列函数已经成为从业者的默认选择 </p>
-<h3 id="梯度爆炸"><a href="#梯度爆炸" class="headerlink" title="梯度爆炸"></a>梯度爆炸</h3><h3 id="打破对称性"><a href="#打破对称性" class="headerlink" title="打破对称性"></a>打破对称性</h3><p>神经网络设计中的另一个问题是其参数化所固有的对称性。假设我们有一个简单的多层感知机，它有一个隐藏层和两个隐藏单元。在这种情况下，我们可以对第一层的权重W(1)进行重排列，并且同样对输出层的权重进行重排列，可以获得相同的函数。第一个隐藏单元与第二个隐藏单元没有什么特别的区别。换句话说，我们在每一层的隐藏单元之间具有排列对称性。</p>
-<p>这不仅仅是理论上的麻烦。考虑前述具有两个隐藏单元的单隐藏层多层感知机。为便于说明，假设输出层将两个隐藏单元转换为仅一个输出单元。想象一下，如果我们将隐藏层的所有参数初始化为W(1)=c，c为常量，会发生什么情况。在这种情况下，在正向传播期间，两个隐藏单元采用相同的输入和参数，产生相同的激活，该激活被送到输出单元。在反向传播期间，根据参数W(1)对输出单元进行微分，得到一个梯度，其元素都取相同的值。因此，在基于梯度的迭代(例如，小批量随机梯度下降)之后，W(1)的所有元素仍然采用相同的值。这样的迭代永远不会打破对称性，我们可能永远也无法实现网络的表达能力。隐藏层的行为就好像只有一个单元。请注意，虽然小批量随机梯度下降不会打破这种对称性，但dropout正则化可以。</p>
-<h2 id="参数初始化"><a href="#参数初始化" class="headerlink" title="参数初始化"></a>参数初始化</h2><p>解决（或至少减轻）上述问题的一种方法是仔细地进行初始化。优化期间的注意和适当的正则化可以进一步提高稳定性。</p>
+                <h1 id="层与块"><a href="#层与块" class="headerlink" title="层与块"></a>层与块</h1><h2 id="在正向传播函数中执行代码"><a href="#在正向传播函数中执行代码" class="headerlink" title="在正向传播函数中执行代码**"></a>在正向传播函数中执行代码**</h2><p> <code>Sequential</code>类使模型构造变得简单，允许我们组合新的结构，而不必定义自己的类。然而，并不是所有的架构都是简单的顺序结构。当需要更大的灵活性时，我们需要定义自己的块。例如，我们可能希望在正向传播函数中执行Python的控制流。此外，我们可能希望执行任意的数学运算，而不是简单地依赖预定义的神经网络层。 </p>
+<p> 到目前为止，我们网络中的所有操作都对网络的激活值及网络的参数起作用。然而，有时我们可能希望合并既不是上一层的结果也不是可更新参数的项。我们称之为常数参数（constant parameters）。例如，我们需要一个计算函数f(x,w)=c⋅w⊤x的层，其中xx是输入，w是我们的参数，c是某个在优化过程中没有更新的指定常量。因此我们实现了一个<code>FixedHiddenMLP</code>类，如下所示。 </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">class FixedHiddenMLP(nn.Module):</span><br><span class="line">    def __init__(self):</span><br><span class="line">        super().__init__()</span><br><span class="line">        # 不计算梯度的随机权重参数。因此其在训练期间保持不变。</span><br><span class="line">        self.rand_weight = torch.rand((20, 20), requires_grad=False)</span><br><span class="line">        self.linear = nn.Linear(20, 20)</span><br><span class="line"></span><br><span class="line">    def forward(self, X):</span><br><span class="line">        X = self.linear(X)</span><br><span class="line">        # 使用创建的常量参数以及`relu`和`dot`函数。</span><br><span class="line">        X = F.relu(torch.mm(X, self.rand_weight) + 1)</span><br><span class="line">        # 复用全连接层。这相当于两个全连接层共享参数。</span><br><span class="line">        X = self.linear(X)</span><br><span class="line">        # 控制流</span><br><span class="line">        while X.abs().sum() &gt; 1:</span><br><span class="line">            X /= 2</span><br><span class="line">        return X.sum()</span><br></pre></td></tr></table></figure>
+
+<p>在这个<code>FixedHiddenMLP</code>模型中，我们实现了一个隐藏层，其权重（<code>self.rand_weight</code>）在实例化时被随机初始化，之后为常量。这个权重不是一个模型参数，因此它永远不会被反向传播更新。然后，网络将这个固定层的输出通过一个全连接层。</p>
+<p>注意，在返回输出之前，我们的模型做了一些不寻常的事情。我们运行了一个while循环，在L1范数大于1的条件下，将输出向量除以2，直到它满足条件为止。最后，我们返回了<code>X</code>中所有项的和。据我们所知，没有标准的神经网络执行这种操作。注意，此特定操作在任何实际任务中可能都没有用处。我们的重点只是向你展示如何将任意代码集成到神经网络计算的流程中。</p>
+<h2 id="效率"><a href="#效率" class="headerlink" title="效率"></a>效率</h2><p> 热心的读者可能会开始担心其中一些操作的效率。毕竟，我们在一个应该是高性能的深度学习库中进行了大量的字典查找、代码执行和许多其他的Python代码。Python的问题<a target="_blank" rel="noopener" href="https://wiki.python.org/moin/GlobalInterpreterLock">全局解释器锁</a>是众所周知的。 在深度学习环境中，我们担心速度极快的GPU可能要等到CPU运行Python代码后才能运行另一个作业。 </p>
 <h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><ul>
-<li>梯度消失和爆炸是深度网络中常见的问题。在参数初始化时需要非常小心，以确保梯度和参数可以得到很好的控制。</li>
-<li>需要用启发式的初始化方法来确保初始梯度既不太大也不太小。</li>
-<li>ReLU激活函数缓解了梯度消失问题，这样可以加速收敛。</li>
-<li>随机初始化是保证在进行优化前打破对称性的关键。</li>
+<li>层也是块。</li>
+<li>一个块可以由许多层组成。</li>
+<li>一个块可以由许多块组成。</li>
+<li>块可以包含代码。</li>
+<li>块负责大量的内部处理，包括参数初始化和反向传播。</li>
+<li>层和块的顺序连接由<code>Sequential</code>块处理。</li>
 </ul>
 
                 
@@ -509,7 +508,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://huizhilei.github.io/2021/11/24/%E5%8A%A8%E6%89%8B%E5%AD%A6%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A02021-11-23/">https://huizhilei.github.io/2021/11/24/%E5%8A%A8%E6%89%8B%E5%AD%A6%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A02021-11-23/</a>
+                    <a href="https://huizhilei.github.io/2021/11/24/%E5%8A%A8%E6%89%8B%E5%AD%A6%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A02021-11-24/">https://huizhilei.github.io/2021/11/24/%E5%8A%A8%E6%89%8B%E5%AD%A6%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A02021-11-24/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -547,8 +546,8 @@
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/%E6%9D%A5%E8%87%AA%E5%8A%A8%E6%89%8B%E5%AD%A6%E4%B9%A0%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">
-                                    <span class="chip bg-color">来自动手学习深度学习</span>
+                                <a href="/tags/%E5%B1%82%E4%B8%8E%E5%9D%97/">
+                                    <span class="chip bg-color">层与块</span>
                                 </a>
                             
                         </div>
@@ -720,9 +719,10 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
                 <a href="/2021/11/24/%E5%8A%A8%E6%89%8B%E5%AD%A6%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A02021-11-24/">
                     <div class="card-image">
@@ -740,9 +740,9 @@
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2021-11-24
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-11-24
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-user fa-fw"></i>
@@ -751,6 +751,7 @@
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
@@ -769,13 +770,13 @@
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2021/11/22/%E5%8A%A8%E6%89%8B%E5%AD%A6%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A02021-11-22/">
+                <a href="/2021/11/24/%E5%8A%A8%E6%89%8B%E5%AD%A6%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A02021-11-23/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/1.jpg" class="responsive-img" alt="动手学深度学习2021-11-22">
+                        <img src="/medias/featureimages/0.jpg" class="responsive-img" alt="动手学深度学习2021-11-23">
                         
-                        <span class="card-title">动手学深度学习2021-11-22</span>
+                        <span class="card-title">动手学深度学习2021-11-23</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -786,7 +787,7 @@
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2021-11-22
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-11-24
                             </span>
                         <span class="publish-author">
                             
@@ -795,6 +796,14 @@
                             
                         </span>
                     </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/%E6%9D%A5%E8%87%AA%E5%8A%A8%E6%89%8B%E5%AD%A6%E4%B9%A0%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">
+                        <span class="chip bg-color">来自动手学习深度学习</span>
+                    </a>
+                    
                 </div>
                 
             </div>
