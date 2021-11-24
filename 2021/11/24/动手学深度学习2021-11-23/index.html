@@ -4,8 +4,10 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="动手学深度学习2021-11-22, 寂寞沙洲冷">
-    <meta name="description" content="模式学习中 模式 的概念：作为机器学习科学家，我们的目标是发现模式（pattern）。但是，我们如何才能确定模型是真正发现了一种泛化的模式，而不是简单地记住了数据呢？例如，我们想要在患者的基因数据与痴呆状态之间寻找模式，其中标签是从集合{痴">
+    <meta name="keywords" content="动手学深度学习2021-11-23, 寂寞沙洲冷">
+    <meta name="description" content="数值稳定性和模型初始化初始化方案的选择在神经网络学习中起着非常重要的作用，它对保持数值稳定性至关重要。 
+我们选择哪个函数以及如何初始化参数可以决定优化算法收敛的速度有多快。糟糕选择可能会导致我们在训练时遇到梯度爆炸或梯度消失。
+梯度消失（">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -17,7 +19,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>动手学深度学习2021-11-22 | 寂寞沙洲冷</title>
+    <title>动手学深度学习2021-11-23 | 寂寞沙洲冷</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.min.css">
@@ -309,12 +311,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/1.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/0.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">动手学深度学习2021-11-22</h1>
+                    <h1 class="description center-align post-title">动手学深度学习2021-11-23</h1>
                 </div>
             </div>
         </div>
@@ -428,9 +430,13 @@
             <div class="row tag-cate">
                 <div class="col s7">
                     
-                          <div class="article-tag">
-                            <span class="chip bg-color">无标签</span>
-                          </div>
+                    <div class="article-tag">
+                        
+                            <a href="/tags/%E6%9D%A5%E8%87%AA%E5%8A%A8%E6%89%8B%E5%AD%A6%E4%B9%A0%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">
+                                <span class="chip bg-color">来自动手学习深度学习</span>
+                            </a>
+                        
+                    </div>
                     
                 </div>
                 <div class="col s5 right-align">
@@ -442,7 +448,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2021-11-22
+                    2021-11-24
                 </div>
                 
 
@@ -463,43 +469,19 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h3 id="模式学习中-模式-的概念："><a href="#模式学习中-模式-的概念：" class="headerlink" title="模式学习中 模式 的概念："></a>模式学习中 模式 的概念：</h3><p>作为机器学习科学家，我们的目标是发现<strong><em>模式</em>（pattern）</strong>。但是，我们如何才能确定模型是真正发现了一种<strong>泛化的模式</strong>，而不是简单地记住了数据呢？例如，我们想要在患者的基因数据与痴呆状态之间寻找模式，其中标签是从集合{痴呆,轻度认知障碍,健康}{痴呆,轻度认知障碍,健康}中提取的。因为基因可以唯一确定每个个体（不考虑双胞胎），所以在这个任务中是有可能记住整个数据集的。</p>
-<p>我们不想让模型只会做这样的事情：“那是鲍勃！我记得他！他有痴呆症！”。 原因很简单。当我们将来部署该模型时，模型会遇到从未见过的患者。只有当我们的模型真正发现了一种泛化模式时，才会作出有效的预测。</p>
-<p><strong>更正式地来说，我们的目标是发现模式，这些模式捕捉到了我们训练集所来自的潜在总体的规律。</strong>如果成功做到了这点，即使是对我们以前从未遇到过的个体，我们也可以成功地评估风险。<strong>如何发现可以泛化的模式是机器学习的根本问题。</strong></p>
-<p> 将模型在训练数据上拟合得比在潜在分布中更接近的现象称为<em>过拟合</em>（overfitting），用于对抗过拟合的技术称为<em>正则化</em>（regularization）。 </p>
-<h3 id="模型复杂性"><a href="#模型复杂性" class="headerlink" title="模型复杂性:"></a>模型复杂性:</h3><p> 通常，对于神经网络，我们认为需要更多训练迭代的模型比较复杂，而需要“提前停止”（early stopping）的模型（意味着具有较少训练迭代周期）就不那么复杂。 </p>
-<p>几个倾向于影响模型泛化的因素：</p>
-<ol>
-<li>可调整参数的数量。当可调整参数的数量（有时称为<em>自由度</em>）很大时，模型往往更容易过拟合。</li>
-<li>参数采用的值。当权重的取值范围较大时，模型可能更容易过拟合。</li>
-<li>训练样本的数量。即使你的模型很简单，也很容易过拟合只包含一两个样本的数据集。而过拟合一个有数百万个样本的数据集则需要一个极其灵活的模型。</li>
-</ol>
-<h3 id="验证集"><a href="#验证集" class="headerlink" title="验证集"></a>验证集</h3><p>原则上，在我们确定所有的超参数之前，我们不应该用到测试集。如果我们在模型选择过程中使用测试数据，可能会有过拟合测试数据的风险。那我们就麻烦大了。如果我们过拟合了训练数据，还有在测试数据上的评估来判断过拟合。但是如果我们过拟合了测试数据，我们又该怎么知道呢？</p>
-<p>因此，我们决不能依靠测试数据进行模型选择。然而，我们也不能仅仅依靠训练数据来选择模型，因为我们无法估计训练数据的泛化误差。</p>
-<p>在实际应用中，情况变得更加复杂。虽然理想情况下我们只会使用测试数据一次，以评估最好的模型或比较一些模型效果，但现实是，测试数据很少在使用一次后被丢弃。我们很少能有充足的数据来对每一轮实验采用全新测试集。</p>
-<p>解决此问题的常见做法是将我们的数据分成三份，除了训练和测试数据集之外，还增加一个<em>验证数据集</em>（validation dataset），也叫<em>验证集</em>（validation set）。</p>
-<h3 id="K折交叉验证"><a href="#K折交叉验证" class="headerlink" title="K折交叉验证"></a>K折交叉验证</h3><p> 当训练数据稀缺时，我们甚至可能无法提供足够的数据来构成一个合适的验证集。这个问题的一个流行的解决方案是采用KK<em>折交叉验证</em>。这里，原始训练数据被分成KK个不重叠的子集。然后执行KK次模型训练和验证，每次在K−1K−1个子集上进行训练，并在剩余的一个子集（在该轮中没有用于训练的子集）上进行验证。最后，通过对KK次实验的结果取平均来估计训练和验证误差。 </p>
-<h1 id="欠拟合还是过拟合"><a href="#欠拟合还是过拟合" class="headerlink" title="欠拟合还是过拟合"></a>欠拟合还是过拟合</h1><p>当我们比较训练和验证误差时，我们要注意两种常见的情况。首先，我们要注意这样的情况：训练误差和验证误差都很严重，但它们之间仅有一点差距。如果模型不能降低训练误差，这可能意味着我们的<strong>模型过于简单（即表达能力不足）</strong>，无法捕获我们试图学习的模式。此外，由于我们的训练和验证误差之间的<em>泛化误差</em>很小，我们有理由相信可以用一个更复杂的模型降低训练误差。这种现象被称为<em>欠拟合</em>（underfitting）。</p>
-<p>另一方面，当我们的训练误差明显低于验证误差时要小心，这表明严重的<em>过拟合</em>（overfitting）。注意，<em>过拟合</em>并不总是一件坏事。特别是在深度学习领域，众所周知，最好的预测模型在训练数据上的表现往往比在保留数据上好得多。最终，我们通常更关心验证误差，而不是训练误差和验证误差之间的差距。</p>
-<h3 id="数据集大小"><a href="#数据集大小" class="headerlink" title="数据集大小"></a>数据集大小</h3><p> 一个需要牢记的重要因素是数据集的大小。训练数据集中的样本越少，我们就越有可能（且更严重地）遇到过拟合。随着训练数据量的增加，泛化误差通常会减小。<strong>此外，一般来说，更多的数据不会有什么坏处。</strong>对于固定的任务和数据分布，模型复杂性和数据集大小之间通常存在关系。给出更多的数据，我们可能会尝试拟合一个更复杂的模型。能够拟合更复杂的模型可能是有益的。如果没有足够的数据，简单的模型可能更有用。对于许多任务，深度学习只有在有数千个训练样本时才优于线性模型。从一定程度上来说，深度学习目前的成功要归功于互联网公司、廉价存储、互联设备以及数字化经济带来的海量数据集。 </p>
-<h3 id="范数与权重衰减"><a href="#范数与权重衰减" class="headerlink" title="范数与权重衰减"></a>范数与权重衰减</h3><p> 使用L2范数的一个原因是它对权重向量的大分量施加了巨大的惩罚。这使得我们的学习算法偏向于在大量特征上均匀分布权重的模型。在实践中，这可能使它们对单个变量中的观测误差更为鲁棒。相比之下，L1惩罚会导致模型将其他权重清除为零而将权重集中在一小部分特征上。这称为<em>特征选择</em>（feature selection），这可能是其他场景下需要的。 </p>
-<p>我们根据估计值与观测值之间的差异来更新w。然而，我们同时也在试图将w的大小缩小到零。这就是为什么这种方法有时被称为<em>权重衰减</em>。我们仅考虑惩罚项，优化算法在训练的每一步<em>衰减</em>权重。与特征选择相比，权重衰减为我们提供了一种连续的机制来调整函数的复杂度。较小的λλ值对应较少约束的w，而较大的λλ值对w的约束更大。</p>
-<h1 id="Dropout"><a href="#Dropout" class="headerlink" title="Dropout"></a>Dropout</h1><p> 简单性的另一个有用角度是平滑性，即函数不应该对其输入的微小变化敏感。例如，当我们对图像进行分类时，我们预计向像素添加一些随机噪声应该是基本无影响的。 </p>
-<p> 在训练过程中，在计算后续层之前向网络的每一层注入噪声。当训练一个有多层的深层网络时，注入噪声只会在输入-输出映射上增强平滑性。 </p>
-<p><strong>可以这样理解，在神经网络前向传播过程中，不断添加噪音，为了拟合泛化数据，模型会迫使具备抵抗这些噪音的能力，因而这样训练出来的模型更具备平滑能力，抵抗噪音的能力。（hzl）</strong></p>
-<p> dropout在正向传播过程中，计算每一内部层的同时注入噪声，这已经成为训练神经网络的标准技术。这种方法之所以被称为 <em>dropout</em> ，因为我们从表面上看是在训练过程中丢弃（drop out）一些神经元。 在整个训练过程的每一次迭代中，dropout包括在计算下一层之前将当前层中的一些节点置零。 </p>
-<p><strong>dropout 小结</strong></p>
-<ul>
-<li>除了控制权重向量的维数和大小之外，dropout也是避免过拟合的另一种工具。它们通常是联合使用的。</li>
-<li>dropout将激活值h替换为具有期望值h的随机变量。</li>
-<li>dropout仅在训练期间使用。</li>
-</ul>
-<h3 id="正向传播、反向传播和计算图"><a href="#正向传播、反向传播和计算图" class="headerlink" title="正向传播、反向传播和计算图"></a>正向传播、反向传播和计算图</h3><p> 在训练神经网络时，在初始化模型参数后，我们交替使用正向传播和反向传播，利用反向传播给出的梯度来更新模型参数。注意，反向传播复用正向传播中存储的中间值，以避免重复计算。带来的影响之一是我们需要保留中间值，直到反向传播完成。这也是为什么训练比单纯的预测需要更多的内存（显存）的原因之一。此外，这些中间值的大小与网络层的数量和批量的大小大致成正比。因此，使用更大的批量来训练更深层次的网络更容易导致<em>内存（显存）不足</em>（out of memory）错误。 </p>
-<h5 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h5><ul>
-<li>正向传播在神经网络定义的计算图中按顺序计算和存储中间变量。它的顺序是从输入层到输出层。</li>
-<li>反向传播按相反的顺序计算和存储神经网络的中间变量和参数的梯度。</li>
-<li>在训练深度学习模型时，正向传播和反向传播是相互依赖的。</li>
-<li>训练比预测需要更多的内存（显存）。</li>
+                <h3 id="数值稳定性和模型初始化"><a href="#数值稳定性和模型初始化" class="headerlink" title="数值稳定性和模型初始化"></a>数值稳定性和模型初始化</h3><p>初始化方案的选择在神经网络学习中起着非常重要的作用，它对保持数值稳定性至关重要。 </p>
+<p>我们选择哪个函数以及如何初始化参数可以决定优化算法收敛的速度有多快。糟糕选择可能会导致我们在训练时遇到梯度爆炸或梯度消失。</p>
+<h3 id="梯度消失（参考原文）"><a href="#梯度消失（参考原文）" class="headerlink" title="梯度消失（参考原文）"></a>梯度消失（参考原文）</h3><p> 导致梯度消失问题的一个常见的原因是跟在每层的线性运算之后的激活函数σ。 </p>
+<p> <img src="0.jpg"></p>
+<p> 当它的输入很大或是很小时，sigmoid函数的梯度都会消失。此外，当反向传播通过许多层时，除非我们在刚刚好的地方，这些地方sigmoid函数的输入接近于零，否则整个乘积的梯度可能会消失。当我们的网络有很多层时，除非我们很小心，否则在某一层可能会切断梯度。事实上，这个问题曾经困扰着深度网络的训练。因此，更稳定（但在神经科学的角度看起来不太合理）的ReLU系列函数已经成为从业者的默认选择 </p>
+<h3 id="梯度爆炸"><a href="#梯度爆炸" class="headerlink" title="梯度爆炸"></a>梯度爆炸</h3><h3 id="打破对称性"><a href="#打破对称性" class="headerlink" title="打破对称性"></a>打破对称性</h3><p>神经网络设计中的另一个问题是其参数化所固有的对称性。假设我们有一个简单的多层感知机，它有一个隐藏层和两个隐藏单元。在这种情况下，我们可以对第一层的权重W(1)进行重排列，并且同样对输出层的权重进行重排列，可以获得相同的函数。第一个隐藏单元与第二个隐藏单元没有什么特别的区别。换句话说，我们在每一层的隐藏单元之间具有排列对称性。</p>
+<p>这不仅仅是理论上的麻烦。考虑前述具有两个隐藏单元的单隐藏层多层感知机。为便于说明，假设输出层将两个隐藏单元转换为仅一个输出单元。想象一下，如果我们将隐藏层的所有参数初始化为W(1)=c，c为常量，会发生什么情况。在这种情况下，在正向传播期间，两个隐藏单元采用相同的输入和参数，产生相同的激活，该激活被送到输出单元。在反向传播期间，根据参数W(1)对输出单元进行微分，得到一个梯度，其元素都取相同的值。因此，在基于梯度的迭代(例如，小批量随机梯度下降)之后，W(1)的所有元素仍然采用相同的值。这样的迭代永远不会打破对称性，我们可能永远也无法实现网络的表达能力。隐藏层的行为就好像只有一个单元。请注意，虽然小批量随机梯度下降不会打破这种对称性，但dropout正则化可以。</p>
+<h2 id="参数初始化"><a href="#参数初始化" class="headerlink" title="参数初始化"></a>参数初始化</h2><p>解决（或至少减轻）上述问题的一种方法是仔细地进行初始化。优化期间的注意和适当的正则化可以进一步提高稳定性。</p>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><ul>
+<li>梯度消失和爆炸是深度网络中常见的问题。在参数初始化时需要非常小心，以确保梯度和参数可以得到很好的控制。</li>
+<li>需要用启发式的初始化方法来确保初始梯度既不太大也不太小。</li>
+<li>ReLU激活函数缓解了梯度消失问题，这样可以加速收敛。</li>
+<li>随机初始化是保证在进行优化前打破对称性的关键。</li>
 </ul>
 
                 
@@ -527,7 +509,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://huizhilei.github.io/2021/11/22/%E5%8A%A8%E6%89%8B%E5%AD%A6%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A02021-11-22/">https://huizhilei.github.io/2021/11/22/%E5%8A%A8%E6%89%8B%E5%AD%A6%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A02021-11-22/</a>
+                    <a href="https://huizhilei.github.io/2021/11/24/%E5%8A%A8%E6%89%8B%E5%AD%A6%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A02021-11-23/">https://huizhilei.github.io/2021/11/24/%E5%8A%A8%E6%89%8B%E5%AD%A6%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A02021-11-23/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -564,7 +546,11 @@
                 <div class="post-meta__tag-list" style="display: inline-block;">
                     
                         <div class="article-tag">
-                            <span class="chip bg-color">无标签</span>
+                            
+                                <a href="/tags/%E6%9D%A5%E8%87%AA%E5%8A%A8%E6%89%8B%E5%AD%A6%E4%B9%A0%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">
+                                    <span class="chip bg-color">来自动手学习深度学习</span>
+                                </a>
+                            
                         </div>
                     
                 </div>
@@ -734,9 +720,10 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
                 <a href="/2021/11/24/%E5%8A%A8%E6%89%8B%E5%AD%A6%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A02021-11-23/">
                     <div class="card-image">
@@ -754,9 +741,9 @@
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2021-11-24
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-11-24
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-user fa-fw"></i>
@@ -765,6 +752,7 @@
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
@@ -783,13 +771,13 @@
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2021/11/08/%E4%BC%BC%E7%84%B6%E4%BC%B0%E8%AE%A1/">
+                <a href="/2021/11/22/%E5%8A%A8%E6%89%8B%E5%AD%A6%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A02021-11-22/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/19.jpg" class="responsive-img" alt="似然估计">
+                        <img src="/medias/featureimages/1.jpg" class="responsive-img" alt="动手学深度学习2021-11-22">
                         
-                        <span class="card-title">似然估计</span>
+                        <span class="card-title">动手学深度学习2021-11-22</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -800,7 +788,7 @@
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2021-11-08
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-11-22
                             </span>
                         <span class="publish-author">
                             
@@ -809,14 +797,6 @@
                             
                         </span>
                     </div>
-                </div>
-                
-                <div class="card-action article-tags">
-                    
-                    <a href="/tags/%E4%BC%BC%E7%84%B6%E4%BC%B0%E8%AE%A1/">
-                        <span class="chip bg-color">似然估计</span>
-                    </a>
-                    
                 </div>
                 
             </div>
