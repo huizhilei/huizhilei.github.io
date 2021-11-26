@@ -4,10 +4,9 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="动手学深度学习2021-11-24（2）, 寂寞沙洲冷">
-    <meta name="description" content="参数管理大多数情况下，我们可以忽略声明和操作参数的具体细节，而只依靠深度学习框架来完成繁重的工作。然而，当我们离开具有标准层的层叠架构时，我们有时会陷入声明和操作参数的麻烦中。在本节中，我们将介绍以下内容：
-
-访问参数，用于调试、诊断和可视">
+    <meta name="keywords" content="动手学深度学习2021-11-26, 寂寞沙洲冷">
+    <meta name="description" content="自定义层不带参数的层 下面的CenteredLayer类要从其输入中减去均值。要构建它，我们只需继承基础层类并实现正向传播功能。 
+1234567891011import torchimport torch.nn.functional as">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -19,7 +18,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>动手学深度学习2021-11-24（2） | 寂寞沙洲冷</title>
+    <title>动手学深度学习2021-11-26 | 寂寞沙洲冷</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.min.css">
@@ -311,12 +310,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/10.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/21.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">动手学深度学习2021-11-24（2）</h1>
+                    <h1 class="description center-align post-title">动手学深度学习2021-11-26</h1>
                 </div>
             </div>
         </div>
@@ -432,8 +431,8 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/%E5%8F%82%E6%95%B0%E7%AE%A1%E7%90%86/">
-                                <span class="chip bg-color">参数管理</span>
+                            <a href="/tags/%E8%87%AA%E5%AE%9A%E4%B9%89%E5%B1%82/">
+                                <span class="chip bg-color">自定义层</span>
                             </a>
                         
                     </div>
@@ -448,7 +447,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2021-11-24
+                    2021-11-26
                 </div>
                 
 
@@ -469,47 +468,35 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="参数管理"><a href="#参数管理" class="headerlink" title="参数管理"></a>参数管理</h1><p>大多数情况下，我们可以忽略声明和操作参数的具体细节，而只依靠深度学习框架来完成繁重的工作。然而，当我们离开具有标准层的层叠架构时，我们有时会陷入声明和操作参数的麻烦中。在本节中，我们将介绍以下内容：</p>
-<ul>
-<li>访问参数，用于调试、诊断和可视化。</li>
-<li>参数初始化。</li>
-<li>在不同模型组件间共享参数。</li>
+                <h1 id="自定义层"><a href="#自定义层" class="headerlink" title="自定义层"></a>自定义层</h1><h2 id="不带参数的层"><a href="#不带参数的层" class="headerlink" title="不带参数的层"></a>不带参数的层</h2><p> 下面的<code>CenteredLayer</code>类要从其输入中减去均值。要构建它，我们只需继承基础层类并实现正向传播功能。 </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">import</span> torch.nn.functional <span class="keyword">as</span> F</span><br><span class="line"><span class="keyword">from</span> torch <span class="keyword">import</span> nn</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CenteredLayer</span>(<span class="params">nn.Module</span>):</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self</span>):</span></span><br><span class="line">        <span class="built_in">super</span>().__init__()</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span>(<span class="params">self, X</span>):</span></span><br><span class="line">        <span class="keyword">return</span> X - X.mean()</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">layer = CenteredLayer()</span><br><span class="line">layer(torch.FloatTensor([1, 2, 3, 4, 5]))</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">tensor([-2., -1.,  0.,  1.,  2.])</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+<h2 id="带参数的层"><a href="#带参数的层" class="headerlink" title="带参数的层"></a>带参数的层</h2><p>既然我们知道了如何定义简单的层，那么让我们继续定义具有参数的层，这些参数可以通过训练进行调整。我们可以使用内置函数来创建参数，这些函数提供一些基本的管理功能。比如管理访问、初始化、共享、保存和加载模型参数。这样做的好处之一是，我们不需要为每个自定义层编写自定义序列化程序。</p>
+<p>现在，让我们实现自定义版本的全连接层。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyLinear</span>(<span class="params">nn.Module</span>):</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, in_units, units</span>):</span></span><br><span class="line">        <span class="built_in">super</span>().__init__()</span><br><span class="line">        self.weight = nn.Parameter(torch.randn(in_units, units))</span><br><span class="line">        self.bias = nn.Parameter(torch.randn(units,))</span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span>(<span class="params">self, X</span>):</span></span><br><span class="line">        linear = torch.matmul(X, self.weight.data) + self.bias.data</span><br><span class="line">        <span class="keyword">return</span> F.relu(linear)</span><br></pre></td></tr></table></figure>
+
+<p> 接下来，我们实例化<code>MyLinear</code>类并访问其模型参数。 </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">linear = MyLinear(5, 3)</span><br><span class="line">linear.weight</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><ul>
+<li>我们可以通过基本层类设计自定义层。这允许我们定义灵活的新层，其行为与库中的任何现有层不同。</li>
+<li>在自定义层定义完成后，就可以在任意环境和网络结构中调用该自定义层。</li>
+<li>层可以有局部参数，这些参数可以通过内置函数创建。</li>
 </ul>
-<p> 让我们看看，如果我们将多个块相互嵌套，参数命名约定是如何工作的。为此，我们首先定义一个生成块的函数（可以说是块工厂），然后将这些块组合到更大的块中。 </p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">block1</span>():</span></span><br><span class="line">    <span class="keyword">return</span> nn.Sequential(nn.Linear(<span class="number">4</span>, <span class="number">8</span>), nn.ReLU(),</span><br><span class="line">                         nn.Linear(<span class="number">8</span>, <span class="number">4</span>), nn.ReLU())</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">block2</span>():</span></span><br><span class="line">    net = nn.Sequential()</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">4</span>):</span><br><span class="line">        <span class="comment"># 在这里嵌套</span></span><br><span class="line">        net.add_module(<span class="string">f&#x27;block <span class="subst">&#123;i&#125;</span>&#x27;</span>, block1())</span><br><span class="line">    <span class="keyword">return</span> net</span><br><span class="line"></span><br><span class="line">rgnet = nn.Sequential(block2(), nn.Linear(<span class="number">4</span>, <span class="number">1</span>))</span><br><span class="line">rgnet(X)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(rgnet)</span><br><span class="line">***************************************************************</span><br><span class="line">Sequential(</span><br><span class="line">  (<span class="number">0</span>): Sequential(</span><br><span class="line">    (block <span class="number">0</span>): Sequential(</span><br><span class="line">      (<span class="number">0</span>): Linear(in_features=<span class="number">4</span>, out_features=<span class="number">8</span>, bias=<span class="literal">True</span>)</span><br><span class="line">      (<span class="number">1</span>): ReLU()</span><br><span class="line">      (<span class="number">2</span>): Linear(in_features=<span class="number">8</span>, out_features=<span class="number">4</span>, bias=<span class="literal">True</span>)</span><br><span class="line">      (<span class="number">3</span>): ReLU()</span><br><span class="line">    )</span><br><span class="line">    (block <span class="number">1</span>): Sequential(</span><br><span class="line">      (<span class="number">0</span>): Linear(in_features=<span class="number">4</span>, out_features=<span class="number">8</span>, bias=<span class="literal">True</span>)</span><br><span class="line">      (<span class="number">1</span>): ReLU()</span><br><span class="line">      (<span class="number">2</span>): Linear(in_features=<span class="number">8</span>, out_features=<span class="number">4</span>, bias=<span class="literal">True</span>)</span><br><span class="line">      (<span class="number">3</span>): ReLU()</span><br><span class="line">    )</span><br><span class="line">    (block <span class="number">2</span>): Sequential(</span><br><span class="line">      (<span class="number">0</span>): Linear(in_features=<span class="number">4</span>, out_features=<span class="number">8</span>, bias=<span class="literal">True</span>)</span><br><span class="line">      (<span class="number">1</span>): ReLU()</span><br><span class="line">      (<span class="number">2</span>): Linear(in_features=<span class="number">8</span>, out_features=<span class="number">4</span>, bias=<span class="literal">True</span>)</span><br><span class="line">      (<span class="number">3</span>): ReLU()</span><br><span class="line">    )</span><br><span class="line">    (block <span class="number">3</span>): Sequential(</span><br><span class="line">      (<span class="number">0</span>): Linear(in_features=<span class="number">4</span>, out_features=<span class="number">8</span>, bias=<span class="literal">True</span>)</span><br><span class="line">      (<span class="number">1</span>): ReLU()</span><br><span class="line">      (<span class="number">2</span>): Linear(in_features=<span class="number">8</span>, out_features=<span class="number">4</span>, bias=<span class="literal">True</span>)</span><br><span class="line">      (<span class="number">3</span>): ReLU()</span><br><span class="line">    )</span><br><span class="line">  )</span><br><span class="line">  (<span class="number">1</span>): Linear(in_features=<span class="number">4</span>, out_features=<span class="number">1</span>, bias=<span class="literal">True</span>)</span><br><span class="line">)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p> 因为层是分层嵌套的，所以我们也可以像通过嵌套列表索引一样访问它们。例如，我们下面访问第一个主要的块，其中第二个子块的第一层的偏置项。 </p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rgnet[<span class="number">0</span>][<span class="number">1</span>][<span class="number">0</span>].bias.data</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tensor([-0.2009,  0.4356, -0.0054,  0.4656,  0.1657,  0.0178,  0.3627,  0.0615])</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-
-
-<h2 id="参数初始化"><a href="#参数初始化" class="headerlink" title="参数初始化"></a>参数初始化</h2><p> <strong>深度学习框架提供默认随机初始化。</strong>然而，我们经常希望根据其他规则初始化权重。深度学习框架提供了最常用的规则，也允许创建自定义初始化方法。 </p>
-<p> 默认情况下，PyTorch会根据一个范围均匀地初始化权重和偏置矩阵，这个范围是根据输入和输出维度计算出的。PyTorch的<code>nn.init</code>模块提供了多种预置初始化方法。 </p>
-<h5 id="内置初始化"><a href="#内置初始化" class="headerlink" title="内置初始化"></a>内置初始化</h5><p> 下面的代码将所有权重参数初始化为标准差为0.01的高斯随机变量，且将偏置参数设置为0。 </p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">init_normal</span>(<span class="params">m</span>):</span></span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">type</span>(m) == nn.Linear:</span><br><span class="line">        nn.init.normal_(m.weight, mean=<span class="number">0</span>, std=<span class="number">0.01</span>)</span><br><span class="line">        nn.init.zeros_(m.bias)</span><br><span class="line">net.apply(init_normal)</span><br><span class="line">net[<span class="number">0</span>].weight.data[<span class="number">0</span>], net[<span class="number">0</span>].bias.data[<span class="number">0</span>]</span><br></pre></td></tr></table></figure>
-
-<p> 我们还可以将所有参数初始化为给定的常数（比如1）。 </p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">init_constant</span>(<span class="params">m</span>):</span></span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">type</span>(m) == nn.Linear:</span><br><span class="line">        nn.init.constant_(m.weight, <span class="number">1</span>)</span><br><span class="line">        nn.init.zeros_(m.bias)</span><br><span class="line">net.apply(init_constant)</span><br><span class="line">net[<span class="number">0</span>].weight.data[<span class="number">0</span>], net[<span class="number">0</span>].bias.data[<span class="number">0</span>]</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(tensor([1., 1., 1., 1.]), tensor(0.))</span><br></pre></td></tr></table></figure>
-
-<p> 我们还可以对某些块应用不同的初始化方法。例如，下面我们使用Xavier初始化方法初始化第一层，然后第二层初始化为常量值42。 </p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">def xavier(m):</span><br><span class="line">    if type(m) == nn.Linear:</span><br><span class="line">        nn.init.xavier_uniform_(m.weight)</span><br><span class="line">def init_42(m):</span><br><span class="line">    if type(m) == nn.Linear:</span><br><span class="line">        nn.init.constant_(m.weight, 42)</span><br><span class="line"></span><br><span class="line">net[0].apply(xavier)</span><br><span class="line">net[2].apply(init_42)</span><br><span class="line">print(net[0].weight.data[0])</span><br><span class="line">print(net[2].weight.data)</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="参数绑定"><a href="#参数绑定" class="headerlink" title="参数绑定"></a>参数绑定</h2><p>有时我们希望在多个层间共享参数。让我们看看如何优雅地做这件事。在下面，我们定义一个稠密层，然后使用它的参数来设置另一个层的参数。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 我们需要给共享层一个名称，以便可以引用它的参数。</span></span><br><span class="line">shared = nn.Linear(<span class="number">8</span>, <span class="number">8</span>)</span><br><span class="line">net = nn.Sequential(nn.Linear(<span class="number">4</span>, <span class="number">8</span>), nn.ReLU(),</span><br><span class="line">                    shared, nn.ReLU(),</span><br><span class="line">                    shared, nn.ReLU(),</span><br><span class="line">                    nn.Linear(<span class="number">8</span>, <span class="number">1</span>))</span><br><span class="line">net(X)</span><br><span class="line"><span class="comment"># 检查参数是否相同</span></span><br><span class="line"><span class="built_in">print</span>(net[<span class="number">2</span>].weight.data[<span class="number">0</span>] == net[<span class="number">4</span>].weight.data[<span class="number">0</span>])</span><br><span class="line">net[<span class="number">2</span>].weight.data[<span class="number">0</span>, <span class="number">0</span>] = <span class="number">100</span></span><br><span class="line"><span class="comment"># 确保它们实际上是同一个对象，而不只是有相同的值。</span></span><br><span class="line"><span class="built_in">print</span>(net[<span class="number">2</span>].weight.data[<span class="number">0</span>] == net[<span class="number">4</span>].weight.data[<span class="number">0</span>])</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">tensor([True, True, True, True, True, True, True, True])</span><br><span class="line">tensor([True, True, True, True, True, True, True, True])</span><br></pre></td></tr></table></figure>
-
-<p> 这个例子表明第二层和第三层的参数是绑定的。它们不仅值相等，而且由相同的张量表示。因此，如果我们改变其中一个参数，另一个参数也会改变。你可能会想，当参数绑定时，梯度会发生什么情况？答案是由于模型参数包含梯度，因此在反向传播期间第二个隐藏层和第三个隐藏层的梯度会加在一起。 </p>
 
                 
             </div>
@@ -536,7 +523,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://huizhilei.github.io/2021/11/24/%E5%8A%A8%E6%89%8B%E5%AD%A6%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A02021-11-24%EF%BC%882%EF%BC%89/">https://huizhilei.github.io/2021/11/24/%E5%8A%A8%E6%89%8B%E5%AD%A6%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A02021-11-24%EF%BC%882%EF%BC%89/</a>
+                    <a href="https://huizhilei.github.io/2021/11/26/%E5%8A%A8%E6%89%8B%E5%AD%A6%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A02021-11-26/">https://huizhilei.github.io/2021/11/26/%E5%8A%A8%E6%89%8B%E5%AD%A6%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A02021-11-26/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -574,8 +561,8 @@
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/%E5%8F%82%E6%95%B0%E7%AE%A1%E7%90%86/">
-                                    <span class="chip bg-color">参数管理</span>
+                                <a href="/tags/%E8%87%AA%E5%AE%9A%E4%B9%89%E5%B1%82/">
+                                    <span class="chip bg-color">自定义层</span>
                                 </a>
                             
                         </div>
@@ -747,9 +734,10 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
                 <a href="/2021/11/26/%E5%8A%A8%E6%89%8B%E5%AD%A6%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A02021-11-26/">
                     <div class="card-image">
@@ -767,9 +755,9 @@
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2021-11-26
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-11-26
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-user fa-fw"></i>
@@ -778,6 +766,7 @@
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
@@ -796,13 +785,13 @@
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2021/11/24/%E5%8A%A8%E6%89%8B%E5%AD%A6%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A02021-11-24/">
+                <a href="/2021/11/24/%E5%8A%A8%E6%89%8B%E5%AD%A6%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A02021-11-24%EF%BC%882%EF%BC%89/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/23.jpg" class="responsive-img" alt="动手学深度学习2021-11-24">
+                        <img src="/medias/featureimages/10.jpg" class="responsive-img" alt="动手学深度学习2021-11-24（2）">
                         
-                        <span class="card-title">动手学深度学习2021-11-24</span>
+                        <span class="card-title">动手学深度学习2021-11-24（2）</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -826,8 +815,8 @@
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/%E5%B1%82%E4%B8%8E%E5%9D%97/">
-                        <span class="chip bg-color">层与块</span>
+                    <a href="/tags/%E5%8F%82%E6%95%B0%E7%AE%A1%E7%90%86/">
+                        <span class="chip bg-color">参数管理</span>
                     </a>
                     
                 </div>
