@@ -4,8 +4,8 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="动手学深度学习2021-12-02（0）, 寂寞沙洲冷">
-    <meta name="description" content="多输出通道在最流行的神经网络架构中，随着神经网络层数的加深，我们常会增加输出通道的维数，通过减少空间分辨率以获得更大的通道深度。直观地说，我们可以将每个通道看作是对不同特征的响应。而现实可能更为复杂一些，因为每个通道不是独立学习的，而是为了">
+    <meta name="keywords" content="GoogLeNet, 寂寞沙洲冷">
+    <meta name="description" content="含并行连结的网络（GoogLeNet）在2014年的ImageNet图像识别挑战赛中，一个名叫GoogLeNet [Szegedy et al., 2015] 的网络结构大放异彩。 GoogLeNet吸收了NiN中串联网络的思想，并在此基础">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -17,7 +17,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>动手学深度学习2021-12-02（0） | 寂寞沙洲冷</title>
+    <title>GoogLeNet | 寂寞沙洲冷</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.min.css">
@@ -309,12 +309,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/9.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/4.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">动手学深度学习2021-12-02（0）</h1>
+                    <h1 class="description center-align post-title">GoogLeNet</h1>
                 </div>
             </div>
         </div>
@@ -428,13 +428,9 @@
             <div class="row tag-cate">
                 <div class="col s7">
                     
-                    <div class="article-tag">
-                        
-                            <a href="/tags/1x1%E5%8D%B7%E7%A7%AF/">
-                                <span class="chip bg-color">1x1卷积</span>
-                            </a>
-                        
-                    </div>
+                          <div class="article-tag">
+                            <span class="chip bg-color">无标签</span>
+                          </div>
                     
                 </div>
                 <div class="col s5 right-align">
@@ -446,7 +442,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2021-12-02
+                    2021-12-03
                 </div>
                 
 
@@ -467,15 +463,37 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h2 id="多输出通道"><a href="#多输出通道" class="headerlink" title="多输出通道"></a>多输出通道</h2><p><strong>在最流行的神经网络架构中，随着神经网络层数的加深，我们常会增加输出通道的维数，通过减少空间分辨率以获得更大的通道深度。</strong>直观地说，<strong>我们可以将每个通道看作是对不同特征的响应。</strong>而现实可能更为复杂一些，因为每个通道不是独立学习的，而是为了共同使用而优化的。因此，多输出通道并不仅是学习多个单通道的检测器。 </p>
-<h2 id="1×1-卷积层"><a href="#1×1-卷积层" class="headerlink" title="1×1 卷积层"></a>1×1 卷积层</h2><p> 1×1卷积，即 kh=kw=1，看起来似乎没有多大意义。 毕竟，卷积的本质是有效提取相邻像素间的相关特征，而 1×1 卷积显然没有此作用。 尽管如此，1×1 仍然十分流行，时常包含在复杂深层网络的设计中。</p>
-<p> 因为使用了最小窗口，1×1 卷积失去了卷积层的特有能力——在高度和宽度维度上，识别相邻元素间相互作用的能力。 其实 1×1 卷积的唯一计算发生在通道上。 </p>
-<p> <a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_convolutional-neural-networks/channels.html#fig-conv-1x1">图6.4.2</a> 展示了使用 1×1 卷积核与 3 个输入通道和 2 个输出通道的互相关计算。 <strong>这里输入和输出具有相同的高度和宽度，输出中的每个元素都是从输入图像中同一位置的元素的线性组合。</strong> <strong>我们可以将 1×1 卷积层看作是在每个像素位置应用的全连接层，以 ci个输入值转换为 co 个输出值。</strong> 因为这仍然是一个卷积层，所以跨像素的权重是一致的。 同时，1×1 卷积层需要的权重维度为 co×ci，再额外加上一个偏置。 </p>
+                <h1 id="含并行连结的网络（GoogLeNet）"><a href="#含并行连结的网络（GoogLeNet）" class="headerlink" title="含并行连结的网络（GoogLeNet）"></a>含并行连结的网络（GoogLeNet）</h1><p>在2014年的ImageNet图像识别挑战赛中，一个名叫<em>GoogLeNet</em> [<a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_references/zreferences.html#szegedy-liu-jia-ea-2015">Szegedy et al., 2015]</a> 的网络结构大放异彩。 GoogLeNet吸收了NiN中串联网络的思想，并在此基础上做了改进。 <strong>这篇论文的一个重点是解决了什么样大小的卷积核最合适的问题。</strong> 毕竟，以前流行的网络使用小到 1×1 ，大到 11×11的卷积核。 <strong>本文的一个观点是，有时使用不同大小的卷积核组合是有利的。</strong> 在本节中，我们将介绍一个稍微简化的GoogLeNet版本：我们省略了一些为稳定训练而添加的特殊特性，但是现在有了更好的训练算法，<strong>这些特性不是必要的。</strong> </p>
+<h2 id="Inception块"><a href="#Inception块" class="headerlink" title="Inception块"></a>Inception块</h2><p> 在GoogLeNet中，基本的卷积块被称为<em>Inception块</em>（Inception block） </p>
 <p><img src="0.jpg"></p>
+<p> 如<a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_convolutional-modern/googlenet.html#fig-inception">图7.4.1</a> 所示，Inception块由四条并行路径组成。 前三条路径使用窗口大小为 1×1、3×3和 5×5 的卷积层，从不同空间大小中提取信息。 <strong>中间的两条路径在输入上执行 1×1 卷积，以减少通道数，从而降低模型的复杂性。</strong> 第四条路径使用 3×3 最大汇聚层，<strong>然后使用 1×1 卷积层来改变通道数。</strong> 这四条路径都使用合适的填充来使输入与输出的高和宽一致，最后我们将每条线路的输出在通道维度上连结，并构成Inception块的输出。在Inception块中，通常调整的超参数是每层输出通道的数量。 </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">import torch</span><br><span class="line">from torch import nn</span><br><span class="line">from torch.nn import functional as F</span><br><span class="line">from d2l import torch as d2l</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Inception(nn.Module):</span><br><span class="line">    # `c1`--`c4` 是每条路径的输出通道数</span><br><span class="line">    def __init__(self, in_channels, c1, c2, c3, c4, **kwargs):</span><br><span class="line">        super(Inception, self).__init__(**kwargs)</span><br><span class="line">        # 线路1，单1 x 1卷积层</span><br><span class="line">        self.p1_1 = nn.Conv2d(in_channels, c1, kernel_size=1)</span><br><span class="line">        # 线路2，1 x 1卷积层后接3 x 3卷积层</span><br><span class="line">        self.p2_1 = nn.Conv2d(in_channels, c2[0], kernel_size=1)</span><br><span class="line">        self.p2_2 = nn.Conv2d(c2[0], c2[1], kernel_size=3, padding=1)</span><br><span class="line">        # 线路3，1 x 1卷积层后接5 x 5卷积层</span><br><span class="line">        self.p3_1 = nn.Conv2d(in_channels, c3[0], kernel_size=1)</span><br><span class="line">        self.p3_2 = nn.Conv2d(c3[0], c3[1], kernel_size=5, padding=2)</span><br><span class="line">        # 线路4，3 x 3最大汇聚层后接1 x 1卷积层</span><br><span class="line">        self.p4_1 = nn.MaxPool2d(kernel_size=3, stride=1, padding=1)</span><br><span class="line">        self.p4_2 = nn.Conv2d(in_channels, c4, kernel_size=1)</span><br><span class="line"></span><br><span class="line">    def forward(self, x):</span><br><span class="line">        p1 = F.relu(self.p1_1(x))</span><br><span class="line">        p2 = F.relu(self.p2_2(F.relu(self.p2_1(x))))</span><br><span class="line">        p3 = F.relu(self.p3_2(F.relu(self.p3_1(x))))</span><br><span class="line">        p4 = F.relu(self.p4_2(self.p4_1(x)))</span><br><span class="line">        # 在通道维度上连结输出</span><br><span class="line">        return torch.cat((p1, p2, p3, p4), dim=1)</span><br></pre></td></tr></table></figure>
+
+<p> <strong>那么为什么GoogLeNet这个网络如此有效呢？ 我们考虑一下滤波器（filter）的组合，它们可以用各种滤波器尺寸探索图像，这意味着不同大小的滤波器可以有效地识别不同范围的图像细节。 同时，我们可以为不同的滤波器分配不同数量的参数。</strong></p>
+<h2 id="GoogLeNet模型"><a href="#GoogLeNet模型" class="headerlink" title="GoogLeNet模型"></a>GoogLeNet模型</h2><p> 如 <a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_convolutional-modern/googlenet.html#fig-inception-full">图7.4.2</a> 所示，GoogLeNet 一共使用 9 个Inception块和全局平均汇聚层的堆叠来生成其估计值。Inception块之间的最大汇聚层可降低维度。 第一个模块类似于 AlexNet 和 LeNet，Inception块的栈从VGG继承，全局平均汇聚层避免了在最后使用全连接层。 </p>
+<p><img src="1.jpg"></p>
+<p> 现在，我们逐一实现GoogLeNet的每个模块。第一个模块使用 64 个通道、 7×7卷积层。 </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">b1 = nn.Sequential(nn.Conv2d(1, 64, kernel_size=7, stride=2, padding=3),</span><br><span class="line">                   nn.ReLU(),</span><br><span class="line">                   nn.MaxPool2d(kernel_size=3, stride=2, padding=1))</span><br></pre></td></tr></table></figure>
+
+<p>第二个模块使用两个卷积层：第一个卷积层是 64个通道、 1×1 卷积层；第二个卷积层使用将通道数量增加三倍的 3×3 卷积层。 这对应于 Inception 块中的第二条路径。 </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">b2 = nn.Sequential(nn.Conv2d(64, 64, kernel_size=1),</span><br><span class="line">                   nn.ReLU(),</span><br><span class="line">                   nn.Conv2d(64, 192, kernel_size=3, padding=1),</span><br><span class="line">                   nn.MaxPool2d(kernel_size=3, stride=2, padding=1))</span><br></pre></td></tr></table></figure>
+
+<p> 第三个模块串联两个完整的Inception块。 (具体看原文介绍)</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">b3 = nn.Sequential(Inception(192, 64, (96, 128), (16, 32), 32),</span><br><span class="line">                   Inception(256, 128, (128, 192), (32, 96), 64),</span><br><span class="line">                   nn.MaxPool2d(kernel_size=3, stride=2, padding=1))</span><br></pre></td></tr></table></figure>
+
+<p> 第四模块更加复杂， 它串联了5个Inception块 。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">b4 = nn.Sequential(Inception(480, 192, (96, 208), (16, 48), 64),</span><br><span class="line">                   Inception(512, 160, (112, 224), (24, 64), 64),</span><br><span class="line">                   Inception(512, 128, (128, 256), (24, 64), 64),</span><br><span class="line">                   Inception(512, 112, (144, 288), (32, 64), 64),</span><br><span class="line">                   Inception(528, 256, (160, 320), (32, 128), 128),</span><br><span class="line">                   nn.MaxPool2d(kernel_size=3, stride=2, padding=1))</span><br></pre></td></tr></table></figure>
+
+<p> 五模块包含输出通道数为 256+320+128+128=832 和 384+384+128+128=1024 的两个Inception块。 </p>
+<p><strong>需要注意的是，第五模块的后面紧跟输出层，该模块同 NiN 一样使用全局平均汇聚层，将每个通道的高和宽变成1。 最后我们将输出变成二维数组，再接上一个输出个数为标签类别数的全连接层。</strong> </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">b5 = nn.Sequential(Inception(832, 256, (160, 320), (32, 128), 128),</span><br><span class="line">                   Inception(832, 384, (192, 384), (48, 128), 128),</span><br><span class="line">                   nn.AdaptiveAvgPool2d((1,1)),</span><br><span class="line">                   nn.Flatten())</span><br><span class="line"></span><br><span class="line">net = nn.Sequential(b1, b2, b3, b4, b5, nn.Linear(1024, 10))</span><br></pre></td></tr></table></figure>
+
+
+
 <h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><ul>
-<li>多输入多输出通道可以用来扩展卷积层的模型。</li>
-<li>当以每像素为基础应用时，1×1卷积层相当于全连接层。</li>
-<li>1×1 卷积层通常用于调整网络层的通道数量和控制模型复杂性。</li>
+<li>Inception 块相当于一个有4条路径的子网络。它通过不同窗口形状的卷积层和最大汇聚层来并行抽取信息，并使用 1×1卷积层减少每像素级别上的通道维数从而降低模型复杂度。</li>
+<li>GoogLeNet将多个设计精细的Inception块与其他层（卷积层、全连接层）串联起来。其中Inception块的通道数分配之比是在 ImageNet 数据集上通过大量的实验得来的。</li>
+<li>GoogLeNet 和它的后继者们一度是 ImageNet 上最有效的模型之一：它以较低的计算复杂度提供了类似的测试精度。</li>
 </ul>
 
                 
@@ -503,7 +521,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://huizhilei.github.io/2021/12/02/%E5%8A%A8%E6%89%8B%E5%AD%A6%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A02021-12-02%EF%BC%880%EF%BC%89/">https://huizhilei.github.io/2021/12/02/%E5%8A%A8%E6%89%8B%E5%AD%A6%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A02021-12-02%EF%BC%880%EF%BC%89/</a>
+                    <a href="https://huizhilei.github.io/2021/12/03/GoogLeNet/">https://huizhilei.github.io/2021/12/03/GoogLeNet/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -540,11 +558,7 @@
                 <div class="post-meta__tag-list" style="display: inline-block;">
                     
                         <div class="article-tag">
-                            
-                                <a href="/tags/1x1%E5%8D%B7%E7%A7%AF/">
-                                    <span class="chip bg-color">1x1卷积</span>
-                                </a>
-                            
+                            <span class="chip bg-color">无标签</span>
                         </div>
                     
                 </div>
@@ -714,62 +728,18 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
-                <a href="/2021/12/02/%E5%8A%A8%E6%89%8B%E5%AD%A6%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A02021-12-02%EF%BC%881%EF%BC%89/">
+                <a href="/2021/12/03/GoogLeNet/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/16.jpg" class="responsive-img" alt="动手学深度学习2021-12-02（1）">
+                        <img src="/medias/featureimages/4.jpg" class="responsive-img" alt="GoogLeNet">
                         
-                        <span class="card-title">动手学深度学习2021-12-02（1）</span>
-                    </div>
-                </a>
-                <div class="card-content article-content">
-                    <div class="summary block-with-text">
-                        
-                            
-                        
-                    </div>
-                    <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2021-12-02
-                        </span>
-                        <span class="publish-author">
-                            
-                            <i class="fas fa-user fa-fw"></i>
-                            HZL
-                            
-                        </span>
-                    </div>
-                </div>
-                
-                <div class="card-action article-tags">
-                    
-                    <a href="/tags/%E6%B1%A0%E5%8C%96andLeNet/">
-                        <span class="chip bg-color">池化andLeNet</span>
-                    </a>
-                    
-                </div>
-                
-            </div>
-        </div>
-        
-        
-        <div class="article col s12 m6" data-aos="fade-up">
-            <div class="article-badge right-badge text-color">
-                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
-            </div>
-            <div class="card">
-                <a href="/2021/11/29/%E5%8A%A8%E6%89%8B%E5%AD%A6%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A02021-11-29%EF%BC%881%EF%BC%89/">
-                    <div class="card-image">
-                        
-                        
-                        <img src="/medias/featureimages/6.jpg" class="responsive-img" alt="动手学深度学习2021-11-29（1）">
-                        
-                        <span class="card-title">动手学深度学习2021-11-29（1）</span>
+                        <span class="card-title">GoogLeNet</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -780,7 +750,7 @@
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2021-11-29
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-12-03
                             </span>
                         <span class="publish-author">
                             
@@ -790,13 +760,43 @@
                         </span>
                     </div>
                 </div>
+
                 
-                <div class="card-action article-tags">
-                    
-                    <a href="/tags/%E5%8D%B7%E7%A7%AF%E5%AE%9E%E9%99%85%E5%BA%94%E7%94%A8/">
-                        <span class="chip bg-color">卷积实际应用</span>
-                    </a>
-                    
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/2021/12/03/NiN/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/3.jpg" class="responsive-img" alt="NiN">
+                        
+                        <span class="card-title">NiN</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-12-03
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-user fa-fw"></i>
+                            HZL
+                            
+                        </span>
+                    </div>
                 </div>
                 
             </div>
