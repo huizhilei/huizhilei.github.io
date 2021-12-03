@@ -4,9 +4,9 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="vgg, 寂寞沙洲冷">
-    <meta name="description" content="使用块的网络（VGG） 虽然 AlexNet 证明深层神经网络卓有成效，但它没有提供一个通用的模板来指导后续的研究人员设计新的网络。 在下面的几个章节中，我们将介绍一些常用于设计深层神经网络的启发式概念。 
-VGG块 经典卷积神经网络的基本">
+    <meta name="keywords" content="NiN, 寂寞沙洲冷">
+    <meta name="description" content="网络中的网络（NiN） LeNet、AlexNet 和 VGG 都有一个共同的设计模式：通过一系列的卷积层与汇聚层来提取空间结构特征；然后通过全连接层对特征的表征进行处理。 
+然而，如果使用稠密层了，可能会完全放弃表征的空间结构。 网络中的">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -18,7 +18,7 @@ VGG块 经典卷积神经网络的基本">
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>vgg | 寂寞沙洲冷</title>
+    <title>NiN | 寂寞沙洲冷</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.min.css">
@@ -310,12 +310,12 @@ VGG块 经典卷积神经网络的基本">
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/6.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/3.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">vgg</h1>
+                    <h1 class="description center-align post-title">NiN</h1>
                 </div>
             </div>
         </div>
@@ -429,13 +429,9 @@ VGG块 经典卷积神经网络的基本">
             <div class="row tag-cate">
                 <div class="col s7">
                     
-                    <div class="article-tag">
-                        
-                            <a href="/tags/%E5%8A%A8%E6%89%8B%E5%AD%A6%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">
-                                <span class="chip bg-color">动手学深度学习</span>
-                            </a>
-                        
-                    </div>
+                          <div class="article-tag">
+                            <span class="chip bg-color">无标签</span>
+                          </div>
                     
                 </div>
                 <div class="col s5 right-align">
@@ -468,27 +464,30 @@ VGG块 经典卷积神经网络的基本">
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="使用块的网络（VGG）"><a href="#使用块的网络（VGG）" class="headerlink" title="使用块的网络（VGG）"></a>使用块的网络（VGG）</h1><p> 虽然 <strong>AlexNet 证明深层神经网络卓有成效</strong>，但它没有提供一个通用的模板来指导后续的研究人员设计新的网络。 在下面的几个章节中，我们将介绍一些常用于<strong>设计深层神经网络的启发式概念</strong>。 </p>
-<h2 id="VGG块"><a href="#VGG块" class="headerlink" title="VGG块"></a>VGG块</h2><p> 经典卷积神经网络的基本组成部分是下面的这个序列： 1. 带填充以保持分辨率的卷积层； 1. 非线性激活函数，如ReLU； 1. 汇聚层，如最大汇聚层。  而一个 VGG 块与之类似，由一系列卷积层组成，后面再加上用于空间下采样的最大汇聚层。 </p>
-<p> 下面的代码中，我们定义了一个名为 <code>vgg_block</code> 的函数来实现一个 VGG 块。 </p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">import torch</span><br><span class="line">from torch import nn</span><br><span class="line">from d2l import torch as d2l</span><br><span class="line"></span><br><span class="line"># 卷积层的数量 num_convs、输入通道的数量 in_channels 和输出通道的数量 out_channels.</span><br><span class="line">def vgg_block(num_convs, in_channels, out_channels):</span><br><span class="line">    layers = []</span><br><span class="line">    for _ in range(num_convs):</span><br><span class="line">        layers.append(nn.Conv2d(in_channels, out_channels,</span><br><span class="line">                                kernel_size=3, padding=1))</span><br><span class="line">        layers.append(nn.ReLU())</span><br><span class="line">        in_channels = out_channels</span><br><span class="line">    layers.append(nn.MaxPool2d(kernel_size=2,stride=2))</span><br><span class="line">    return nn.Sequential(*layers)</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="VGG网络"><a href="#VGG网络" class="headerlink" title="VGG网络"></a>VGG网络</h2><p> 与 AlexNet、LeNet 一样，VGG 网络可以分为两部分：第一部分主要由卷积层和汇聚层组成，第二部分由全连接层组成。 </p>
+                <h1 id="网络中的网络（NiN）"><a href="#网络中的网络（NiN）" class="headerlink" title="网络中的网络（NiN）"></a>网络中的网络（NiN）</h1><p> LeNet、AlexNet 和 VGG 都有一个共同的设计模式：<strong>通过一系列的卷积层与汇聚层来提取空间结构特征；然后通过全连接层对特征的表征进行处理。</strong> </p>
+<p><strong>然而，如果使用稠密层了，可能会完全放弃表征的空间结构。 <em>网络中的网络</em> (<em>NiN</em>) 提供了一个非常简单的解决方案：在每个像素的通道上分别使用多层感知机</strong> [<a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_references/zreferences.html#lin-chen-yan-2013">Lin et al., 2013]</a></p>
+<h2 id="NiN块"><a href="#NiN块" class="headerlink" title="NiN块"></a>NiN块</h2><p> 卷积层的输入和输出由四维张量组成，张量的每个轴分别对应样本、通道、高度和宽度。 另外，全连接层的输入和输出通常是分别对应于样本和特征的二维张量。 <strong>NiN 的想法是在每个像素位置（针对每个高度和宽度）应用一个全连接层。 如果我们将权重连接到每个空间位置，我们可以将其视为 1×1 卷积层（如 <a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_convolutional-neural-networks/channels.html#sec-channels">6.4节</a> 中所述），或作为在每个像素位置上独立作用的全连接层。 从另一个角度看，即将空间维度中的每个像素视为单个样本，将通道维度视为不同特征（feature）。</strong> </p>
+<p> <a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_convolutional-modern/nin.html#fig-nin">图7.3.1</a> 说明了 VGG 和 NiN 及它们的块之间主要结构差异。 NiN 块以一个普通卷积层开始，后面是两个 1×1 的卷积层。<strong>这两个1×1 卷积层充当带有 ReLU 激活函数的逐像素全连接层。</strong> 第一层的卷积窗口形状通常由用户设置。 随后的卷积窗口形状固定为 1×1。 </p>
 <p><img src="0.jpg"></p>
-<p> VGG神经网络连续连接 <a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_convolutional-modern/vgg.html#fig-vgg">图7.2.1</a> 的几个 VGG块（在 <code>vgg_block</code> 函数中定义）。其中有超参数变量 <code>conv_arch</code> 。该变量指定了<strong>每个VGG块里卷积层个数和输出通道数</strong>。全连接模块则与AlexNet中的相同。 </p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conv_arch = ((1, 64), (1, 128), (2, 256), (2, 512), (2, 512))</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">import torch</span><br><span class="line">from torch import nn</span><br><span class="line">from d2l import torch as d2l</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def nin_block(in_channels, out_channels, kernel_size, strides, padding):</span><br><span class="line">    return nn.Sequential(</span><br><span class="line">        nn.Conv2d(in_channels, out_channels, kernel_size, strides, padding),</span><br><span class="line">        nn.ReLU(),</span><br><span class="line">        nn.Conv2d(out_channels, out_channels, kernel_size=1), nn.ReLU(),</span><br><span class="line">        nn.Conv2d(out_channels, out_channels, kernel_size=1), nn.ReLU())</span><br></pre></td></tr></table></figure>
 
-<p> 原始 VGG 网络有 5 个卷积块，其中前两个块各有一个卷积层，后三个块各包含两个卷积层。 第一个模块有 64 个输出通道，每个后续模块将输出通道数量翻倍，直到该数字达到 512。<strong>由于该网络使用 8 个卷积层和 3 个全连接层，因此它通常被称为 VGG-11</strong> </p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">def vgg(conv_arch):</span><br><span class="line">    conv_blks = []</span><br><span class="line">    in_channels = 1</span><br><span class="line">    # 卷积层部分</span><br><span class="line">    for (num_convs, out_channels) in conv_arch:</span><br><span class="line">        conv_blks.append(vgg_block(num_convs, in_channels, out_channels))</span><br><span class="line">        in_channels = out_channels</span><br><span class="line"></span><br><span class="line">    return nn.Sequential(</span><br><span class="line">        *conv_blks, nn.Flatten(),</span><br><span class="line">        # 全连接层部分</span><br><span class="line">        nn.Linear(out_channels * 7 * 7, 4096), nn.ReLU(), nn.Dropout(0.5),</span><br><span class="line">        nn.Linear(4096, 4096), nn.ReLU(), nn.Dropout(0.5),</span><br><span class="line">        nn.Linear(4096, 10))</span><br><span class="line"></span><br><span class="line">net = vgg(conv_arch)</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="NiN模型"><a href="#NiN模型" class="headerlink" title="NiN模型"></a>NiN模型</h2><p>最初的 NiN 网络是在 AlexNet 后不久提出的，显然从中得到了一些启示。 NiN使用窗口形状为 11×11、5×5 和 3×3的卷积层，输出通道数量与 AlexNet 中的相同。 每个 NiN 块后有一个最大汇聚层，池化窗口形状为 3×3，步幅为 2。 </p>
+<p> **NiN 和 AlexNet 之间的一个显著区别是 NiN 完全取消了全连接层。 相反，NiN 使用一个 NiN块，其输出通道数等于标签类别的数量。最后放一个 <em>全局平均汇聚层</em>（global average pooling layer），生成一个多元逻辑向量（logits）。**NiN 设计的一个优点是，它显著减少了模型所需参数的数量。然而，在实践中，这种设计有时会增加训练模型的时间。 </p>
+<p>#############################################################################小思考，1x1卷积，逐元素处理，每个通道视为不同的特征，最后全局平均池化。</p>
+<p>本意是避免全连接层失去空间结构，但1x1卷积是否真的能够保留空间结构（毕竟最后使用了全局池化）有待证考虑；</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">net = nn.Sequential(</span><br><span class="line">    nin_block(1, 96, kernel_size=11, strides=4, padding=0),</span><br><span class="line">    nn.MaxPool2d(3, stride=2),</span><br><span class="line">    nin_block(96, 256, kernel_size=5, strides=1, padding=2),</span><br><span class="line">    nn.MaxPool2d(3, stride=2),</span><br><span class="line">    nin_block(256, 384, kernel_size=3, strides=1, padding=1),</span><br><span class="line">    nn.MaxPool2d(3, stride=2),</span><br><span class="line">    nn.Dropout(0.5),</span><br><span class="line">    # 标签类别数是10</span><br><span class="line">    nin_block(384, 10, kernel_size=3, strides=1, padding=1),</span><br><span class="line">    nn.AdaptiveAvgPool2d((1, 1)),</span><br><span class="line">    # 将四维的输出转成二维的输出，其形状为(批量大小, 10)</span><br><span class="line">    nn.Flatten())</span><br></pre></td></tr></table></figure>
+
+
 
 
 
 <h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><ul>
-<li>VGG-11 使用可复用的卷积块构造网络。不同的 VGG 模型可通过每个块中卷积层数量和输出通道数量的差异来定义。</li>
-<li>块的使用导致网络定义的非常简洁。使用块可以有效地设计复杂的网络。</li>
-<li>在VGG论文中，Simonyan和Ziserman尝试了各种架构。特别是他们发现深层且窄的卷积（即3×33×3）比较浅层且宽的卷积更有效。</li>
+<li>NiN使用由一个卷积层和多个 1×11×1 卷积层组成的块。该块可以在卷积神经网络中使用，以允许更多的每像素非线性。</li>
+<li>NiN去除了容易造成过拟合的全连接层，将它们替换为全局平均汇聚层（即在所有位置上进行求和）。该汇聚层通道数量为所需的输出数量（例如，Fashion-MNIST的输出为10）。</li>
+<li>移除全连接层可减少过拟合，同时显著减少NiN的参数。</li>
+<li>NiN的设计影响了许多后续卷积神经网络的设计。</li>
 </ul>
 
                 
@@ -516,7 +515,7 @@ VGG块 经典卷积神经网络的基本">
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://huizhilei.github.io/2021/12/03/vgg/">https://huizhilei.github.io/2021/12/03/vgg/</a>
+                    <a href="https://huizhilei.github.io/2021/12/03/NiN/">https://huizhilei.github.io/2021/12/03/NiN/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -553,11 +552,7 @@ VGG块 经典卷积神经网络的基本">
                 <div class="post-meta__tag-list" style="display: inline-block;">
                     
                         <div class="article-tag">
-                            
-                                <a href="/tags/%E5%8A%A8%E6%89%8B%E5%AD%A6%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">
-                                    <span class="chip bg-color">动手学深度学习</span>
-                                </a>
-                            
+                            <span class="chip bg-color">无标签</span>
                         </div>
                     
                 </div>
@@ -727,9 +722,10 @@ VGG块 经典卷积神经网络的基本">
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
                 <a href="/2021/12/03/NiN/">
                     <div class="card-image">
@@ -747,9 +743,9 @@ VGG块 经典卷积神经网络的基本">
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2021-12-03
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-12-03
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-user fa-fw"></i>
@@ -758,6 +754,7 @@ VGG块 经典卷积神经网络的基本">
                         </span>
                     </div>
                 </div>
+
                 
             </div>
         </div>
@@ -768,13 +765,13 @@ VGG块 经典卷积神经网络的基本">
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2021/12/02/AlexNet/">
+                <a href="/2021/12/03/vgg/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/15.jpg" class="responsive-img" alt="AlexNet">
+                        <img src="/medias/featureimages/6.jpg" class="responsive-img" alt="vgg">
                         
-                        <span class="card-title">AlexNet</span>
+                        <span class="card-title">vgg</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -785,7 +782,7 @@ VGG块 经典卷积神经网络的基本">
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2021-12-02
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-12-03
                             </span>
                         <span class="publish-author">
                             
