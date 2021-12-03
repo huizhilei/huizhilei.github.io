@@ -4,8 +4,8 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="GoogLeNet, 寂寞沙洲冷">
-    <meta name="description" content="含并行连结的网络（GoogLeNet）在2014年的ImageNet图像识别挑战赛中，一个名叫GoogLeNet [Szegedy et al., 2015] 的网络结构大放异彩。 GoogLeNet吸收了NiN中串联网络的思想，并在此基础">
+    <meta name="keywords" content="批量归一化, 寂寞沙洲冷">
+    <meta name="description" content="批量归一化 训练深层神经网络是十分困难的，特别是在较短的时间内使他们收敛更加棘手。 *在本节中，我们将介绍 批量归一化（batch normalization） [Ioffe &amp;amp; Szegedy, 2015] ，这是一种流行且有效的">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -17,7 +17,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>GoogLeNet | 寂寞沙洲冷</title>
+    <title>批量归一化 | 寂寞沙洲冷</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.min.css">
@@ -309,12 +309,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/4.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/14.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">GoogLeNet</h1>
+                    <h1 class="description center-align post-title">批量归一化</h1>
                 </div>
             </div>
         </div>
@@ -463,37 +463,34 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="含并行连结的网络（GoogLeNet）"><a href="#含并行连结的网络（GoogLeNet）" class="headerlink" title="含并行连结的网络（GoogLeNet）"></a>含并行连结的网络（GoogLeNet）</h1><p>在2014年的ImageNet图像识别挑战赛中，一个名叫<em>GoogLeNet</em> [<a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_references/zreferences.html#szegedy-liu-jia-ea-2015">Szegedy et al., 2015]</a> 的网络结构大放异彩。 GoogLeNet吸收了NiN中串联网络的思想，并在此基础上做了改进。 <strong>这篇论文的一个重点是解决了什么样大小的卷积核最合适的问题。</strong> 毕竟，以前流行的网络使用小到 1×1 ，大到 11×11的卷积核。 <strong>本文的一个观点是，有时使用不同大小的卷积核组合是有利的。</strong> 在本节中，我们将介绍一个稍微简化的GoogLeNet版本：我们省略了一些为稳定训练而添加的特殊特性，但是现在有了更好的训练算法，<strong>这些特性不是必要的。</strong> </p>
-<h2 id="Inception块"><a href="#Inception块" class="headerlink" title="Inception块"></a>Inception块</h2><p> 在GoogLeNet中，基本的卷积块被称为<em>Inception块</em>（Inception block） </p>
+                <h1 id="批量归一化"><a href="#批量归一化" class="headerlink" title="批量归一化"></a>批量归一化</h1><p> 训练深层神经网络是十分困难的，特别是在较短的时间内使他们收敛更加棘手。 *<em>在本节中，我们将介绍 <em>批量归一化</em>（batch normalization） [<a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_references/zreferences.html#ioffe-szegedy-2015">Ioffe &amp; Szegedy, 2015]</a> ，这是一种流行且有效的技术，可持续加速深层网络的收敛速度。</em>* 再结合在 <a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_convolutional-modern/resnet.html#sec-resnet">7.6节</a> 中将介绍的残差块，批量归一化使得研究人员能够训练 100 层以上的网络。 </p>
+<h2 id="训练深层网络"><a href="#训练深层网络" class="headerlink" title="训练深层网络"></a>训练深层网络</h2><p>为什么需要批量归一化层呢？让我们来回顾一下训练神经网络时出现的一些实际挑战。</p>
+<p>首先，数据预处理的方式通常会对最终结果产生巨大影响。 回想一下我们应用多层感知机来预测房价的例子（ <a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_multilayer-perceptrons/kaggle-house-price.html#sec-kaggle-house">4.10节</a> ）。 使用真实数据时，我们的第一步是标准化输入特征，使其平均值为0，方差为1。 直观地说，这种标准化可以很好地与我们的优化器配合使用，因为它可以将参数的量级进行统一。</p>
+<p>第二，对于典型的多层感知机或卷积神经网络。当我们训练时，中间层中的变量（例如，多层感知机中的仿射变换输出）可能具有更广的变化范围：不论是沿着从输入到输出的层，跨同一层中的单元，或是随着时间的推移，模型参数的随着训练更新变幻莫测。 批量归一化的发明者非正式地假设，这些变量分布中的这种偏移可能会阻碍网络的收敛。 直观地说，我们可能会猜想，如果一个层的可变值是另一层的 100 倍，这可能需要对学习率进行补偿调整。</p>
+<p>第三，更深层的网络很复杂，容易过拟合。 这意味着正则化变得更加重要。</p>
+<p><strong>批量归一化应用于单个可选层（也可以应用到所有层），其原理如下：在每次训练迭代中，我们首先归一化输入，即通过减去其均值并除以其标准差，其中两者均基于当前小批量处理。 接下来，我们应用比例系数和比例偏移。 正是由于这个基于<em>批量</em>统计的<em>标准化</em>，才有了<em>批量归一化</em>的名称。</strong> </p>
+<p> <strong>请注意，如果我们尝试使用大小为 1 的小批量应用批量归一化，我们将无法学到任何东西。 这是因为在减去均值之后，每个隐藏单元将为 0。 所以，只有使用足够大的小批量，批量归一化这种方法才是有效且稳定的。 请注意，在应用批量归一化时，批量大小的选择可能比没有批量归一化时更重要。</strong> </p>
 <p><img src="0.jpg"></p>
-<p> 如<a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_convolutional-modern/googlenet.html#fig-inception">图7.4.1</a> 所示，Inception块由四条并行路径组成。 前三条路径使用窗口大小为 1×1、3×3和 5×5 的卷积层，从不同空间大小中提取信息。 <strong>中间的两条路径在输入上执行 1×1 卷积，以减少通道数，从而降低模型的复杂性。</strong> 第四条路径使用 3×3 最大汇聚层，<strong>然后使用 1×1 卷积层来改变通道数。</strong> 这四条路径都使用合适的填充来使输入与输出的高和宽一致，最后我们将每条线路的输出在通道维度上连结，并构成Inception块的输出。在Inception块中，通常调整的超参数是每层输出通道的数量。 </p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">import torch</span><br><span class="line">from torch import nn</span><br><span class="line">from torch.nn import functional as F</span><br><span class="line">from d2l import torch as d2l</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Inception(nn.Module):</span><br><span class="line">    # `c1`--`c4` 是每条路径的输出通道数</span><br><span class="line">    def __init__(self, in_channels, c1, c2, c3, c4, **kwargs):</span><br><span class="line">        super(Inception, self).__init__(**kwargs)</span><br><span class="line">        # 线路1，单1 x 1卷积层</span><br><span class="line">        self.p1_1 = nn.Conv2d(in_channels, c1, kernel_size=1)</span><br><span class="line">        # 线路2，1 x 1卷积层后接3 x 3卷积层</span><br><span class="line">        self.p2_1 = nn.Conv2d(in_channels, c2[0], kernel_size=1)</span><br><span class="line">        self.p2_2 = nn.Conv2d(c2[0], c2[1], kernel_size=3, padding=1)</span><br><span class="line">        # 线路3，1 x 1卷积层后接5 x 5卷积层</span><br><span class="line">        self.p3_1 = nn.Conv2d(in_channels, c3[0], kernel_size=1)</span><br><span class="line">        self.p3_2 = nn.Conv2d(c3[0], c3[1], kernel_size=5, padding=2)</span><br><span class="line">        # 线路4，3 x 3最大汇聚层后接1 x 1卷积层</span><br><span class="line">        self.p4_1 = nn.MaxPool2d(kernel_size=3, stride=1, padding=1)</span><br><span class="line">        self.p4_2 = nn.Conv2d(in_channels, c4, kernel_size=1)</span><br><span class="line"></span><br><span class="line">    def forward(self, x):</span><br><span class="line">        p1 = F.relu(self.p1_1(x))</span><br><span class="line">        p2 = F.relu(self.p2_2(F.relu(self.p2_1(x))))</span><br><span class="line">        p3 = F.relu(self.p3_2(F.relu(self.p3_1(x))))</span><br><span class="line">        p4 = F.relu(self.p4_2(self.p4_1(x)))</span><br><span class="line">        # 在通道维度上连结输出</span><br><span class="line">        return torch.cat((p1, p2, p3, p4), dim=1)</span><br></pre></td></tr></table></figure>
-
-<p> <strong>那么为什么GoogLeNet这个网络如此有效呢？ 我们考虑一下滤波器（filter）的组合，它们可以用各种滤波器尺寸探索图像，这意味着不同大小的滤波器可以有效地识别不同范围的图像细节。 同时，我们可以为不同的滤波器分配不同数量的参数。</strong></p>
-<h2 id="GoogLeNet模型"><a href="#GoogLeNet模型" class="headerlink" title="GoogLeNet模型"></a>GoogLeNet模型</h2><p> 如 <a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_convolutional-modern/googlenet.html#fig-inception-full">图7.4.2</a> 所示，GoogLeNet 一共使用 9 个Inception块和全局平均汇聚层的堆叠来生成其估计值。Inception块之间的最大汇聚层可降低维度。 第一个模块类似于 AlexNet 和 LeNet，Inception块的栈从VGG继承，全局平均汇聚层避免了在最后使用全连接层。 </p>
 <p><img src="1.jpg"></p>
-<p> 现在，我们逐一实现GoogLeNet的每个模块。第一个模块使用 64 个通道、 7×7卷积层。 </p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">b1 = nn.Sequential(nn.Conv2d(1, 64, kernel_size=7, stride=2, padding=3),</span><br><span class="line">                   nn.ReLU(),</span><br><span class="line">                   nn.MaxPool2d(kernel_size=3, stride=2, padding=1))</span><br></pre></td></tr></table></figure>
+<p> <strong>事实证明，这是深度学习中一个反复出现的主题。 由于理论上尚未明确表述的原因，优化中的各种噪声源通常会导致更快的训练和较少的过拟合：这种变化似乎是正则化的一种形式。</strong> </p>
+<h2 id="批量归一化层"><a href="#批量归一化层" class="headerlink" title="批量归一化层"></a>批量归一化层</h2><p> 批量归一化和其他图层之间的一个关键区别是，由于批量归一化在完整的小批次上运行，因此我们不能像以前在引入其他图层时那样忽略批处理的尺寸大小。 我们在下面讨论这两种情况：全连接层和卷积层，他们的批量归一化实现略有不同。 </p>
+<h3 id="全连接层"><a href="#全连接层" class="headerlink" title="全连接层"></a>全连接层</h3><p><img src="2.jpg"></p>
+<h3 id="卷积层"><a href="#卷积层" class="headerlink" title="卷积层"></a>卷积层</h3><p><strong>同样，对于卷积层，我们可以在卷积层之后和非线性激活函数之前应用批量归一化。</strong> 当卷积有多个输出通道时，我们需要对这些通道的“每个”输出执行批量归一化，每个通道都有自己的拉伸（scale）和偏移（shift）参数，这两个参数都是标量。 假设我们的微批次包含 mm 个示例，并且对于每个通道，卷积的输出具有高度 p 和宽度 q。 那么对于卷积层，我们在每个输出通道的 m⋅p⋅q 个元素上同时执行每个批量归一化。 因此，在计算平均值和方差时，我们会收集所有空间位置的值，然后在给定通道内应用相同的均值和方差，以便在每个空间位置对值进行归一化。 </p>
+<h3 id="预测过程中的批量归一化-这里先了解，在训练模式下和预测模式下，批量归一化的方式不同，具体用的时候再研究代码"><a href="#预测过程中的批量归一化-这里先了解，在训练模式下和预测模式下，批量归一化的方式不同，具体用的时候再研究代码" class="headerlink" title="预测过程中的批量归一化(这里先了解，在训练模式下和预测模式下，批量归一化的方式不同，具体用的时候再研究代码)"></a>预测过程中的批量归一化(这里先了解，在训练模式下和预测模式下，批量归一化的方式不同，具体用的时候再研究代码)</h3><p> 正如我们前面提到的，批量归一化在训练模式和预测模式下的行为通常不同。 首先，将训练好的模型用于预测时，我们不再需要样本均值中的噪声以及在微批次上估计每个小批次产生的样本方差了。 其次，例如，我们可能需要使用我们的模型对逐个样本进行预测。 <strong>一种常用的方法是通过移动平均估算整个训练数据集的样本均值和方差，并在预测时使用它们得到确定的输出。</strong> 可见，和 dropout 一样，批量归一化层在训练模式和预测模式下的计算结果也是不一样的。 </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">import torch</span><br><span class="line">from torch import nn</span><br><span class="line">from d2l import torch as d2l</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def batch_norm(X, gamma, beta, moving_mean, moving_var, eps, momentum):</span><br><span class="line">    # 通过 `is_grad_enabled` 来判断当前模式是训练模式还是预测模式</span><br><span class="line">    if not torch.is_grad_enabled():</span><br><span class="line">        # 如果是在预测模式下，直接使用传入的移动平均所得的均值和方差</span><br><span class="line">        X_hat = (X - moving_mean) / torch.sqrt(moving_var + eps)</span><br><span class="line">    else:</span><br><span class="line">        assert len(X.shape) in (2, 4)</span><br><span class="line">        if len(X.shape) == 2:</span><br><span class="line">            # 使用全连接层的情况，计算特征维上的均值和方差</span><br><span class="line">            mean = X.mean(dim=0)</span><br><span class="line">            var = ((X - mean) ** 2).mean(dim=0)</span><br><span class="line">        else:</span><br><span class="line">            # 使用二维卷积层的情况，计算通道维上（axis=1）的均值和方差。</span><br><span class="line">            # 这里我们需要保持X的形状以便后面可以做广播运算</span><br><span class="line">            mean = X.mean(dim=(0, 2, 3), keepdim=True)</span><br><span class="line">            var = ((X - mean) ** 2).mean(dim=(0, 2, 3), keepdim=True)</span><br><span class="line">        # 训练模式下，用当前的均值和方差做标准化</span><br><span class="line">        X_hat = (X - mean) / torch.sqrt(var + eps)</span><br><span class="line">        # 更新移动平均的均值和方差</span><br><span class="line">        moving_mean = momentum * moving_mean + (1.0 - momentum) * mean</span><br><span class="line">        moving_var = momentum * moving_var + (1.0 - momentum) * var</span><br><span class="line">    Y = gamma * X_hat + beta  # 缩放和移位</span><br><span class="line">    return Y, moving_mean.data, moving_var.data</span><br></pre></td></tr></table></figure>
 
-<p>第二个模块使用两个卷积层：第一个卷积层是 64个通道、 1×1 卷积层；第二个卷积层使用将通道数量增加三倍的 3×3 卷积层。 这对应于 Inception 块中的第二条路径。 </p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">b2 = nn.Sequential(nn.Conv2d(64, 64, kernel_size=1),</span><br><span class="line">                   nn.ReLU(),</span><br><span class="line">                   nn.Conv2d(64, 192, kernel_size=3, padding=1),</span><br><span class="line">                   nn.MaxPool2d(kernel_size=3, stride=2, padding=1))</span><br></pre></td></tr></table></figure>
-
-<p> 第三个模块串联两个完整的Inception块。 (具体看原文介绍)</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">b3 = nn.Sequential(Inception(192, 64, (96, 128), (16, 32), 32),</span><br><span class="line">                   Inception(256, 128, (128, 192), (32, 96), 64),</span><br><span class="line">                   nn.MaxPool2d(kernel_size=3, stride=2, padding=1))</span><br></pre></td></tr></table></figure>
-
-<p> 第四模块更加复杂， 它串联了5个Inception块 。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">b4 = nn.Sequential(Inception(480, 192, (96, 208), (16, 48), 64),</span><br><span class="line">                   Inception(512, 160, (112, 224), (24, 64), 64),</span><br><span class="line">                   Inception(512, 128, (128, 256), (24, 64), 64),</span><br><span class="line">                   Inception(512, 112, (144, 288), (32, 64), 64),</span><br><span class="line">                   Inception(528, 256, (160, 320), (32, 128), 128),</span><br><span class="line">                   nn.MaxPool2d(kernel_size=3, stride=2, padding=1))</span><br></pre></td></tr></table></figure>
-
-<p> 五模块包含输出通道数为 256+320+128+128=832 和 384+384+128+128=1024 的两个Inception块。 </p>
-<p><strong>需要注意的是，第五模块的后面紧跟输出层，该模块同 NiN 一样使用全局平均汇聚层，将每个通道的高和宽变成1。 最后我们将输出变成二维数组，再接上一个输出个数为标签类别数的全连接层。</strong> </p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">b5 = nn.Sequential(Inception(832, 256, (160, 320), (32, 128), 128),</span><br><span class="line">                   Inception(832, 384, (192, 384), (48, 128), 128),</span><br><span class="line">                   nn.AdaptiveAvgPool2d((1,1)),</span><br><span class="line">                   nn.Flatten())</span><br><span class="line"></span><br><span class="line">net = nn.Sequential(b1, b2, b3, b4, b5, nn.Linear(1024, 10))</span><br></pre></td></tr></table></figure>
+<h2 id="简明实现"><a href="#简明实现" class="headerlink" title="简明实现"></a>简明实现</h2><p> 除了使用我们刚刚定义的 <code>BatchNorm</code> ，我们也可以直接使用深度学习框架中定义的 <code>BatchNorm</code> 。 该代码看起来几乎与我们上面的代码相同。 </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">net = nn.Sequential(</span><br><span class="line">    nn.Conv2d(1, 6, kernel_size=5), nn.BatchNorm2d(6), nn.Sigmoid(),</span><br><span class="line">    nn.MaxPool2d(kernel_size=2, stride=2),</span><br><span class="line">    nn.Conv2d(6, 16, kernel_size=5), nn.BatchNorm2d(16), nn.Sigmoid(),</span><br><span class="line">    nn.MaxPool2d(kernel_size=2, stride=2), nn.Flatten(),</span><br><span class="line">    nn.Linear(256, 120), nn.BatchNorm1d(120), nn.Sigmoid(),</span><br><span class="line">    nn.Linear(120, 84), nn.BatchNorm1d(84), nn.Sigmoid(),</span><br><span class="line">    nn.Linear(84, 10))</span><br></pre></td></tr></table></figure>
 
 
 
+<h2 id="争议"><a href="#争议" class="headerlink" title="争议"></a>争议</h2><p> <strong>直观地说，批量归一化被认为可以使优化更加平滑。 然而，我们必须小心区分投机直觉和对我们观察到的现象的真实解释。 回想一下，我们甚至不知道简单的神经网络（多层感知机和传统的卷积神经网络）为什么如此有效。 即使在 dropout 和权重衰减的情况下，它们仍然非常灵活，因此无法通过常规的学习理论泛化保证来解释它们是否能够泛化到看不见的数据。</strong> </p>
+<p> <strong>重要的是将这些指导性直觉与既定的科学事实区分开来。 最终，当你掌握了这些方法，并开始撰写自己的研究论文时，你会希望清楚地区分技术和直觉。</strong> </p>
 <h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><ul>
-<li>Inception 块相当于一个有4条路径的子网络。它通过不同窗口形状的卷积层和最大汇聚层来并行抽取信息，并使用 1×1卷积层减少每像素级别上的通道维数从而降低模型复杂度。</li>
-<li>GoogLeNet将多个设计精细的Inception块与其他层（卷积层、全连接层）串联起来。其中Inception块的通道数分配之比是在 ImageNet 数据集上通过大量的实验得来的。</li>
-<li>GoogLeNet 和它的后继者们一度是 ImageNet 上最有效的模型之一：它以较低的计算复杂度提供了类似的测试精度。</li>
+<li>在模型训练过程中，批量归一化利用小批量的均值和标准差，不断调整神经网络的中间输出，使整个神经网络各层的中间输出值更加稳定。</li>
+<li>批量归一化在全连接层和卷积层的使用略有不同。</li>
+<li>批量归一化层和 dropout 层一样，在训练模式和预测模式下计算不同。</li>
+<li>批量归一化有许多有益的副作用，主要是正则化。另一方面，”减少内部协变量偏移“的原始动机似乎不是一个有效的解释。</li>
 </ul>
 
                 
@@ -521,7 +518,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://huizhilei.github.io/2021/12/03/GoogLeNet/">https://huizhilei.github.io/2021/12/03/GoogLeNet/</a>
+                    <a href="https://huizhilei.github.io/2021/12/03/%E6%89%B9%E9%87%8F%E5%BD%92%E4%B8%80%E5%8C%96/">https://huizhilei.github.io/2021/12/03/%E6%89%B9%E9%87%8F%E5%BD%92%E4%B8%80%E5%8C%96/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -728,9 +725,10 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
                 <a href="/2021/12/03/%E6%89%B9%E9%87%8F%E5%BD%92%E4%B8%80%E5%8C%96/">
                     <div class="card-image">
@@ -748,9 +746,9 @@
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2021-12-03
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-12-03
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-user fa-fw"></i>
@@ -759,6 +757,7 @@
                         </span>
                     </div>
                 </div>
+
                 
             </div>
         </div>
@@ -769,13 +768,13 @@
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2021/12/03/NiN/">
+                <a href="/2021/12/03/GoogLeNet/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/3.jpg" class="responsive-img" alt="NiN">
+                        <img src="/medias/featureimages/4.jpg" class="responsive-img" alt="GoogLeNet">
                         
-                        <span class="card-title">NiN</span>
+                        <span class="card-title">GoogLeNet</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
