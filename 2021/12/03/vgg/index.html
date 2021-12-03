@@ -4,8 +4,9 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="AlexNet, 寂寞沙洲冷">
-    <meta name="description" content="学习表征 在2012年前，图像特征都是机械地计算出来的。事实上，设计一套新的特征函数、改进结果，并撰写论文是盛极一时的潮流。SIFT [Lowe, 2004]、SURF [Bay et al., 2006]、HOG（定向梯度直方图） [Da">
+    <meta name="keywords" content="vgg, 寂寞沙洲冷">
+    <meta name="description" content="使用块的网络（VGG） 虽然 AlexNet 证明深层神经网络卓有成效，但它没有提供一个通用的模板来指导后续的研究人员设计新的网络。 在下面的几个章节中，我们将介绍一些常用于设计深层神经网络的启发式概念。 
+VGG块 经典卷积神经网络的基本">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -17,7 +18,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>AlexNet | 寂寞沙洲冷</title>
+    <title>vgg | 寂寞沙洲冷</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.min.css">
@@ -309,12 +310,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/15.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/6.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">AlexNet</h1>
+                    <h1 class="description center-align post-title">vgg</h1>
                 </div>
             </div>
         </div>
@@ -446,7 +447,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2021-12-02
+                    2021-12-03
                 </div>
                 
 
@@ -467,26 +468,27 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h2 id="学习表征"><a href="#学习表征" class="headerlink" title="学习表征"></a>学习表征</h2><p> <strong>在2012年前，图像特征都是机械地计算出来的。</strong>事实上，设计一套新的特征函数、改进结果，并撰写论文是盛极一时的潮流。SIFT [<a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_references/zreferences.html#lowe-2004">Lowe, 2004]</a>、SURF [<a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_references/zreferences.html#bay-tuytelaars-van-gool-2006">Bay et al., 2006]</a>、HOG（定向梯度直方图） [<a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_references/zreferences.html#dalal-triggs-2005">Dalal &amp; Triggs, 2005]</a> 、<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Bag-of-words_model_in_computer_vision">bags of visual words</a> 和类似的特征提取方法占据了主导地位。 </p>
-<p> 另一组研究人员，包括Yann LeCun、Geoff Hinton、Yoshua Bengio、Andrew Ng、Shun ichi Amari和Juergen Schmidhuber，想法则与众不同：<strong>他们认为特征本身应该被学习。</strong> </p>
-<p> <strong>此外，他们还认为，在合理地复杂性前提下，特征应该由多个共同学习的神经网络层组成，每个层都有可学习的参数。在机器视觉中，最底层可能检测边缘、颜色和纹理。</strong>事实上，Alex Krizhevsky、Ilya Sutskever和Geoff Hinton提出了一种新的卷积神经网络变体<em>AlexNet</em>。 </p>
-<p> 有趣的是，在网络的最底层，模型学习到了一些类似于传统滤波器的特征抽取器。 </p>
+                <h1 id="使用块的网络（VGG）"><a href="#使用块的网络（VGG）" class="headerlink" title="使用块的网络（VGG）"></a>使用块的网络（VGG）</h1><p> 虽然 <strong>AlexNet 证明深层神经网络卓有成效</strong>，但它没有提供一个通用的模板来指导后续的研究人员设计新的网络。 在下面的几个章节中，我们将介绍一些常用于<strong>设计深层神经网络的启发式概念</strong>。 </p>
+<h2 id="VGG块"><a href="#VGG块" class="headerlink" title="VGG块"></a>VGG块</h2><p> 经典卷积神经网络的基本组成部分是下面的这个序列： 1. 带填充以保持分辨率的卷积层； 1. 非线性激活函数，如ReLU； 1. 汇聚层，如最大汇聚层。  而一个 VGG 块与之类似，由一系列卷积层组成，后面再加上用于空间下采样的最大汇聚层。 </p>
+<p> 下面的代码中，我们定义了一个名为 <code>vgg_block</code> 的函数来实现一个 VGG 块。 </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">import torch</span><br><span class="line">from torch import nn</span><br><span class="line">from d2l import torch as d2l</span><br><span class="line"></span><br><span class="line"># 卷积层的数量 num_convs、输入通道的数量 in_channels 和输出通道的数量 out_channels.</span><br><span class="line">def vgg_block(num_convs, in_channels, out_channels):</span><br><span class="line">    layers = []</span><br><span class="line">    for _ in range(num_convs):</span><br><span class="line">        layers.append(nn.Conv2d(in_channels, out_channels,</span><br><span class="line">                                kernel_size=3, padding=1))</span><br><span class="line">        layers.append(nn.ReLU())</span><br><span class="line">        in_channels = out_channels</span><br><span class="line">    layers.append(nn.MaxPool2d(kernel_size=2,stride=2))</span><br><span class="line">    return nn.Sequential(*layers)</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="VGG网络"><a href="#VGG网络" class="headerlink" title="VGG网络"></a>VGG网络</h2><p> 与 AlexNet、LeNet 一样，VGG 网络可以分为两部分：第一部分主要由卷积层和汇聚层组成，第二部分由全连接层组成。 </p>
 <p><img src="0.jpg"></p>
-<p> <strong>AlexNet的更高层建立在这些底层表示的基础上，以表示更大的特征，如眼睛、鼻子、草叶等等。而更高的层可以检测整个物体，如人、飞机、狗或飞盘。最终的隐藏神经元可以学习图像的综合表示，从而使属于不同类别的数据易于区分。</strong> </p>
-<h2 id="AlexNet"><a href="#AlexNet" class="headerlink" title="AlexNet"></a>AlexNet</h2><p> 2012年，AlexNet横空出世。<strong>它首次证明了学习到的特征可以超越手工设计的特征。</strong>它一举打破了计算机视觉研究的现状。 </p>
-<h3 id="模型设计"><a href="#模型设计" class="headerlink" title="模型设计"></a>模型设计</h3><p> <strong>在AlexNet的第一层，卷积窗口的形状是 11×11。 由于ImageNet中大多数图像的宽和高比MNIST图像的多10倍以上，因此，需要一个更大的卷积窗口来捕获目标。</strong> </p>
-<p> 在最后一个卷积层后有两个全连接层，分别有4096个输出。 这两个巨大的全连接层拥有将近1GB的模型参数。  </p>
-<h3 id="激活函数"><a href="#激活函数" class="headerlink" title="激活函数"></a>激活函数</h3><p><strong>此外，AlexNet将sigmoid激活函数改为更简单的ReLU激活函数。 一方面，ReLU激活函数的计算更简单，它不需要如sigmoid激活函数那般复杂的求幂运算。 另一方面，当使用不同的参数初始化方法时，ReLU激活函数使训练模型更加容易。 当sigmoid激活函数的输出非常接近于0或1时，这些区域的梯度几乎为0，因此反向传播无法继续更新一些模型参数。 相反，ReLU激活函数在正区间的梯度总是1。 因此，如果模型参数没有正确初始化，sigmoid函数可能在正区间内得到几乎为0的梯度，从而使模型无法得到有效的训练。</strong> </p>
-<h3 id="容量控制和预处理"><a href="#容量控制和预处理" class="headerlink" title="容量控制和预处理"></a>容量控制和预处理</h3><p>AlexNet通过dropout（ <a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_multilayer-perceptrons/dropout.html#sec-dropout">4.6节</a> ）控制全连接层的模型复杂度，而LeNet只使用了权重衰减。 为了进一步扩充数据，AlexNet在训练时增加了大量的图像增强数据，如翻转、裁切和变色。 这使得模型更健壮，更大的样本量有效地减少了过拟合。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">import torch</span><br><span class="line">from torch import nn</span><br><span class="line">from d2l import torch as d2l</span><br><span class="line"></span><br><span class="line">net = nn.Sequential(</span><br><span class="line">    # 这里，我们使用一个11*11的更大窗口来捕捉对象。</span><br><span class="line">    # 同时，步幅为4，以减少输出的高度和宽度。</span><br><span class="line">    # 另外，输出通道的数目远大于LeNet</span><br><span class="line">    nn.Conv2d(1, 96, kernel_size=11, stride=4, padding=1), nn.ReLU(),</span><br><span class="line">    nn.MaxPool2d(kernel_size=3, stride=2),</span><br><span class="line">    # 减小卷积窗口，使用填充为2来使得输入与输出的高和宽一致，且增大输出通道数</span><br><span class="line">    nn.Conv2d(96, 256, kernel_size=5, padding=2), nn.ReLU(),</span><br><span class="line">    nn.MaxPool2d(kernel_size=3, stride=2),</span><br><span class="line">    # 使用三个连续的卷积层和较小的卷积窗口。</span><br><span class="line">    # 除了最后的卷积层，输出通道的数量进一步增加。</span><br><span class="line">    # 在前两个卷积层之后，汇聚层不用于减少输入的高度和宽度</span><br><span class="line">    nn.Conv2d(256, 384, kernel_size=3, padding=1), nn.ReLU(),</span><br><span class="line">    nn.Conv2d(384, 384, kernel_size=3, padding=1), nn.ReLU(),</span><br><span class="line">    nn.Conv2d(384, 256, kernel_size=3, padding=1), nn.ReLU(),</span><br><span class="line">    nn.MaxPool2d(kernel_size=3, stride=2),</span><br><span class="line">    nn.Flatten(),</span><br><span class="line">    # 这里，全连接层的输出数量是LeNet中的好几倍。使用dropout层来减轻过度拟合</span><br><span class="line">    nn.Linear(6400, 4096), nn.ReLU(),</span><br><span class="line">    nn.Dropout(p=0.5),</span><br><span class="line">    nn.Linear(4096, 4096), nn.ReLU(),</span><br><span class="line">    nn.Dropout(p=0.5),</span><br><span class="line">    # 最后是输出层。由于这里使用Fashion-MNIST，所以用类别数为10，而非论文中的1000</span><br><span class="line">    nn.Linear(4096, 10))</span><br></pre></td></tr></table></figure>
+<p> VGG神经网络连续连接 <a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_convolutional-modern/vgg.html#fig-vgg">图7.2.1</a> 的几个 VGG块（在 <code>vgg_block</code> 函数中定义）。其中有超参数变量 <code>conv_arch</code> 。该变量指定了<strong>每个VGG块里卷积层个数和输出通道数</strong>。全连接模块则与AlexNet中的相同。 </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conv_arch = ((1, 64), (1, 128), (2, 256), (2, 512), (2, 512))</span><br></pre></td></tr></table></figure>
+
+<p> 原始 VGG 网络有 5 个卷积块，其中前两个块各有一个卷积层，后三个块各包含两个卷积层。 第一个模块有 64 个输出通道，每个后续模块将输出通道数量翻倍，直到该数字达到 512。<strong>由于该网络使用 8 个卷积层和 3 个全连接层，因此它通常被称为 VGG-11</strong> </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">def vgg(conv_arch):</span><br><span class="line">    conv_blks = []</span><br><span class="line">    in_channels = 1</span><br><span class="line">    # 卷积层部分</span><br><span class="line">    for (num_convs, out_channels) in conv_arch:</span><br><span class="line">        conv_blks.append(vgg_block(num_convs, in_channels, out_channels))</span><br><span class="line">        in_channels = out_channels</span><br><span class="line"></span><br><span class="line">    return nn.Sequential(</span><br><span class="line">        *conv_blks, nn.Flatten(),</span><br><span class="line">        # 全连接层部分</span><br><span class="line">        nn.Linear(out_channels * 7 * 7, 4096), nn.ReLU(), nn.Dropout(0.5),</span><br><span class="line">        nn.Linear(4096, 4096), nn.ReLU(), nn.Dropout(0.5),</span><br><span class="line">        nn.Linear(4096, 10))</span><br><span class="line"></span><br><span class="line">net = vgg(conv_arch)</span><br></pre></td></tr></table></figure>
 
 
 
 <h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><ul>
-<li>AlexNet的结构与LeNet相似，但使用了更多的卷积层和更多的参数来拟合大规模的ImageNet数据集。</li>
-<li>今天，AlexNet已经被更有效的结构所超越，但它是从浅层网络到深层网络的关键一步。</li>
-<li>尽管AlexNet的代码只比LeNet多出几行，但学术界花了很多年才接受深度学习这一概念，并应用其出色的实验结果。这也是由于缺乏有效的计算工具。</li>
-<li>Dropout、ReLU和预处理是提升计算机视觉任务性能的其他关键步骤。</li>
+<li>VGG-11 使用可复用的卷积块构造网络。不同的 VGG 模型可通过每个块中卷积层数量和输出通道数量的差异来定义。</li>
+<li>块的使用导致网络定义的非常简洁。使用块可以有效地设计复杂的网络。</li>
+<li>在VGG论文中，Simonyan和Ziserman尝试了各种架构。特别是他们发现深层且窄的卷积（即3×33×3）比较浅层且宽的卷积更有效。</li>
 </ul>
 
                 
@@ -514,7 +516,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://huizhilei.github.io/2021/12/02/AlexNet/">https://huizhilei.github.io/2021/12/02/AlexNet/</a>
+                    <a href="https://huizhilei.github.io/2021/12/03/vgg/">https://huizhilei.github.io/2021/12/03/vgg/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -725,9 +727,10 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
                 <a href="/2021/12/03/vgg/">
                     <div class="card-image">
@@ -745,9 +748,9 @@
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2021-12-03
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-12-03
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-user fa-fw"></i>
@@ -756,6 +759,7 @@
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
@@ -774,13 +778,13 @@
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2021/12/02/%E5%8A%A8%E6%89%8B%E5%AD%A6%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A02021-12-02%EF%BC%881%EF%BC%89/">
+                <a href="/2021/12/02/AlexNet/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/16.jpg" class="responsive-img" alt="动手学深度学习2021-12-02（1）">
+                        <img src="/medias/featureimages/15.jpg" class="responsive-img" alt="AlexNet">
                         
-                        <span class="card-title">动手学深度学习2021-12-02（1）</span>
+                        <span class="card-title">AlexNet</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -804,8 +808,8 @@
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/%E6%B1%A0%E5%8C%96andLeNet/">
-                        <span class="chip bg-color">池化andLeNet</span>
+                    <a href="/tags/%E5%8A%A8%E6%89%8B%E5%AD%A6%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">
+                        <span class="chip bg-color">动手学深度学习</span>
                     </a>
                     
                 </div>
