@@ -4,9 +4,10 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="DenseNet, 寂寞沙洲冷">
-    <meta name="description" content="稠密连接网络（DenseNet） ResNet极大地改变了如何参数化深层网络中函数的观点。 稠密连接网络（DenseNet） [Huang et al., 2017]在某种程度上是ResNet的逻辑扩展。让我们先从数学上了解一下。 
-从Re">
+    <meta name="keywords" content="最近的一件事, 寂寞沙洲冷">
+    <meta name="description" content="关于byy的一些收获：
+（1）对自己该以什么样的态度面对别人有了一些新的理解，我也更加了解更适合自己的展示姿态，性格呈现，真诚待人。
+（2）一个小思考，对于两种情况，1：拥有长久的过去，但已经是过去；2：短暂的现在，但是是现在进行时。从伦理">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -18,7 +19,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>DenseNet | 寂寞沙洲冷</title>
+    <title>最近的一件事 | 寂寞沙洲冷</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.min.css">
@@ -315,7 +316,7 @@
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">DenseNet</h1>
+                    <h1 class="description center-align post-title">最近的一件事</h1>
                 </div>
             </div>
         </div>
@@ -464,32 +465,11 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="稠密连接网络（DenseNet）"><a href="#稠密连接网络（DenseNet）" class="headerlink" title="稠密连接网络（DenseNet）"></a>稠密连接网络（DenseNet）</h1><p> ResNet极大地改变了如何参数化深层网络中函数的观点。 <em>稠密连接网络</em>（DenseNet） [<a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_references/zreferences.html#huang-liu-van-der-maaten-ea-2017">Huang et al., 2017]</a>在某种程度上是ResNet的逻辑扩展。让我们先从数学上了解一下。 </p>
-<h2 id="从ResNet到DenseNet"><a href="#从ResNet到DenseNet" class="headerlink" title="从ResNet到DenseNet"></a>从ResNet到DenseNet</h2><p><img src="0.jpg"></p>
-<p><img src="1.jpg"></p>
-<h2 id="稠密块体"><a href="#稠密块体" class="headerlink" title="稠密块体"></a>稠密块体</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">import torch</span><br><span class="line">from torch import nn</span><br><span class="line">from d2l import torch as d2l</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def conv_block(input_channels, num_channels):</span><br><span class="line">    return nn.Sequential(</span><br><span class="line">        nn.BatchNorm2d(input_channels), nn.ReLU(),</span><br><span class="line">        nn.Conv2d(input_channels, num_channels, kernel_size=3, padding=1))</span><br></pre></td></tr></table></figure>
-
-<p> <strong>一个<em>稠密块</em>由多个卷积块组成，每个卷积块使用相同数量的输出信道。 然而，在前向传播中，我们将每个卷积块的输入和输出在通道维上连结。</strong> </p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">class DenseBlock(nn.Module):</span><br><span class="line">    def __init__(self, num_convs, input_channels, num_channels):</span><br><span class="line">        super(DenseBlock, self).__init__()</span><br><span class="line">        layer = []</span><br><span class="line">        for i in range(num_convs):</span><br><span class="line">            layer.append(conv_block(</span><br><span class="line">                num_channels * i + input_channels, num_channels))</span><br><span class="line">        self.net = nn.Sequential(*layer)</span><br><span class="line"></span><br><span class="line">    def forward(self, X):</span><br><span class="line">        for blk in self.net:</span><br><span class="line">            Y = blk(X)</span><br><span class="line">            # 连接通道维度上每个块的输入和输出</span><br><span class="line">            X = torch.cat((X, Y), dim=1)</span><br><span class="line">        return X</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="过渡层"><a href="#过渡层" class="headerlink" title="过渡层"></a>过渡层</h2><p> 由于每个稠密块都会带来通道数的增加，使用过多则会过于复杂化模型。 而过渡层可以用来控制模型复杂度。 它通过1×1卷积层来减小通道数，并使用步幅为2的平均汇聚层减半高和宽，从而进一步降低模型复杂度 。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">def transition_block(input_channels, num_channels):</span><br><span class="line">    return nn.Sequential(</span><br><span class="line">        nn.BatchNorm2d(input_channels), nn.ReLU(),</span><br><span class="line">        nn.Conv2d(input_channels, num_channels, kernel_size=1),</span><br><span class="line">        nn.AvgPool2d(kernel_size=2, stride=2))</span><br></pre></td></tr></table></figure>
-
-<h2 id="DenseNet模型"><a href="#DenseNet模型" class="headerlink" title="DenseNet模型"></a>DenseNet模型</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">b1 = nn.Sequential(</span><br><span class="line">    nn.Conv2d(1, 64, kernel_size=7, stride=2, padding=3),</span><br><span class="line">    nn.BatchNorm2d(64), nn.ReLU(),</span><br><span class="line">    nn.MaxPool2d(kernel_size=3, stride=2, padding=1))</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"># `num_channels`为当前的通道数</span><br><span class="line">num_channels, growth_rate = 64, 32</span><br><span class="line">num_convs_in_dense_blocks = [4, 4, 4, 4]</span><br><span class="line">blks = []</span><br><span class="line">for i, num_convs in enumerate(num_convs_in_dense_blocks):</span><br><span class="line">    blks.append(DenseBlock(num_convs, num_channels, growth_rate))</span><br><span class="line">    # 上一个稠密块的输出通道数</span><br><span class="line">    num_channels += num_convs * growth_rate</span><br><span class="line">    # 在稠密块之间添加一个转换层，使通道数量减半</span><br><span class="line">    if i != len(num_convs_in_dense_blocks) - 1:</span><br><span class="line">        blks.append(transition_block(num_channels, num_channels // 2))</span><br><span class="line">        num_channels = num_channels // 2</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">net = nn.Sequential(</span><br><span class="line">    b1, *blks,</span><br><span class="line">    nn.BatchNorm2d(num_channels), nn.ReLU(),</span><br><span class="line">    nn.AdaptiveMaxPool2d((1, 1)),</span><br><span class="line">    nn.Flatten(),</span><br><span class="line">    nn.Linear(num_channels, 10))</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><ul>
-<li>在跨层连接上，不同于ResNet中将输入与输出相加，稠密连接网络（DenseNet）在通道维上连结输入与输出。</li>
-<li>DenseNet的主要构建模块是稠密块和过渡层。</li>
-<li>在构建DenseNet时，我们需要通过添加过渡层来控制网络的维数，从而再次减少信道的数量。</li>
-</ul>
+                <p>关于byy的一些收获：</p>
+<p>（1）对自己该以什么样的态度面对别人有了一些新的理解，我也更加了解更适合自己的展示姿态，性格呈现，真诚待人。</p>
+<p>（2）一个小思考，对于两种情况，1：拥有长久的过去，但已经是过去；2：短暂的现在，但是是现在进行时。从伦理上讲，选择哪一种情况更为合理些？是否有这样的价值观，即，和过去断除，虽然长久，但是过去，不值得留意，应该负责的是当前的。二者表面上是1远胜于2，但理性上不具备可比性，2完胜。</p>
+<p>（3）说不难过是假的，但要拿得起，放得下。</p>
+<p>（4）请你尊重我。</p>
 
                 
             </div>
@@ -516,7 +496,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://huizhilei.github.io/2021/12/06/DenseNet/">https://huizhilei.github.io/2021/12/06/DenseNet/</a>
+                    <a href="https://huizhilei.github.io/2021/12/06/%E6%9C%80%E8%BF%91%E7%9A%84%E4%B8%80%E4%BB%B6%E4%BA%8B/">https://huizhilei.github.io/2021/12/06/%E6%9C%80%E8%BF%91%E7%9A%84%E4%B8%80%E4%BB%B6%E4%BA%8B/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -723,9 +703,10 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
                 <a href="/2021/12/06/%E6%9C%80%E8%BF%91%E7%9A%84%E4%B8%80%E4%BB%B6%E4%BA%8B/">
                     <div class="card-image">
@@ -743,9 +724,9 @@
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2021-12-06
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-12-06
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-user fa-fw"></i>
@@ -754,6 +735,7 @@
                         </span>
                     </div>
                 </div>
+
                 
             </div>
         </div>
@@ -764,13 +746,13 @@
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2021/12/03/ResNet/">
+                <a href="/2021/12/06/DenseNet/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/11.jpg" class="responsive-img" alt="ResNet">
+                        <img src="/medias/featureimages/6.jpg" class="responsive-img" alt="DenseNet">
                         
-                        <span class="card-title">ResNet</span>
+                        <span class="card-title">DenseNet</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -781,7 +763,7 @@
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2021-12-03
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-12-06
                             </span>
                         <span class="publish-author">
                             
