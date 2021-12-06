@@ -4,11 +4,9 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="ResNet, 寂寞沙洲冷">
-    <meta name="description" content="残差网络（ResNet） 随着我们设计越来越深的网络，深刻理解“新添加的层如何提升神经网络的性能”变得至关重要。更重要的是设计网络的能力，在这种网络中，添加层会使网络更具表现力， 为了取得质的突破，我们需要一些数学基础知识。 
-函数类
-
-因">
+    <meta name="keywords" content="DenseNet, 寂寞沙洲冷">
+    <meta name="description" content="稠密连接网络（DenseNet） ResNet极大地改变了如何参数化深层网络中函数的观点。 稠密连接网络（DenseNet） [Huang et al., 2017]在某种程度上是ResNet的逻辑扩展。让我们先从数学上了解一下。 
+从Re">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -20,7 +18,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>ResNet | 寂寞沙洲冷</title>
+    <title>DenseNet | 寂寞沙洲冷</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.min.css">
@@ -312,12 +310,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/11.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/6.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">ResNet</h1>
+                    <h1 class="description center-align post-title">DenseNet</h1>
                 </div>
             </div>
         </div>
@@ -445,7 +443,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2021-12-03
+                    2021-12-06
                 </div>
                 
 
@@ -466,37 +464,31 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="残差网络（ResNet）"><a href="#残差网络（ResNet）" class="headerlink" title="残差网络（ResNet）"></a>残差网络（ResNet）</h1><p> 随着我们设计越来越深的网络，深刻理解“新添加的层如何提升神经网络的性能”变得至关重要。更重要的是设计网络的能力，在这种网络中，添加层会使网络更具表现力， 为了取得质的突破，我们需要一些<strong>数学基础知识</strong>。 </p>
-<h2 id="函数类"><a href="#函数类" class="headerlink" title="函数类"></a>函数类</h2><p><img src="0.jpg"></p>
+                <h1 id="稠密连接网络（DenseNet）"><a href="#稠密连接网络（DenseNet）" class="headerlink" title="稠密连接网络（DenseNet）"></a>稠密连接网络（DenseNet）</h1><p> ResNet极大地改变了如何参数化深层网络中函数的观点。 <em>稠密连接网络</em>（DenseNet） [<a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_references/zreferences.html#huang-liu-van-der-maaten-ea-2017">Huang et al., 2017]</a>在某种程度上是ResNet的逻辑扩展。让我们先从数学上了解一下。 </p>
+<h2 id="从ResNet到DenseNet"><a href="#从ResNet到DenseNet" class="headerlink" title="从ResNet到DenseNet"></a>从ResNet到DenseNet</h2><p><img src="0.jpg"></p>
 <p><img src="1.jpg"></p>
-<p><strong>因此，只有当较复杂的函数类包含较小的函数类时，我们才能确保提高它们的性能。 对于深度神经网络，如果我们能将新添加的层训练成<em>恒等映射</em>（identity function）f(x)=x，新模型和原模型将同样有效。 同时，由于新模型可能得出更优的解来拟合训练数据集，因此添加层似乎更容易降低训练误差。</strong></p>
-<p>针对这一问题，何恺明等人提出了<em>残差网络</em>（ResNet） [<a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_references/zreferences.html#he-zhang-ren-ea-2016">He et al., 2016a]</a>。 它在2015年的ImageNet图像识别挑战赛夺魁，并深刻影响了后来的深度神经网络的设计。 <strong>残差网络的核心思想是：每个附加层都应该更容易地包含原始函数作为其元素之一。</strong> 于是，<em>残差块</em>（residual blocks）便诞生了，这个设计对如何建立深层神经网络产生了深远的影响。 凭借它，ResNet赢得了2015年ImageNet大规模视觉识别挑战赛。</p>
-<h2 id="残差块"><a href="#残差块" class="headerlink" title="残差块"></a>残差块</h2><p>让我们聚焦于神经网络局部：如图 <a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_convolutional-modern/resnet.html#fig-residual-block">图7.6.2</a>所示，假设我们的原始输入为x，而希望学出的理想映射为f(x)（作为 <a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_convolutional-modern/resnet.html#fig-residual-block">图7.6.2</a>上方激活函数的输入）。 <a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_convolutional-modern/resnet.html#fig-residual-block">图7.6.2</a>左图虚线框中的部分需要直接拟合出该映射f(x)，而右图虚线框中的部分则需要拟合出残差映射f(x)−x。 残差映射在现实中往往更容易优化。 以本节开头提到的恒等映射作为我们希望学出的理想映射f(x)，我们只需将 <a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_convolutional-modern/resnet.html#fig-residual-block">图7.6.2</a>中右图虚线框内上方的加权运算（如仿射）的权重和偏置参数设成0，那么f(x)即为恒等映射。 实际中，当理想映射f(x)极接近于恒等映射时，残差映射也易于捕捉恒等映射的细微波动。 <a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_convolutional-modern/resnet.html#fig-residual-block">图7.6.2</a>右图是ResNet的基础架构–<em>残差块</em>（residual block）。 在残差块中，输入可通过跨层数据线路更快地向前传播。 </p>
-<p><img src="2.jpg"></p>
-<p>###################################################################<strong>右方的残差块结构可以很容易的优化成恒等映射，即右方的残差网络添加新的残差块之后可以确保复杂网络能够包含较小网络，从而确保整个网络能够朝着更优化的结果。</strong></p>
-<p>###################################################################</p>
-<p>ResNet沿用了VGG完整的3×3卷积层设计。 残差块里首先有2个有相同输出通道数的3×3卷积层。 每个卷积层后接一个批量规范化层和ReLU激活函数。 <strong>然后我们通过跨层数据通路，跳过这2个卷积运算，将输入直接加在最后的ReLU激活函数前。 这样的设计要求2个卷积层的输出与输入形状一样，从而可以相加。 如果想改变通道数，就需要引入一个额外的1×1卷积层来将输入变换成需要的形状后再做相加运算。</strong> 残差块的实现如下： </p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">import torch</span><br><span class="line">from torch import nn</span><br><span class="line">from torch.nn import functional as F</span><br><span class="line">from d2l import torch as d2l</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Residual(nn.Module):  #@save</span><br><span class="line">    def __init__(self, input_channels, num_channels,</span><br><span class="line">                 use_1x1conv=False, strides=1):</span><br><span class="line">        super().__init__()</span><br><span class="line">        self.conv1 = nn.Conv2d(input_channels, num_channels,</span><br><span class="line">                               kernel_size=3, padding=1, stride=strides)</span><br><span class="line">        self.conv2 = nn.Conv2d(num_channels, num_channels,</span><br><span class="line">                               kernel_size=3, padding=1)</span><br><span class="line">        if use_1x1conv:</span><br><span class="line">            self.conv3 = nn.Conv2d(input_channels, num_channels,</span><br><span class="line">                                   kernel_size=1, stride=strides)</span><br><span class="line">        else:</span><br><span class="line">            self.conv3 = None</span><br><span class="line">        self.bn1 = nn.BatchNorm2d(num_channels)</span><br><span class="line">        self.bn2 = nn.BatchNorm2d(num_channels)</span><br><span class="line"></span><br><span class="line">    def forward(self, X):</span><br><span class="line">        Y = F.relu(self.bn1(self.conv1(X)))</span><br><span class="line">        Y = self.bn2(self.conv2(Y))</span><br><span class="line">        if self.conv3:</span><br><span class="line">            X = self.conv3(X)</span><br><span class="line">        Y += X</span><br><span class="line">        return F.relu(Y)</span><br></pre></td></tr></table></figure>
+<h2 id="稠密块体"><a href="#稠密块体" class="headerlink" title="稠密块体"></a>稠密块体</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">import torch</span><br><span class="line">from torch import nn</span><br><span class="line">from d2l import torch as d2l</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def conv_block(input_channels, num_channels):</span><br><span class="line">    return nn.Sequential(</span><br><span class="line">        nn.BatchNorm2d(input_channels), nn.ReLU(),</span><br><span class="line">        nn.Conv2d(input_channels, num_channels, kernel_size=3, padding=1))</span><br></pre></td></tr></table></figure>
+
+<p> <strong>一个<em>稠密块</em>由多个卷积块组成，每个卷积块使用相同数量的输出信道。 然而，在前向传播中，我们将每个卷积块的输入和输出在通道维上连结。</strong> </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">class DenseBlock(nn.Module):</span><br><span class="line">    def __init__(self, num_convs, input_channels, num_channels):</span><br><span class="line">        super(DenseBlock, self).__init__()</span><br><span class="line">        layer = []</span><br><span class="line">        for i in range(num_convs):</span><br><span class="line">            layer.append(conv_block(</span><br><span class="line">                num_channels * i + input_channels, num_channels))</span><br><span class="line">        self.net = nn.Sequential(*layer)</span><br><span class="line"></span><br><span class="line">    def forward(self, X):</span><br><span class="line">        for blk in self.net:</span><br><span class="line">            Y = blk(X)</span><br><span class="line">            # 连接通道维度上每个块的输入和输出</span><br><span class="line">            X = torch.cat((X, Y), dim=1)</span><br><span class="line">        return X</span><br></pre></td></tr></table></figure>
 
 
 
+<h2 id="过渡层"><a href="#过渡层" class="headerlink" title="过渡层"></a>过渡层</h2><p> 由于每个稠密块都会带来通道数的增加，使用过多则会过于复杂化模型。 而过渡层可以用来控制模型复杂度。 它通过1×1卷积层来减小通道数，并使用步幅为2的平均汇聚层减半高和宽，从而进一步降低模型复杂度 。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">def transition_block(input_channels, num_channels):</span><br><span class="line">    return nn.Sequential(</span><br><span class="line">        nn.BatchNorm2d(input_channels), nn.ReLU(),</span><br><span class="line">        nn.Conv2d(input_channels, num_channels, kernel_size=1),</span><br><span class="line">        nn.AvgPool2d(kernel_size=2, stride=2))</span><br></pre></td></tr></table></figure>
 
+<h2 id="DenseNet模型"><a href="#DenseNet模型" class="headerlink" title="DenseNet模型"></a>DenseNet模型</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">b1 = nn.Sequential(</span><br><span class="line">    nn.Conv2d(1, 64, kernel_size=7, stride=2, padding=3),</span><br><span class="line">    nn.BatchNorm2d(64), nn.ReLU(),</span><br><span class="line">    nn.MaxPool2d(kernel_size=3, stride=2, padding=1))</span><br></pre></td></tr></table></figure>
 
-<h2 id="ResNet模型"><a href="#ResNet模型" class="headerlink" title="ResNet模型"></a>ResNet模型</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">b1 = nn.Sequential(nn.Conv2d(1, 64, kernel_size=7, stride=2, padding=3),</span><br><span class="line">                   nn.BatchNorm2d(64), nn.ReLU(),</span><br><span class="line">                   nn.MaxPool2d(kernel_size=3, stride=2, padding=1))</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"># `num_channels`为当前的通道数</span><br><span class="line">num_channels, growth_rate = 64, 32</span><br><span class="line">num_convs_in_dense_blocks = [4, 4, 4, 4]</span><br><span class="line">blks = []</span><br><span class="line">for i, num_convs in enumerate(num_convs_in_dense_blocks):</span><br><span class="line">    blks.append(DenseBlock(num_convs, num_channels, growth_rate))</span><br><span class="line">    # 上一个稠密块的输出通道数</span><br><span class="line">    num_channels += num_convs * growth_rate</span><br><span class="line">    # 在稠密块之间添加一个转换层，使通道数量减半</span><br><span class="line">    if i != len(num_convs_in_dense_blocks) - 1:</span><br><span class="line">        blks.append(transition_block(num_channels, num_channels // 2))</span><br><span class="line">        num_channels = num_channels // 2</span><br></pre></td></tr></table></figure>
 
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">def resnet_block(input_channels, num_channels, num_residuals,</span><br><span class="line">                 first_block=False):</span><br><span class="line">    blk = []</span><br><span class="line">    for i in range(num_residuals):</span><br><span class="line">        if i == 0 and not first_block:</span><br><span class="line">            blk.append(Residual(input_channels, num_channels,</span><br><span class="line">                                use_1x1conv=True, strides=2))</span><br><span class="line">        else:</span><br><span class="line">            blk.append(Residual(num_channels, num_channels))</span><br><span class="line">    return blk</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">b2 = nn.Sequential(*resnet_block(64, 64, 2, first_block=True))</span><br><span class="line">b3 = nn.Sequential(*resnet_block(64, 128, 2))</span><br><span class="line">b4 = nn.Sequential(*resnet_block(128, 256, 2))</span><br><span class="line">b5 = nn.Sequential(*resnet_block(256, 512, 2))</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">net = nn.Sequential(b1, b2, b3, b4, b5,</span><br><span class="line">                    nn.AdaptiveAvgPool2d((1,1)),</span><br><span class="line">                    nn.Flatten(), nn.Linear(512, 10))</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">net = nn.Sequential(</span><br><span class="line">    b1, *blks,</span><br><span class="line">    nn.BatchNorm2d(num_channels), nn.ReLU(),</span><br><span class="line">    nn.AdaptiveMaxPool2d((1, 1)),</span><br><span class="line">    nn.Flatten(),</span><br><span class="line">    nn.Linear(num_channels, 10))</span><br></pre></td></tr></table></figure>
 
 
 
 <h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><ul>
-<li>学习嵌套函数（nested function）是训练神经网络的理想情况。在深层神经网络中，学习另一层作为恒等映射（identity function）较容易（尽管这是一个极端情况）。</li>
-<li>残差映射可以更容易地学习同一函数，例如将权重层中的参数近似为零。</li>
-<li>利用残差块（residual blocks）可以训练出一个有效的深层神经网络：输入可以通过层间的残余连接更快地向前传播。</li>
-<li>残差网络（ResNet）对随后的深层神经网络设计产生了深远影响，无论是卷积类网络还是全连接类网络。</li>
+<li>在跨层连接上，不同于ResNet中将输入与输出相加，稠密连接网络（DenseNet）在通道维上连结输入与输出。</li>
+<li>DenseNet的主要构建模块是稠密块和过渡层。</li>
+<li>在构建DenseNet时，我们需要通过添加过渡层来控制网络的维数，从而再次减少信道的数量。</li>
 </ul>
 
                 
@@ -524,7 +516,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://huizhilei.github.io/2021/12/03/ResNet/">https://huizhilei.github.io/2021/12/03/ResNet/</a>
+                    <a href="https://huizhilei.github.io/2021/12/06/DenseNet/">https://huizhilei.github.io/2021/12/06/DenseNet/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -731,9 +723,10 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
                 <a href="/2021/12/06/DenseNet/">
                     <div class="card-image">
@@ -751,9 +744,9 @@
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2021-12-06
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-12-06
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-user fa-fw"></i>
@@ -762,6 +755,7 @@
                         </span>
                     </div>
                 </div>
+
                 
             </div>
         </div>
@@ -772,13 +766,13 @@
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2021/12/03/%E6%89%B9%E9%87%8F%E5%BD%92%E4%B8%80%E5%8C%96/">
+                <a href="/2021/12/03/ResNet/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/14.jpg" class="responsive-img" alt="批量归一化">
+                        <img src="/medias/featureimages/11.jpg" class="responsive-img" alt="ResNet">
                         
-                        <span class="card-title">批量归一化</span>
+                        <span class="card-title">ResNet</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
