@@ -4,8 +4,8 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="微调, 寂寞沙洲冷">
-    <meta name="description" content="微调应用迁移学习（transfer learning）将从源数据集学到的知识迁移到目标数据集。 例如，尽管ImageNet数据集中的大多数图像与椅子无关，但在此数据集上训练的模型可能会提取更常规的图像特征，这有助于识别边缘、纹理、形状和对象">
+    <meta name="keywords" content="目标检测, 寂寞沙洲冷">
+    <meta name="description" content="目标检测和边界框在图像分类任务中，我们假设图像中只有一个主要物体对象，我们只关注如何识别其类别。 然而，很多时候图像里有多个我们感兴趣的目标，我们不仅想知道它们的类别，还想得到它们在图像中的具体位置。 在计算机视觉里，我们将这类任务称为目标">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -17,7 +17,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>微调 | 寂寞沙洲冷</title>
+    <title>目标检测 | 寂寞沙洲冷</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.min.css">
@@ -309,12 +309,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/13.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/20.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">微调</h1>
+                    <h1 class="description center-align post-title">目标检测</h1>
                 </div>
             </div>
         </div>
@@ -442,7 +442,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2021-12-08
+                    2021-12-10
                 </div>
                 
 
@@ -463,20 +463,24 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="微调"><a href="#微调" class="headerlink" title="微调"></a>微调</h1><p><strong>应用<em>迁移学习</em>（transfer learning）将从<em>源数据集</em>学到的知识迁移到<em>目标数据集</em>。</strong> 例如，<strong>尽管ImageNet数据集中的大多数图像与椅子无关，但在此数据集上训练的模型可能会提取更常规的图像特征，这有助于识别边缘、纹理、形状和对象合成。 这些类似的功能也可能有效地识别椅子。</strong> </p>
-<h2 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h2><p> 在本节中，我们将介绍迁移学习中的常见技巧:<em>微调</em>（fine-tuning）。如 <a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_computer-vision/fine-tuning.html#fig-finetune">图13.2.1</a>所示，微调包括以下四个步骤： </p>
-<ol>
-<li>在源数据集（例如ImageNet数据集）上预训练神经网络模型，即<em>源模型</em>。</li>
-<li>创建一个新的神经网络模型，即<em>目标模型</em>。<strong>这将复制源模型上的所有模型设计及其参数，但输出层除外。我们假定这些模型参数包含从源数据集中学到的知识，这些知识也将适用于目标数据集。我们还假设源模型的输出层与源数据集的标签密切相关；因此不在目标模型中使用该层。</strong></li>
-<li>向目标模型添加输出层，其输出数量是目标数据集中的类别数。然后随机初始化该层的模型参数。</li>
-<li>在目标数据集（如椅子数据集）上训练目标模型。<strong>输出层将从头开始进行训练，而所有其他层的参数将根据源模型的参数进行微调。</strong></li>
-</ol>
-<p><img src="0.jpg"></p>
-<p> <strong>当目标数据集比源数据集小得多时，微调有助于提高模型的泛化能力。</strong> </p>
-<h2 id="小结¶"><a href="#小结¶" class="headerlink" title="小结¶"></a>小结<a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_computer-vision/fine-tuning.html#id7">¶</a></h2><ul>
-<li>迁移学习将从源数据集中学到的知识“迁移”到目标数据集，微调是迁移学习的常见技巧。</li>
-<li>除输出层外，目标模型从源模型中复制所有模型设计及其参数，并根据目标数据集对这些参数进行微调。但是，目标模型的输出层需要从头开始训练。</li>
-<li>通常，微调参数使用较小的学习率，而从头开始训练输出层可以使用更大的学习率。</li>
+                <h1 id="目标检测和边界框"><a href="#目标检测和边界框" class="headerlink" title="目标检测和边界框"></a>目标检测和边界框</h1><p><strong>在图像分类任务中，我们假设图像中只有一个主要物体对象，我们只关注如何识别其类别。</strong> 然而，很多时候图像里有多个我们感兴趣的目标，我们不仅想知道它们的类别，还想得到它们在图像中的具体位置。 在计算机视觉里，我们将这类任务称为<em>目标检测</em>（object detection）或<em>目标识别</em>（object recognition）。 </p>
+<h2 id="边界框"><a href="#边界框" class="headerlink" title="边界框"></a>边界框</h2><p> 在目标检测中，我们通常使用<em>边界框</em>（bounding box）来描述对象的空间位置。 边界框是矩形的，<strong>由矩形左上角的以及右下角的x和y坐标决定。 另一种常用的边界框表示方法是边界框中心的(x,y)轴坐标以及框的宽度和高度。</strong> </p>
+<p> 在这里，我们定义在这两种表示法之间进行转换的函数：<code>box_corner_to_center</code>从两角表示法转换为中心宽度表示法，而<code>box_center_to_corner</code>反之亦然。 <strong>输入参数<code>boxes</code>可以是长度为4的张量，也可以是形状为（n，4）的二维张量，其中n是边界框的数量。</strong> </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">#@save</span><br><span class="line">def box_corner_to_center(boxes):</span><br><span class="line">    &quot;&quot;&quot;从（左上，右下）转换到（中间，宽度，高度）&quot;&quot;&quot;</span><br><span class="line">    x1, y1, x2, y2 = boxes[:, 0], boxes[:, 1], boxes[:, 2], boxes[:, 3]</span><br><span class="line">    cx = (x1 + x2) / 2</span><br><span class="line">    cy = (y1 + y2) / 2</span><br><span class="line">    w = x2 - x1</span><br><span class="line">    h = y2 - y1</span><br><span class="line">    boxes = torch.stack((cx, cy, w, h), axis=-1)</span><br><span class="line">    return boxes</span><br><span class="line"></span><br><span class="line">#@save</span><br><span class="line">def box_center_to_corner(boxes):</span><br><span class="line">    &quot;&quot;&quot;从（中间，宽度，高度）转换到（左上，右下）&quot;&quot;&quot;</span><br><span class="line">    cx, cy, w, h = boxes[:, 0], boxes[:, 1], boxes[:, 2], boxes[:, 3]</span><br><span class="line">    x1 = cx - 0.5 * w</span><br><span class="line">    y1 = cy - 0.5 * h</span><br><span class="line">    x2 = cx + 0.5 * w</span><br><span class="line">    y2 = cy + 0.5 * h</span><br><span class="line">    boxes = torch.stack((x1, y1, x2, y2), axis=-1)</span><br><span class="line">    return boxes</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<p><strong>图像中坐标的原点是图像的左上角，向右的方向为x轴的正方向，向下的方向为y轴的正方向。</strong> </p>
+<p> 我们可以将边界框在图中画出，以检查其是否准确。 画之前，我们定义一个辅助函数<code>bbox_to_rect</code>。 它将边界框表示成<code>matplotlib</code>的边界框格式。 </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">#@save</span><br><span class="line">def bbox_to_rect(bbox, color):</span><br><span class="line">    # 将边界框(左上x,左上y,右下x,右下y)格式转换成matplotlib格式：</span><br><span class="line">    # ((左上x,左上y),宽,高)</span><br><span class="line">    return d2l.plt.Rectangle(</span><br><span class="line">        xy=(bbox[0], bbox[1]), width=bbox[2]-bbox[0], height=bbox[3]-bbox[1],</span><br><span class="line">        fill=False, edgecolor=color, linewidth=2)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">fig = d2l.plt.imshow(img)</span><br><span class="line">fig.axes.add_patch(bbox_to_rect(dog_bbox, &#x27;blue&#x27;))</span><br><span class="line">fig.axes.add_patch(bbox_to_rect(cat_bbox, &#x27;red&#x27;));</span><br></pre></td></tr></table></figure>
+
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><ul>
+<li>目标检测不仅可以识别图像中所有感兴趣的物体，还能识别它们的位置，该位置通常由矩形边界框表示。</li>
+<li>我们可以在两种常用的边界框表示（中间，宽度，高度）和（左上，右下）坐标之间进行转换。</li>
 </ul>
 
                 
@@ -504,7 +508,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://huizhilei.github.io/2021/12/08/%E5%BE%AE%E8%B0%83/">https://huizhilei.github.io/2021/12/08/%E5%BE%AE%E8%B0%83/</a>
+                    <a href="https://huizhilei.github.io/2021/12/10/%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B/">https://huizhilei.github.io/2021/12/10/%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -715,13 +719,13 @@
             <div class="article-badge left-badge text-color">
                 <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/2021/12/10/%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B/">
+                <a href="/2021/12/10/%E9%94%9A%E6%A1%86/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/20.jpg" class="responsive-img" alt="目标检测">
+                        <img src="/medias/featureimages/4.jpg" class="responsive-img" alt="锚框">
                         
-                        <span class="card-title">目标检测</span>
+                        <span class="card-title">锚框</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -752,13 +756,13 @@
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2021/12/07/%E5%9B%BE%E5%83%8F%E5%A2%9E%E5%B9%BF/">
+                <a href="/2021/12/08/%E5%BE%AE%E8%B0%83/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/2.jpg" class="responsive-img" alt="图像增广">
+                        <img src="/medias/featureimages/13.jpg" class="responsive-img" alt="微调">
                         
-                        <span class="card-title">图像增广</span>
+                        <span class="card-title">微调</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -769,7 +773,7 @@
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2021-12-07
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-12-08
                             </span>
                         <span class="publish-author">
                             
