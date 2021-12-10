@@ -4,8 +4,8 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="多尺度目标检测, 寂寞沙洲冷">
-    <meta name="description" content="多尺度目标检测 我们以输入图像的每个像素为中心，生成了多个锚框。 基本而言，这些锚框代表了图像不同区域的样本。 然而，如果为每个像素都生成的锚框，我们最终可能会得到太多需要计算的锚框。 想象一个561×728的输入图像，如果以每个像素为中心">
+    <meta name="keywords" content="SSD, 寂寞沙洲冷">
+    <meta name="description" content="SSD | 寂寞沙洲冷">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -17,7 +17,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>多尺度目标检测 | 寂寞沙洲冷</title>
+    <title>SSD | 寂寞沙洲冷</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.min.css">
@@ -309,12 +309,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/10.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/12.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">多尺度目标检测</h1>
+                    <h1 class="description center-align post-title">SSD</h1>
                 </div>
             </div>
         </div>
@@ -463,26 +463,7 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="多尺度目标检测"><a href="#多尺度目标检测" class="headerlink" title="多尺度目标检测"></a>多尺度目标检测</h1><p> 我们以输入图像的每个像素为中心，生成了多个锚框。 基本而言，这些锚框代表了图像不同区域的样本。 然而，<strong>如果为每个像素都生成的锚框，我们最终可能会得到太多需要计算的锚框。</strong> 想象一个561×728的输入图像，如果以每个像素为中心生成五个形状不同的锚框，就需要在图像上标记和预测超过200万个锚框（561×728×5）。 </p>
-<h2 id="多尺度锚框（具体见原文）"><a href="#多尺度锚框（具体见原文）" class="headerlink" title="多尺度锚框（具体见原文）"></a>多尺度锚框（具体见原文）</h2><p> 你可能会意识到，减少图像上的锚框数量并不困难。 比如，我们可以在输入图像中均匀采样一小部分像素，并以它们为中心生成锚框。 <strong>此外，在不同尺度下，我们可以生成不同数量和不同大小的锚框。 直观地说，比起较大的目标，较小的目标在图像上出现的可能性更多样。</strong> 例如，1×1、1×21×2和2×2的目标可以分别以4、2和1种可能的方式出现在2×2图像上。 <strong>因此，当使用较小的锚框检测较小的物体时，我们可以采样更多的区域，而对于较大的物体，我们可以采样较少的区域。</strong> </p>
-<p>@@@@@@@@@@@@@@@@@@</p>
-<p><strong><u><em>即均匀取样，按不同尺度大小生成锚框。</u></em></strong></p>
-<p>@@@@@@@@@@@@@@@@@@</p>
-<h2 id="多尺度检测"><a href="#多尺度检测" class="headerlink" title="多尺度检测"></a>多尺度检测</h2><p>下面，我们介绍一种基于CNN的多尺度目标检测方法 </p>
-<p>在某种规模上，假设我们有c张形状为h×w的特征图。 使用 <a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_computer-vision/multiscale-object-detection.html#subsec-multiscale-anchor-boxes">13.5.1节</a>中的方法，我们生成了hw组锚框，其中每组都有a个中心相同的锚框。接下来，每个锚框都根据真实值边界框来标记了类和偏移量。 在当前尺度下，目标检测模型需要预测输入图像上hw组锚框类别和偏移量，其中不同组锚框具有不同的中心。 </p>
-<p> 假设此处的c张特征图是CNN基于输入图像的正向传播算法获得的中间输出。 既然每张特征图上都有hw个不同的空间位置，那么相同空间位置可以看作含有c个单元。 <strong>根据 <a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_convolutional-neural-networks/conv-layer.html#sec-conv-layer">6.2节</a>中对感受野的定义，特征图在相同空间位置的c个单元在输入图像上的感受野相同： 它们表征了同一感受野内的输入图像信息。 因此，我们可以将特征图在同一空间位置的c个单元变换为使用此空间位置生成的a个锚框类别和偏移量。 <em>本质上，我们用输入图像在某个感受野区域内的信息，来预测输入图像上与该区域位置相近的锚框类别和偏移量。</em></strong> </p>
-<p>！！！！！！！！！！！！！！！！！！！！！！！！！！！！</p>
-<p>此处重要</p>
-<p>！！！！！！！！！！！！！！！！！！！！！！！！！！！！</p>
-<p><strong>当不同层的特征图在输入图像上分别拥有不同大小的感受野时，它们可以用于检测不同大小的目标。 例如，我们可以设计一个神经网络，其中靠近输出层的特征图单元具有更宽的感受野，这样它们就可以从输入图像中检测到较大的目标。</strong></p>
-<p><strong>简言之，我们可以利用深层神经网络在多个层次上对图像进行分层表示，从而实现多尺度目标检测。</strong></p>
-<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><ul>
-<li>在多个尺度下，我们可以生成不同尺寸的锚框来检测不同尺寸的目标。</li>
-<li>通过定义特征图的形状，我们可以决定任何图像上均匀采样的锚框的中心。</li>
-<li>我们使用输入图像在某个感受野区域内的信息，来预测输入图像上与该区域位置相近的锚框类别和偏移量。</li>
-<li>我们可以通过深入学习，在多个层次上的图像分层表示进行多尺度目标检测。</li>
-</ul>
-
+                
                 
             </div>
             <hr/>
@@ -508,7 +489,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://huizhilei.github.io/2021/12/10/%E5%A4%9A%E5%B0%BA%E5%BA%A6%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B/">https://huizhilei.github.io/2021/12/10/%E5%A4%9A%E5%B0%BA%E5%BA%A6%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B/</a>
+                    <a href="https://huizhilei.github.io/2021/12/10/SSD/">https://huizhilei.github.io/2021/12/10/SSD/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -715,9 +696,10 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
                 <a href="/2021/12/10/SSD/">
                     <div class="card-image">
@@ -735,9 +717,9 @@
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2021-12-10
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-12-10
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-user fa-fw"></i>
@@ -746,6 +728,7 @@
                         </span>
                     </div>
                 </div>
+
                 
             </div>
         </div>
@@ -756,13 +739,13 @@
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2021/12/10/%E9%94%9A%E6%A1%86/">
+                <a href="/2021/12/10/%E5%A4%9A%E5%B0%BA%E5%BA%A6%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/4.jpg" class="responsive-img" alt="锚框">
+                        <img src="/medias/featureimages/10.jpg" class="responsive-img" alt="多尺度目标检测">
                         
-                        <span class="card-title">锚框</span>
+                        <span class="card-title">多尺度目标检测</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
