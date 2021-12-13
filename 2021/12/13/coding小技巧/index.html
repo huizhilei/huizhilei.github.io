@@ -477,6 +477,8 @@
 <p><img src="1.jpg"></p>
 <p>其指明了，img_tensor必须是(torch.Tensor, numpy.array, or string/blobname)这几种类型，</p>
 <p>故，当img_PIL = Image.open(image_path)之后，我们必须img_array = np.array(img_PIL)将其转化为numpy.array类型。</p>
+<h2 id="为什么经常用transforms-ToTensor"><a href="#为什么经常用transforms-ToTensor" class="headerlink" title="为什么经常用transforms.ToTensor?"></a>为什么经常用transforms.ToTensor?</h2><p><img src="2.jpg"></p>
+<p><strong>因为，tensor数据类型 包装了神经网络理论基础所需要的一些参数。</strong></p>
 
                 
             </div>
