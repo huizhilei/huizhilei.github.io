@@ -4,12 +4,8 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="coding小技巧, 寂寞沙洲冷">
-    <meta name="description" content="调用包时，可以通过ctrl+单机查看函数参数格式，参数形状等要求。
-
-如以上代码，若ctrl+单机add_image,可以查看到以下内容
-
-其指明了，img_tensor必须是(torch.Tensor, numpy.array, or s">
+    <meta name="keywords" content="DataLoader, 寂寞沙洲冷">
+    <meta name="description" content="1234567891011121314151617181920212223242526import torchvision# 准备的测试数据集from torch.utils.data import DataLoaderfrom torch">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -21,7 +17,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>coding小技巧 | 寂寞沙洲冷</title>
+    <title>DataLoader | 寂寞沙洲冷</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.min.css">
@@ -313,12 +309,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/12.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/11.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">coding小技巧</h1>
+                    <h1 class="description center-align post-title">DataLoader</h1>
                 </div>
             </div>
         </div>
@@ -432,13 +428,9 @@
             <div class="row tag-cate">
                 <div class="col s7">
                     
-                    <div class="article-tag">
-                        
-                            <a href="/tags/ctrl-%E5%8D%95%E6%9C%BA-%E5%92%8C-transform/">
-                                <span class="chip bg-color">ctrl+单机 和 transform</span>
-                            </a>
-                        
-                    </div>
+                          <div class="article-tag">
+                            <span class="chip bg-color">无标签</span>
+                          </div>
                     
                 </div>
                 <div class="col s5 right-align">
@@ -450,7 +442,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2021-12-13
+                    2021-12-14
                 </div>
                 
 
@@ -471,20 +463,13 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <p>调用包时，可以通过ctrl+单机查看函数参数格式，参数形状等要求。</p>
-<p><img src="0.jpg"></p>
-<p>如以上代码，若ctrl+单机add_image,可以查看到以下内容</p>
-<p><img src="1.jpg"></p>
-<p>其指明了，img_tensor必须是(torch.Tensor, numpy.array, or string/blobname)这几种类型，</p>
-<p>故，当img_PIL = Image.open(image_path)之后，我们必须img_array = np.array(img_PIL)将其转化为numpy.array类型。</p>
-<h2 id="为什么经常用transforms-ToTensor"><a href="#为什么经常用transforms-ToTensor" class="headerlink" title="为什么经常用transforms.ToTensor?"></a>为什么经常用transforms.ToTensor?</h2><p><img src="2.jpg"></p>
-<p><strong>因为，tensor数据类型 包装了神经网络理论基础所需要的一些参数。</strong></p>
-<p><strong>注：ctrl+p 可以查看函数所需要的参数</strong></p>
-<h3 id="常用的transform-多用ctrl-单机查看源码，主要看参数、输入和输出"><a href="#常用的transform-多用ctrl-单机查看源码，主要看参数、输入和输出" class="headerlink" title="常用的transform(多用ctrl+单机查看源码，主要看参数、输入和输出)"></a>常用的transform(多用ctrl+单机查看源码，主要看参数、输入和输出)</h3><h3 id="源码中也有很多样例，基本原理讲解"><a href="#源码中也有很多样例，基本原理讲解" class="headerlink" title="源码中也有很多样例，基本原理讲解"></a>源码中也有很多样例，基本原理讲解</h3><p>Compose</p>
-<p>ToTensor</p>
-<p>Normalize</p>
-<p>Resize</p>
-<h3 id="多看官方文档，即ctrl-单机，官方文档比百度准确"><a href="#多看官方文档，即ctrl-单机，官方文档比百度准确" class="headerlink" title="多看官方文档，即ctrl+单机，官方文档比百度准确"></a>多看官方文档，即ctrl+单机，官方文档比百度准确</h3>
+                <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">import torchvision</span><br><span class="line"></span><br><span class="line"># 准备的测试数据集</span><br><span class="line">from torch.utils.data import DataLoader</span><br><span class="line">from torch.utils.tensorboard import SummaryWriter</span><br><span class="line"></span><br><span class="line">test_data = torchvision.datasets.CIFAR10(&quot;./dataset&quot;, train=False, transform=torchvision.transforms.ToTensor())</span><br><span class="line"></span><br><span class="line">test_loader = DataLoader(dataset=test_data, batch_size=64, shuffle=True, num_workers=0, drop_last=True)</span><br><span class="line"></span><br><span class="line"># 测试数据集中第一张图片及target</span><br><span class="line">img, target = test_data[0]</span><br><span class="line">print(img.shape)</span><br><span class="line">print(target)</span><br><span class="line"></span><br><span class="line">writer = SummaryWriter(&quot;dataloader&quot;)</span><br><span class="line">for epoch in range(2):</span><br><span class="line">    step = 0</span><br><span class="line">    for data in test_loader:</span><br><span class="line">        imgs, targets = data     </span><br><span class="line">        # print(imgs.shape)</span><br><span class="line">        # print(targets)</span><br><span class="line">        writer.add_images(&quot;Epoch: &#123;&#125;&quot;.format(epoch), imgs, step)</span><br><span class="line">        step = step + 1</span><br><span class="line"></span><br><span class="line">writer.close()</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>for 循环中，imgs, targets = data 是将取到的64个tensor_img数据打包成（64， 3， 32， 32） ,将64个target打包成长度为64的tensor。</strong> </p>
+<p><img src="0..jpg"></p>
+
                 
             </div>
             <hr/>
@@ -510,7 +495,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://huizhilei.github.io/2021/12/13/coding%E5%B0%8F%E6%8A%80%E5%B7%A7/">https://huizhilei.github.io/2021/12/13/coding%E5%B0%8F%E6%8A%80%E5%B7%A7/</a>
+                    <a href="https://huizhilei.github.io/2021/12/14/DataLoader/">https://huizhilei.github.io/2021/12/14/DataLoader/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -547,11 +532,7 @@
                 <div class="post-meta__tag-list" style="display: inline-block;">
                     
                         <div class="article-tag">
-                            
-                                <a href="/tags/ctrl-%E5%8D%95%E6%9C%BA-%E5%92%8C-transform/">
-                                    <span class="chip bg-color">ctrl+单机 和 transform</span>
-                                </a>
-                            
+                            <span class="chip bg-color">无标签</span>
                         </div>
                     
                 </div>
@@ -721,17 +702,18 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
-                <a href="/2021/12/13/python-call-%E7%9A%84%E7%94%A8%E6%B3%95/">
+                <a href="/2021/12/14/DataLoader/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/17.jpg" class="responsive-img" alt="python__call__的用法">
+                        <img src="/medias/featureimages/11.jpg" class="responsive-img" alt="DataLoader">
                         
-                        <span class="card-title">python__call__的用法</span>
+                        <span class="card-title">DataLoader</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -741,9 +723,9 @@
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2021-12-13
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-12-14
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-user fa-fw"></i>
@@ -752,6 +734,7 @@
                         </span>
                     </div>
                 </div>
+
                 
             </div>
         </div>
@@ -762,13 +745,13 @@
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2021/12/13/torch-Dataset/">
+                <a href="/2021/12/13/python-call-%E7%9A%84%E7%94%A8%E6%B3%95/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/11.jpg" class="responsive-img" alt="torch_Dataset">
+                        <img src="/medias/featureimages/17.jpg" class="responsive-img" alt="python__call__的用法">
                         
-                        <span class="card-title">torch_Dataset</span>
+                        <span class="card-title">python__call__的用法</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
