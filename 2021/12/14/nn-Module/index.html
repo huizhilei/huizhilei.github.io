@@ -4,8 +4,11 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="动手学深度学习2021-11-26（2）, 寂寞沙洲冷">
-    <meta name="description" content="小土堆：save：1234567891011121314151617181920212223import torchimport torchvisionfrom torch import nnvgg16 = torchvision.mode">
+    <meta name="keywords" content="nn.Module, 寂寞沙洲冷">
+    <meta name="description" content="
+
+注意，所有神经网络模块都必须继承自该类，且必须override forward方法。
+">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -17,7 +20,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>动手学深度学习2021-11-26（2） | 寂寞沙洲冷</title>
+    <title>nn.Module | 寂寞沙洲冷</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.min.css">
@@ -309,12 +312,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/20.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/18.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">动手学深度学习2021-11-26（2）</h1>
+                    <h1 class="description center-align post-title">nn.Module</h1>
                 </div>
             </div>
         </div>
@@ -428,13 +431,9 @@
             <div class="row tag-cate">
                 <div class="col s7">
                     
-                    <div class="article-tag">
-                        
-                            <a href="/tags/%E8%AF%BB%E5%86%99%E6%96%87%E4%BB%B6/">
-                                <span class="chip bg-color">读写文件</span>
-                            </a>
-                        
-                    </div>
+                          <div class="article-tag">
+                            <span class="chip bg-color">无标签</span>
+                          </div>
                     
                 </div>
                 <div class="col s5 right-align">
@@ -446,7 +445,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2021-11-26
+                    2021-12-14
                 </div>
                 
 
@@ -467,47 +466,9 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h3 id="小土堆："><a href="#小土堆：" class="headerlink" title="小土堆："></a>小土堆：</h3><h4 id="save："><a href="#save：" class="headerlink" title="save："></a>save：</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">import torch</span><br><span class="line">import torchvision</span><br><span class="line">from torch import nn</span><br><span class="line"></span><br><span class="line">vgg16 = torchvision.models.vgg16(pretrained=False)</span><br><span class="line"># 保存方式1,同时保存模型结构+模型参数</span><br><span class="line">torch.save(vgg16, &quot;vgg16_method1.pth&quot;)</span><br><span class="line"></span><br><span class="line"># 保存方式2，只保存了模型参数（官方推荐）</span><br><span class="line">torch.save(vgg16.state_dict(), &quot;vgg16_method2.pth&quot;)</span><br><span class="line"></span><br><span class="line"># 陷阱   模型源码必须也要复制到新文件中</span><br><span class="line">class Tudui(nn.Module):</span><br><span class="line">    def __init__(self):</span><br><span class="line">        super(Tudui, self).__init__()</span><br><span class="line">        self.conv1 = nn.Conv2d(3, 64, kernel_size=3)</span><br><span class="line"></span><br><span class="line">    def forward(self, x):</span><br><span class="line">        x = self.conv1(x)</span><br><span class="line">        return x</span><br><span class="line"></span><br><span class="line">tudui = Tudui()</span><br><span class="line">torch.save(tudui, &quot;tudui_method1.pth&quot;)</span><br></pre></td></tr></table></figure>
-
-
-
-<h4 id="load："><a href="#load：" class="headerlink" title="load："></a>load：</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">model = torch.load(&quot;vgg16_method1.pth&quot;)</span><br><span class="line"># print(model)</span><br><span class="line"></span><br><span class="line"># 方式2，加载模型</span><br><span class="line">vgg16 = torchvision.models.vgg16(pretrained=False)</span><br><span class="line">vgg16.load_state_dict(torch.load(&quot;vgg16_method2.pth&quot;))</span><br><span class="line"># model = torch.load(&quot;vgg16_method2.pth&quot;)</span><br><span class="line"># print(vgg16)</span><br><span class="line"></span><br><span class="line"># 陷阱1</span><br><span class="line"># class Tudui(nn.Module):</span><br><span class="line">#     def __init__(self):</span><br><span class="line">#         super(Tudui, self).__init__()</span><br><span class="line">#         self.conv1 = nn.Conv2d(3, 64, kernel_size=3)</span><br><span class="line">#</span><br><span class="line">#     def forward(self, x):</span><br><span class="line">#         x = self.conv1(x)</span><br><span class="line">#         return x</span><br><span class="line"></span><br><span class="line">model = torch.load(&#x27;tudui_method1.pth&#x27;)</span><br><span class="line">print(model)</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-
-
-<h1 id="读写文件"><a href="#读写文件" class="headerlink" title="读写文件"></a>读写文件</h1><p> 有时我们对所学的模型足够满意，我们希望保存训练的模型以备将来在各种环境中使用（甚至可能在部署中进行预测）。此外，当运行一个耗时较长的训练过程时，最佳的做法是定期保存中间结果（检查点），以确保在服务器电源被不小心断掉时不会损失几天的计算结果。 </p>
-<h2 id="加载和保存张量"><a href="#加载和保存张量" class="headerlink" title="加载和保存张量"></a>加载和保存张量</h2><p> 对于单个张量，我们可以直接调用<code>load</code>和<code>save</code>函数分别读写它们。这两个函数都要求我们提供一个名称，<code>save</code>要求将要保存的变量作为输入。 </p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">from</span> torch <span class="keyword">import</span> nn</span><br><span class="line"><span class="keyword">from</span> torch.nn <span class="keyword">import</span> functional <span class="keyword">as</span> F</span><br><span class="line"></span><br><span class="line">x = torch.arange(<span class="number">4</span>)</span><br><span class="line">torch.save(x, <span class="string">&#x27;x-file&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 将存储在文件中的数据读回内存。</span></span><br><span class="line">x2 = torch.load(<span class="string">&#x27;x-file&#x27;</span>)</span><br><span class="line">x2    <span class="comment"># tensor([0, 1, 2, 3])</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 存储一个张量列表，然后把它们读回内存。</span></span><br><span class="line">y = torch.zeros(<span class="number">4</span>)</span><br><span class="line">torch.save([x, y],<span class="string">&#x27;x-files&#x27;</span>)</span><br><span class="line">x2, y2 = torch.load(<span class="string">&#x27;x-files&#x27;</span>)</span><br><span class="line">(x2, y2)  <span class="comment"># (tensor([0, 1, 2, 3]), tensor([0., 0., 0., 0.]))</span></span><br></pre></td></tr></table></figure>
-
-<p> <strong>我们甚至可以写入或读取从字符串映射到张量的字典。当我们要读取或写入模型中的所有权重时，这很方便。</strong> </p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mydict = &#123;<span class="string">&#x27;x&#x27;</span>: x, <span class="string">&#x27;y&#x27;</span>: y&#125;</span><br><span class="line">torch.save(mydict, <span class="string">&#x27;mydict&#x27;</span>)</span><br><span class="line">mydict2 = torch.load(<span class="string">&#x27;mydict&#x27;</span>)</span><br><span class="line">mydict2  <span class="comment"># &#123;&#x27;x&#x27;: tensor([0, 1, 2, 3]), &#x27;y&#x27;: tensor([0., 0., 0., 0.])&#125;</span></span><br></pre></td></tr></table></figure>
-
-
-
-
-
-<h2 id="加载和保存模型参数"><a href="#加载和保存模型参数" class="headerlink" title="加载和保存模型参数"></a>加载和保存模型参数</h2><p> 保存单个权重向量（或其他张量）确实是有用的，但是如果我们想保存整个模型，并在以后加载它们，单独保存每个向量则会变得很麻烦。毕竟，我们可能有数百个参数散布在各处。因此，深度学习框架提供了内置函数来保存和加载整个网络。<strong>需要注意的一个重要细节是，这将保存模型的参数而不是保存整个模型。</strong>例如，如果我们有一个3层多层感知机，我们需要单独指定结构。<strong>因为模型本身可以包含任意代码，所以模型本身难以序列化。</strong>因此，为了恢复模型，我们需要用代码生成结构，然后从磁盘加载参数。 </p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MLP</span>(<span class="params">nn.Module</span>):</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self</span>):</span></span><br><span class="line">        <span class="built_in">super</span>().__init__()</span><br><span class="line">        self.hidden = nn.Linear(<span class="number">20</span>, <span class="number">256</span>)</span><br><span class="line">        self.output = nn.Linear(<span class="number">256</span>, <span class="number">10</span>)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span>(<span class="params">self, x</span>):</span></span><br><span class="line">        <span class="keyword">return</span> self.output(F.relu(self.hidden(x)))</span><br><span class="line"></span><br><span class="line">net = MLP()</span><br><span class="line">X = torch.randn(size=(<span class="number">2</span>, <span class="number">20</span>))</span><br><span class="line">Y = net(X)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 接下来，我们将模型的参数存储为一个叫做“mlp.params”的文件。</span></span><br><span class="line">torch.save(net.state_dict(), <span class="string">&#x27;mlp.params&#x27;</span>)</span><br></pre></td></tr></table></figure>
-
-<p> <strong>为了恢复模型，我们实例化了原始多层感知机模型的一个备份。我们没有随机初始化模型参数，而是直接读取文件中存储的参数。</strong> </p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">clone = MLP()</span><br><span class="line">clone.load_state_dict(torch.load(<span class="string">&#x27;mlp.params&#x27;</span>))</span><br><span class="line">clone.<span class="built_in">eval</span>()</span><br><span class="line"></span><br><span class="line">MLP(</span><br><span class="line">  (hidden): Linear(in_features=<span class="number">20</span>, out_features=<span class="number">256</span>, bias=<span class="literal">True</span>)</span><br><span class="line">  (output): Linear(in_features=<span class="number">256</span>, out_features=<span class="number">10</span>, bias=<span class="literal">True</span>)</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
-
-<p> 由于两个实例具有相同的模型参数，在输入相同的<code>X</code>时，两个实例的计算结果应该相同。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Y_clone = clone(X)</span><br><span class="line">Y_clone == Y</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">tensor([[<span class="literal">True</span>, <span class="literal">True</span>, <span class="literal">True</span>, <span class="literal">True</span>, <span class="literal">True</span>, <span class="literal">True</span>, <span class="literal">True</span>, <span class="literal">True</span>, <span class="literal">True</span>, <span class="literal">True</span>],</span><br><span class="line">        [<span class="literal">True</span>, <span class="literal">True</span>, <span class="literal">True</span>, <span class="literal">True</span>, <span class="literal">True</span>, <span class="literal">True</span>, <span class="literal">True</span>, <span class="literal">True</span>, <span class="literal">True</span>, <span class="literal">True</span>]])</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">tensor([[True, True, True, True, True, True, True, True, True, True],</span><br><span class="line">        [True, True, True, True, True, True, True, True, True, True]])</span><br></pre></td></tr></table></figure>
-
-<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><ul>
-<li><code>save</code>和<code>load</code>函数可用于张量对象的文件读写。</li>
-<li>我们可以通过参数字典保存和加载网络的全部参数。</li>
-<li>保存结构必须在代码中完成，而不是在参数中完成。</li>
-</ul>
+                <p><img src="0.jpg"></p>
+<p><img src="1.jpg"></p>
+<p><strong>注意，所有神经网络模块都必须继承自该类，且必须override forward方法。</strong></p>
 
                 
             </div>
@@ -534,7 +495,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://huizhilei.github.io/2021/11/26/%E5%8A%A8%E6%89%8B%E5%AD%A6%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A02021-11-26%EF%BC%882%EF%BC%89/">https://huizhilei.github.io/2021/11/26/%E5%8A%A8%E6%89%8B%E5%AD%A6%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A02021-11-26%EF%BC%882%EF%BC%89/</a>
+                    <a href="https://huizhilei.github.io/2021/12/14/nn-Module/">https://huizhilei.github.io/2021/12/14/nn-Module/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -571,11 +532,7 @@
                 <div class="post-meta__tag-list" style="display: inline-block;">
                     
                         <div class="article-tag">
-                            
-                                <a href="/tags/%E8%AF%BB%E5%86%99%E6%96%87%E4%BB%B6/">
-                                    <span class="chip bg-color">读写文件</span>
-                                </a>
-                            
+                            <span class="chip bg-color">无标签</span>
                         </div>
                     
                 </div>
@@ -745,62 +702,18 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
-                <a href="/2021/11/29/%E5%8A%A8%E6%89%8B%E5%AD%A6%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A02021-11-29%EF%BC%880%EF%BC%89/">
+                <a href="/2021/12/14/nn-Module/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/13.jpg" class="responsive-img" alt="动手学深度学习2021-11-29（0）">
+                        <img src="/medias/featureimages/18.jpg" class="responsive-img" alt="nn.Module">
                         
-                        <span class="card-title">动手学深度学习2021-11-29（0）</span>
-                    </div>
-                </a>
-                <div class="card-content article-content">
-                    <div class="summary block-with-text">
-                        
-                            
-                        
-                    </div>
-                    <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2021-11-29
-                        </span>
-                        <span class="publish-author">
-                            
-                            <i class="fas fa-user fa-fw"></i>
-                            HZL
-                            
-                        </span>
-                    </div>
-                </div>
-                
-                <div class="card-action article-tags">
-                    
-                    <a href="/tags/%E5%8D%B7%E7%A7%AF%E5%9F%BA%E6%9C%AC%E5%B8%B8%E8%AF%86/">
-                        <span class="chip bg-color">卷积基本常识</span>
-                    </a>
-                    
-                </div>
-                
-            </div>
-        </div>
-        
-        
-        <div class="article col s12 m6" data-aos="fade-up">
-            <div class="article-badge right-badge text-color">
-                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
-            </div>
-            <div class="card">
-                <a href="/2021/11/26/%E5%8A%A8%E6%89%8B%E5%AD%A6%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A02021-11-26/">
-                    <div class="card-image">
-                        
-                        
-                        <img src="/medias/featureimages/21.jpg" class="responsive-img" alt="动手学深度学习2021-11-26">
-                        
-                        <span class="card-title">动手学深度学习2021-11-26</span>
+                        <span class="card-title">nn.Module</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -811,7 +724,7 @@
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2021-11-26
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-12-14
                             </span>
                         <span class="publish-author">
                             
@@ -821,13 +734,43 @@
                         </span>
                     </div>
                 </div>
+
                 
-                <div class="card-action article-tags">
-                    
-                    <a href="/tags/%E8%87%AA%E5%AE%9A%E4%B9%89%E5%B1%82/">
-                        <span class="chip bg-color">自定义层</span>
-                    </a>
-                    
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/2021/12/14/DataLoader/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/11.jpg" class="responsive-img" alt="DataLoader">
+                        
+                        <span class="card-title">DataLoader</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-12-14
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-user fa-fw"></i>
+                            HZL
+                            
+                        </span>
+                    </div>
                 </div>
                 
             </div>
