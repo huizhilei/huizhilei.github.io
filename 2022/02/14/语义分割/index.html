@@ -4,8 +4,11 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="SSD, 寂寞沙洲冷">
-    <meta name="description" content="单发多框检测（SSD） 现在我们已经准备好使用这样的背景知识来设计一个目标检测模型：单发多框检测（SSD） [Liu et al., 2016]。 该模型简单、快速且被广泛使用。尽管这只是其中一种目标检测模型，但本节中的一些设计原则和实现细">
+    <meta name="keywords" content="语义分割, 寂寞沙洲冷">
+    <meta name="description" content="语义分割 与目标检测不同，语义分割可以识别并理解图像中每一个像素的内容：其语义区域的标注和预测是像素级的。  
+与目标检测相比，语义分割标注的像素级的边框显然更加精细。 
+
+图像分割和实例分割 计算机视觉领域还有2个与语义分割相似的重要问题">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -17,7 +20,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>SSD | 寂寞沙洲冷</title>
+    <title>语义分割 | 寂寞沙洲冷</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.min.css">
@@ -309,12 +312,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/12.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/16.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">SSD</h1>
+                    <h1 class="description center-align post-title">语义分割</h1>
                 </div>
             </div>
         </div>
@@ -428,9 +431,13 @@
             <div class="row tag-cate">
                 <div class="col s7">
                     
-                          <div class="article-tag">
-                            <span class="chip bg-color">无标签</span>
-                          </div>
+                    <div class="article-tag">
+                        
+                            <a href="/tags/%E6%9D%A5%E8%87%AA%E5%8A%A8%E6%89%8B%E5%AD%A6%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">
+                                <span class="chip bg-color">来自动手学深度学习</span>
+                            </a>
+                        
+                    </div>
                     
                 </div>
                 <div class="col s5 right-align">
@@ -442,7 +449,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2021-12-10
+                    2022-02-14
                 </div>
                 
 
@@ -463,11 +470,20 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="单发多框检测（SSD）"><a href="#单发多框检测（SSD）" class="headerlink" title="单发多框检测（SSD）"></a>单发多框检测（SSD）</h1><p> 现在我们已经准备好使用这样的背景知识来设计一个目标检测模型：单发多框检测（SSD） [<a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_references/zreferences.html#liu-anguelov-erhan-ea-2016">Liu et al., 2016]</a>。 该模型简单、快速且被广泛使用。尽管这只是其中一种目标检测模型，但本节中的一些设计原则和实现细节也适用于其他模型。 </p>
-<h2 id="模型"><a href="#模型" class="headerlink" title="模型"></a>模型</h2><p> 此模型主要由基础网络组成，其后是几个多尺度特征块。 基本网络用于从输入图像中提取特征，因此它可以使用深度卷积神经网络。 单发多框检测论文中选用了在分类层之前截断的VGG [<a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_references/zreferences.html#liu-anguelov-erhan-ea-2016">Liu et al., 2016]</a>，现在也常用ResNet替代。  <strong>我们可以设计基础网络，使它输出的高和宽较大。 这样一来，基于该特征图生成的锚框数量较多，可以用来检测尺寸较小的目标。</strong>   <strong>接下来的每个多尺度特征块将上一层提供的特征图的高和宽缩小（如减半），并使特征图中每个单元在输入图像上的感受野变得更广阔。</strong> </p>
-<p>  由于接近 <a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_computer-vision/ssd.html#fig-ssd">图13.7.1</a>顶部的多尺度<strong>特征图较小，但具有较大的感受野</strong>，<strong>它们适合检测较少但较大的物体。</strong> 简而言之，通过多尺度特征块，单发多框检测生成不同大小的锚框，并通过预测边界框的类别和偏移量来检测大小不同的目标，因此这是一个多尺度目标检测模型。 </p>
+                <h1 id="语义分割"><a href="#语义分割" class="headerlink" title="语义分割"></a>语义分割</h1><p> 与目标检测不同，语义分割可以识别并理解图像中每一个像素的内容：其语义区域的标注和预测是像素级的。  </p>
+<p>与目标检测相比，语义分割标注的像素级的边框显然更加精细。 </p>
 <p><img src="0.jpg"></p>
-<h3 id="高和宽减半块"><a href="#高和宽减半块" class="headerlink" title="高和宽减半块"></a>高和宽减半块</h3><p>该模块将输入特征图的高度和宽度减半。 事实上，该块应用了VGG模块设计。 更具体地说，每个高和宽减半块由两个填充为1的3×3的卷积层、以及步幅为2的2×2最大汇聚层组成。 <strong>我们知道，填充为1的3×3卷积层不改变特征图的形状。但是，其后的2×2的最大汇聚层将输入特征图的高度和宽度减少了一半。</strong> 对于此高和宽减半块的输入和输出特征图，因为1×2+(3−1)+(3−1)=6，所以输出中的每个单元在输入上都有一个6×6的感受野。<strong>因此，高和宽减半块会扩大每个单元在其输出特征图中的感受野。</strong> </p>
+<h2 id="图像分割和实例分割"><a href="#图像分割和实例分割" class="headerlink" title="图像分割和实例分割"></a>图像分割和实例分割</h2><p> 计算机视觉领域还有2个与语义分割相似的重要问题，即<em>图像分割</em>（image segmentation）和<em>实例分割</em>（instance segmentation）。 我们在这里将它们同语义分割简单区分一下。 </p>
+<ul>
+<li><p><em>图像分割</em>将图像划分为若干组成区域，这类问题的方法通常利用图像中像素之间的相关性。它在训练时不需要有关图像像素的标签信息，在预测时也无法保证分割出的区域具有我们希望得到的语义。以 <a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_computer-vision/semantic-segmentation-and-dataset.html#fig-segmentation">图13.9.1</a>中的图像作为输入，图像分割可能会将狗分为两个区域：一个覆盖以黑色为主的嘴和眼睛，另一个覆盖以黄色为主的其余部分身体。</p>
+</li>
+<li><p><em>实例分割</em>也叫<em>同时检测并分割</em>（simultaneous detection and segmentation），它研究如何识别图像中各个目标实例的像素级区域。与语义分割不同，实例分割不仅需要区分语义，还要区分不同的目标实例。例如，如果图像中有两条狗，则实例分割需要区分像素属于的两条狗中的哪一条。</p>
+</li>
+</ul>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><ul>
+<li>语义分割通过将图像划分为属于不同语义类别的区域，来识别并理解图像中像素级别的内容。</li>
+<li>语义分割的一个重要的数据集叫做Pascal VOC2012。</li>
+</ul>
 
                 
             </div>
@@ -494,7 +510,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://huizhilei.github.io/2021/12/10/SSD/">https://huizhilei.github.io/2021/12/10/SSD/</a>
+                    <a href="https://huizhilei.github.io/2022/02/14/%E8%AF%AD%E4%B9%89%E5%88%86%E5%89%B2/">https://huizhilei.github.io/2022/02/14/%E8%AF%AD%E4%B9%89%E5%88%86%E5%89%B2/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -531,7 +547,11 @@
                 <div class="post-meta__tag-list" style="display: inline-block;">
                     
                         <div class="article-tag">
-                            <span class="chip bg-color">无标签</span>
+                            
+                                <a href="/tags/%E6%9D%A5%E8%87%AA%E5%8A%A8%E6%89%8B%E5%AD%A6%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">
+                                    <span class="chip bg-color">来自动手学深度学习</span>
+                                </a>
+                            
                         </div>
                     
                 </div>
@@ -701,17 +721,18 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
-                <a href="/2021/12/13/torch-Dataset/">
+                <a href="/2022/02/14/%E8%AF%AD%E4%B9%89%E5%88%86%E5%89%B2/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/11.jpg" class="responsive-img" alt="torch_Dataset">
+                        <img src="/medias/featureimages/16.jpg" class="responsive-img" alt="语义分割">
                         
-                        <span class="card-title">torch_Dataset</span>
+                        <span class="card-title">语义分割</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -721,9 +742,9 @@
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2021-12-13
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2022-02-14
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-user fa-fw"></i>
@@ -731,6 +752,15 @@
                             
                         </span>
                     </div>
+                </div>
+
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/%E6%9D%A5%E8%87%AA%E5%8A%A8%E6%89%8B%E5%AD%A6%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">
+                        <span class="chip bg-color">来自动手学深度学习</span>
+                    </a>
+                    
                 </div>
                 
             </div>
@@ -742,13 +772,13 @@
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2021/12/10/%E5%A4%9A%E5%B0%BA%E5%BA%A6%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B/">
+                <a href="/2022/01/06/%E5%8C%BA%E5%9F%9F%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/10.jpg" class="responsive-img" alt="多尺度目标检测">
+                        <img src="/medias/featureimages/9.jpg" class="responsive-img" alt="区域卷积神经网络">
                         
-                        <span class="card-title">多尺度目标检测</span>
+                        <span class="card-title">区域卷积神经网络</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -759,7 +789,7 @@
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2021-12-10
+                                <i class="far fa-clock fa-fw icon-date"></i>2022-01-06
                             </span>
                         <span class="publish-author">
                             
@@ -768,6 +798,14 @@
                             
                         </span>
                     </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/%E5%8A%A8%E6%89%8B%E5%AD%A6%E4%B9%A0%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">
+                        <span class="chip bg-color">动手学习深度学习</span>
+                    </a>
+                    
                 </div>
                 
             </div>
