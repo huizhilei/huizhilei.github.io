@@ -4,11 +4,9 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="语义分割, 寂寞沙洲冷">
-    <meta name="description" content="语义分割 与目标检测不同，语义分割可以识别并理解图像中每一个像素的内容：其语义区域的标注和预测是像素级的。  
-与目标检测相比，语义分割标注的像素级的边框显然更加精细。 
-
-图像分割和实例分割 计算机视觉领域还有2个与语义分割相似的重要问题">
+    <meta name="keywords" content="全卷积网络, 寂寞沙洲冷">
+    <meta name="description" content="全卷积网络 语义分割是对图像中的每个像素分类。 全卷积网络（fully convolutional network，FCN）采用卷积神经网络实现了从图像像素到像素类别的变换 [Long et al., 2015]。 
+ 与我们之前在图像分类">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -20,7 +18,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>语义分割 | 寂寞沙洲冷</title>
+    <title>全卷积网络 | 寂寞沙洲冷</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.min.css">
@@ -312,12 +310,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/16.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/21.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">语义分割</h1>
+                    <h1 class="description center-align post-title">全卷积网络</h1>
                 </div>
             </div>
         </div>
@@ -470,19 +468,15 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="语义分割"><a href="#语义分割" class="headerlink" title="语义分割"></a>语义分割</h1><p> 与目标检测不同，语义分割可以识别并理解图像中每一个像素的内容：其语义区域的标注和预测是像素级的。  </p>
-<p>与目标检测相比，语义分割标注的像素级的边框显然更加精细。 </p>
+                <h1 id="全卷积网络"><a href="#全卷积网络" class="headerlink" title="全卷积网络"></a>全卷积网络</h1><p> 语义分割是对图像中的每个像素分类。 <em>全卷积网络</em>（fully convolutional network，FCN）采用卷积神经网络实现了<strong>从图像像素到像素类别的变换</strong> [<a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_references/zreferences.html#long-shelhamer-darrell-2015">Long et al., 2015]</a>。 </p>
+<p> <strong>与我们之前在图像分类或目标检测部分介绍的卷积神经网络不同，全卷积网络将中间层特征图的高和宽变换回输入图像的尺寸：这是通过在<em>转置卷积</em>（transposed convolution）实现的。 因此，输出的类别预测与输入图像在像素级别上具有一一对应关系：通道维的输出即该位置对应像素的类别预测。</strong> </p>
+<h2 id="构造模型"><a href="#构造模型" class="headerlink" title="构造模型"></a>构造模型</h2><p> 如 <a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_computer-vision/fcn.html#fig-fcn">图13.11.1</a>所示，全卷积网络先使用<strong>卷积神经网络抽取图像特征</strong>，然后<strong>通过1×1卷积层将通道数变换为类别个数</strong>，最后通过<strong>转置卷积层将特征图的高和宽变换为输入图像的尺寸</strong>。 因此，模型输出与输入图像的高和宽相同，且<strong>最终输出通道包含了该空间位置像素的类别预测</strong>。 </p>
 <p><img src="0.jpg"></p>
-<h2 id="图像分割和实例分割"><a href="#图像分割和实例分割" class="headerlink" title="图像分割和实例分割"></a>图像分割和实例分割</h2><p> 计算机视觉领域还有2个与语义分割相似的重要问题，即<em>图像分割</em>（image segmentation）和<em>实例分割</em>（instance segmentation）。 我们在这里将它们同语义分割简单区分一下。 </p>
-<ul>
-<li><p><em>图像分割</em>将图像划分为若干组成区域，这类问题的方法通常利用图像中像素之间的相关性。它在训练时不需要有关图像像素的标签信息，在预测时也无法保证分割出的区域具有我们希望得到的语义。以 <a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_computer-vision/semantic-segmentation-and-dataset.html#fig-segmentation">图13.9.1</a>中的图像作为输入，图像分割可能会将狗分为两个区域：一个覆盖以黑色为主的嘴和眼睛，另一个覆盖以黄色为主的其余部分身体。</p>
-</li>
-<li><p><em>实例分割</em>也叫<em>同时检测并分割</em>（simultaneous detection and segmentation），它研究如何识别图像中各个目标实例的像素级区域。与语义分割不同，实例分割不仅需要区分语义，还要区分不同的目标实例。例如，如果图像中有两条狗，则实例分割需要区分像素属于的两条狗中的哪一条。</p>
-</li>
-</ul>
+<h2 id="初始化转置卷积层"><a href="#初始化转置卷积层" class="headerlink" title="初始化转置卷积层"></a>初始化转置卷积层</h2><p>*<em>在图像处理中，我们有时需要将图像放大，即</em>上采样<em>（upsampling）。 <em>双线性插值</em>（bilinear interpolation） 是常用的上采样方法之一，它也经常用于初始化转置卷积层。</em>*</p>
+<p>为了解释双线性插值，假设给定输入图像，我们想要计算上采样输出图像上的每个像素。 首先，将输出图像的坐标(x,y)映射到输入图像的坐标(x′,y′)上。 例如，根据输入与输出的尺寸之比来映射。 请注意，映射后的x’和y’是实数。 然后，在输入图像上找到离坐标(x′,y′)最近的4个像素。 最后，输出图像在坐标(x,y)上的像素依据输入图像上这4个像素及其与(x′,y′)的相对距离来计算。</p>
 <h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><ul>
-<li>语义分割通过将图像划分为属于不同语义类别的区域，来识别并理解图像中像素级别的内容。</li>
-<li>语义分割的一个重要的数据集叫做Pascal VOC2012。</li>
+<li>全卷积网络先使用卷积神经网络抽取图像特征，然后通过1×1卷积层将通道数变换为类别个数，最后通过转置卷积层将特征图的高和宽变换为输入图像的尺寸。</li>
+<li>在全卷积网络中，我们可以将转置卷积层初始化为双线性插值的上采样。</li>
 </ul>
 
                 
@@ -510,7 +504,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://huizhilei.github.io/2022/02/14/%E8%AF%AD%E4%B9%89%E5%88%86%E5%89%B2/">https://huizhilei.github.io/2022/02/14/%E8%AF%AD%E4%B9%89%E5%88%86%E5%89%B2/</a>
+                    <a href="https://huizhilei.github.io/2022/02/14/%E5%85%A8%E5%8D%B7%E7%A7%AF%E7%BD%91%E7%BB%9C/">https://huizhilei.github.io/2022/02/14/%E5%85%A8%E5%8D%B7%E7%A7%AF%E7%BD%91%E7%BB%9C/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -721,17 +715,18 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
-                <a href="/2022/02/14/%E8%BD%AC%E7%BD%AE%E5%8D%B7%E7%A7%AF/">
+                <a href="/2022/02/14/%E5%85%A8%E5%8D%B7%E7%A7%AF%E7%BD%91%E7%BB%9C/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/18.jpg" class="responsive-img" alt="转置卷积">
+                        <img src="/medias/featureimages/21.jpg" class="responsive-img" alt="全卷积网络">
                         
-                        <span class="card-title">转置卷积</span>
+                        <span class="card-title">全卷积网络</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -741,9 +736,9 @@
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2022-02-14
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2022-02-14
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-user fa-fw"></i>
@@ -752,6 +747,7 @@
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
@@ -770,13 +766,13 @@
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2022/01/06/%E5%8C%BA%E5%9F%9F%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/">
+                <a href="/2022/02/14/%E8%BD%AC%E7%BD%AE%E5%8D%B7%E7%A7%AF/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/9.jpg" class="responsive-img" alt="区域卷积神经网络">
+                        <img src="/medias/featureimages/18.jpg" class="responsive-img" alt="转置卷积">
                         
-                        <span class="card-title">区域卷积神经网络</span>
+                        <span class="card-title">转置卷积</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -787,7 +783,7 @@
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2022-01-06
+                                <i class="far fa-clock fa-fw icon-date"></i>2022-02-14
                             </span>
                         <span class="publish-author">
                             
@@ -800,8 +796,8 @@
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/%E5%8A%A8%E6%89%8B%E5%AD%A6%E4%B9%A0%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">
-                        <span class="chip bg-color">动手学习深度学习</span>
+                    <a href="/tags/%E6%9D%A5%E8%87%AA%E5%8A%A8%E6%89%8B%E5%AD%A6%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">
+                        <span class="chip bg-color">来自动手学深度学习</span>
                     </a>
                     
                 </div>
