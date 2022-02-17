@@ -4,8 +4,9 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="风格迁移, 寂寞沙洲冷">
-    <meta name="description" content="风格迁移 在本节中，我们将介绍如何使用卷积神经网络，自动将一个图像中的风格应用在另一图像之上，即风格迁移（style transfer） [Gatys et al., 2016]。 这里我们需要两张输入图像：一张是内容图像，另一张是风格图像">
+    <meta name="keywords" content="自然语言处理概念, 寂寞沙洲冷">
+    <meta name="description" content="自然语言处理：预训练 自然语言处理是指研究使用自然语言的计算机和人类之间的交互。 
+ 要理解文本，我们可以从学习它的表示开始。 利用来自大型语料库的现有文本序列， 自监督学习（self-supervised learning） 已被广泛用于">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -17,7 +18,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>风格迁移 | 寂寞沙洲冷</title>
+    <title>自然语言处理概念 | 寂寞沙洲冷</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.min.css">
@@ -309,12 +310,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/0.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/20.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">风格迁移</h1>
+                    <h1 class="description center-align post-title">自然语言处理概念</h1>
                 </div>
             </div>
         </div>
@@ -467,11 +468,15 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="风格迁移"><a href="#风格迁移" class="headerlink" title="风格迁移"></a>风格迁移</h1><p> 在本节中，我们将介绍如何使用卷积神经网络，自动将一个图像中的风格应用在另一图像之上，即<em>风格迁移</em>（style transfer） [<a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_references/zreferences.html#gatys-ecker-bethge-2016">Gatys et al., 2016]</a>。 这里我们需要两张输入图像：一张是<em>内容图像</em>，另一张是<em>风格图像</em>。 我们将使用神经网络修改内容图像，使其在风格上接近风格图像。 例如， <a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_computer-vision/neural-style.html#fig-style-transfer">图13.12.1</a>中的内容图像为本书作者在西雅图郊区的雷尼尔山国家公园拍摄的风景照，而风格图像则是一幅主题为秋天橡树的油画。 最终输出的合成图像应用了风格图像的油画笔触让整体颜色更加鲜艳，同时保留了内容图像中物体主体的形状。 </p>
+                <h1 id="自然语言处理：预训练"><a href="#自然语言处理：预训练" class="headerlink" title="自然语言处理：预训练"></a>自然语言处理：预训练</h1><p> <strong><em>自然语言处理</em>是指研究使用自然语言的计算机和人类之间的交互。</strong> </p>
+<p> <strong>要理解文本，我们可以从学习它的表示开始。</strong> 利用来自大型语料库的现有文本序列， <strong><em>自监督学习</em>（self-supervised learning） 已被广泛用于预训练文本表示</strong>， <strong>例如通过使用周围文本的其它部分来预测文本的隐藏部分。</strong> 通过这种方式，模型可以通过有监督地从<em>海量</em>文本数据中学习，而不需要<em>昂贵</em>的标签标注！ </p>
+<p> 本章我们将看到：</p>
+<p><strong>当将每个单词或子词视为单个词元时， 可以在大型语料库上使用word2vec、GloVe或子词嵌入模型预先训练每个词元。</strong> </p>
+<p><strong>经过预训练后，每个词元的表示可以是一个向量。</strong> </p>
+<p><strong>但是，无论上下文是什么，它都保持不变。</strong> </p>
+<p>例如，“bank”（可以译作银行或者河岸）的向量表示在 “go to the bank to deposit some money”（去银行存点钱） 和“go to the bank to sit down”（去河岸坐下来）中是相同的。 </p>
+<p>因此，许多较新的预训练模型使相同词元的表示适应于不同的上下文， 其中包括基于transformer编码器的更深的自监督模型BERT。 在本章中，我们将重点讨论如何预训练文本的这种表示， 如 <a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_natural-language-processing-pretraining/index.html#fig-nlp-map-pretrain">图14.1</a>中所强调的那样。 </p>
 <p><img src="0.jpg"></p>
-<h2 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h2><p> <a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_computer-vision/neural-style.html#fig-style-transfer-model">图13.12.2</a>用简单的例子阐述了基于卷积神经网络的风格迁移方法。 首先，我们初始化合成图像，例如将其初始化为内容图像。 该合成图像是风格迁移过程中唯一需要更新的变量，即风格迁移所需迭代的模型参数。 然后，我们选择一个预训练的卷积神经网络来抽取图像的特征，其中的模型参数在训练中无须更新。 这个深度卷积神经网络凭借多个层逐级抽取图像的特征，我们可以选择其中某些层的输出作为内容特征或风格特征。 以 <a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_computer-vision/neural-style.html#fig-style-transfer-model">图13.12.2</a>为例，这里选取的预训练的神经网络含有3个卷积层，其中第二层输出内容特征，第一层和第三层输出风格特征。 </p>
-<p><img src="1.jpg"></p>
-<p> 接下来，我们通过前向传播（实线箭头方向）计算风格迁移的损失函数，并通过反向传播（虚线箭头方向）迭代模型参数，即不断更新合成图像。 风格迁移常用的损失函数由3部分组成： （i）<em>内容损失</em>使合成图像与内容图像在内容特征上接近； （ii）<em>风格损失</em>使合成图像与风格图像在风格特征上接近； （iii）<em>全变分损失</em>则有助于减少合成图像中的噪点。 最后，当模型训练结束时，我们输出风格迁移的模型参数，即得到最终的合成图像。 </p>
 
                 
             </div>
@@ -498,7 +503,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://huizhilei.github.io/2022/02/14/%E9%A3%8E%E6%A0%BC%E8%BF%81%E7%A7%BB/">https://huizhilei.github.io/2022/02/14/%E9%A3%8E%E6%A0%BC%E8%BF%81%E7%A7%BB/</a>
+                    <a href="https://huizhilei.github.io/2022/02/14/%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E5%A4%84%E7%90%86%E6%A6%82%E5%BF%B5/">https://huizhilei.github.io/2022/02/14/%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E5%A4%84%E7%90%86%E6%A6%82%E5%BF%B5/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -713,13 +718,13 @@
             <div class="article-badge left-badge text-color">
                 <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/2022/02/14/%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E5%A4%84%E7%90%86%E6%A6%82%E5%BF%B5/">
+                <a href="/2022/02/14/%E8%AF%8D%E5%B5%8C%E5%85%A5/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/20.jpg" class="responsive-img" alt="自然语言处理概念">
+                        <img src="/medias/featureimages/14.jpg" class="responsive-img" alt="词嵌入">
                         
-                        <span class="card-title">自然语言处理概念</span>
+                        <span class="card-title">词嵌入</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -758,13 +763,13 @@
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2022/02/14/%E5%85%A8%E5%8D%B7%E7%A7%AF%E7%BD%91%E7%BB%9C/">
+                <a href="/2022/02/14/%E9%A3%8E%E6%A0%BC%E8%BF%81%E7%A7%BB/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/21.jpg" class="responsive-img" alt="全卷积网络">
+                        <img src="/medias/featureimages/0.jpg" class="responsive-img" alt="风格迁移">
                         
-                        <span class="card-title">全卷积网络</span>
+                        <span class="card-title">风格迁移</span>
                     </div>
                 </a>
                 <div class="card-content article-content">

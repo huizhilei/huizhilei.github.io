@@ -4,8 +4,8 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="风格迁移, 寂寞沙洲冷">
-    <meta name="description" content="风格迁移 在本节中，我们将介绍如何使用卷积神经网络，自动将一个图像中的风格应用在另一图像之上，即风格迁移（style transfer） [Gatys et al., 2016]。 这里我们需要两张输入图像：一张是内容图像，另一张是风格图像">
+    <meta name="keywords" content="循环神经网络, 寂寞沙洲冷">
+    <meta name="description" content="8. 循环神经网络（随着时间的推移，反复看，兴许就能看懂了，先尽量理解吧） 到目前为止，我们遇到过两种类型的数据：表格数据和图像数据。 对于图像数据，我们设计了专门的卷积神经网络架构来为这类特殊的数据结构建模。 换句话说，如果我们拥有一张图">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -17,7 +17,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>风格迁移 | 寂寞沙洲冷</title>
+    <title>循环神经网络 | 寂寞沙洲冷</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.min.css">
@@ -309,12 +309,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/0.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/7.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">风格迁移</h1>
+                    <h1 class="description center-align post-title">循环神经网络</h1>
                 </div>
             </div>
         </div>
@@ -446,7 +446,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2022-02-14
+                    2022-02-15
                 </div>
                 
 
@@ -467,11 +467,64 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="风格迁移"><a href="#风格迁移" class="headerlink" title="风格迁移"></a>风格迁移</h1><p> 在本节中，我们将介绍如何使用卷积神经网络，自动将一个图像中的风格应用在另一图像之上，即<em>风格迁移</em>（style transfer） [<a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_references/zreferences.html#gatys-ecker-bethge-2016">Gatys et al., 2016]</a>。 这里我们需要两张输入图像：一张是<em>内容图像</em>，另一张是<em>风格图像</em>。 我们将使用神经网络修改内容图像，使其在风格上接近风格图像。 例如， <a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_computer-vision/neural-style.html#fig-style-transfer">图13.12.1</a>中的内容图像为本书作者在西雅图郊区的雷尼尔山国家公园拍摄的风景照，而风格图像则是一幅主题为秋天橡树的油画。 最终输出的合成图像应用了风格图像的油画笔触让整体颜色更加鲜艳，同时保留了内容图像中物体主体的形状。 </p>
+                <h1 id="8-循环神经网络（随着时间的推移，反复看，兴许就能看懂了，先尽量理解吧）"><a href="#8-循环神经网络（随着时间的推移，反复看，兴许就能看懂了，先尽量理解吧）" class="headerlink" title="8. 循环神经网络（随着时间的推移，反复看，兴许就能看懂了，先尽量理解吧）"></a>8. 循环神经网络（随着时间的推移，反复看，兴许就能看懂了，先尽量理解吧）</h1><p> 到目前为止，我们遇到过两种类型的数据：表格数据和图像数据。 对于图像数据，我们设计了专门的卷积神经网络架构来为这类特殊的数据结构建模。 <strong>换句话说，如果我们拥有一张图像，我们需要有效地利用其像素位置， 假若我们对图像中的像素位置进行重排，就会对图像中内容的推断造成极大的困难。</strong> </p>
+<p> <strong>最重要的是，到目前为止我们默认数据都来自于某种分布， 并且所有样本都是独立同分布的 （independently and identically distributed，i.i.d.）。 然而，大多数的数据并非如此。 例如，文章中的单词是按顺序写的，如果顺序被随机地重排，就很难理解文章原始的意思。 同样，视频中的图像帧、对话中的音频信号以及网站上的浏览行为都是有顺序的。 因此，针对此类数据而设计特定模型，可能效果会更好。</strong> </p>
+<p> <strong>简言之，如果说卷积神经网络可以有效地处理空间信息， 那么本章的<em>循环神经网络</em>（recurrent neural network，RNN）则可以更好地处理序列信息。 循环神经网络通过引入状态变量存储过去的信息和当前的输入，从而可以确定当前的输出。</strong> </p>
+<p> 许多使用循环网络的例子都是基于文本数据的，因此我们将在本章中重点介绍语言模型。 </p>
+<h1 id="8-1-序列模型-序列数据"><a href="#8-1-序列模型-序列数据" class="headerlink" title="8.1. 序列模型/序列数据"></a>8.1. 序列模型/序列数据</h1><h2 id="8-1-1-统计工具"><a href="#8-1-1-统计工具" class="headerlink" title="8.1.1. 统计工具"></a>8.1.1. 统计工具</h2><p><img src="8.1.1.jpg"></p>
+<h3 id="8-1-1-1-自回归模型"><a href="#8-1-1-1-自回归模型" class="headerlink" title="8.1.1.1. 自回归模型"></a>8.1.1.1. 自回归模型</h3><p><img src="8.1.2.jpg"></p>
+<h3 id="8-1-1-2-马尔可夫模型-需要了解基本概念"><a href="#8-1-1-2-马尔可夫模型-需要了解基本概念" class="headerlink" title="8.1.1.2. 马尔可夫模型(需要了解基本概念)"></a>8.1.1.2. 马尔可夫模型(需要了解基本概念)</h3><p><img src="8.1.1.2.jpg"></p>
+<h3 id="8-1-1-3-因果关系"><a href="#8-1-1-3-因果关系" class="headerlink" title="8.1.1.3. 因果关系"></a>8.1.1.3. 因果关系</h3><h2 id="8-1-4-小结"><a href="#8-1-4-小结" class="headerlink" title="8.1.4. 小结"></a>8.1.4. 小结</h2><ul>
+<li>内插法（在现有观测值之间进行估计）和外推法（对超出已知观测范围进行预测）在实践的难度上差别很大。因此，对于你所拥有的序列数据，在训练时始终要尊重其时间顺序，即最好不要基于未来的数据进行训练。</li>
+<li>序列模型的估计需要专门的统计工具，两种较流行的选择是自回归模型和隐变量自回归模型。</li>
+</ul>
+<h5 id="思考：自回归、自监督两个概念好像有相通的地方，都是不需要专门的监督标签，依赖序列中的下一个元素作为标签。"><a href="#思考：自回归、自监督两个概念好像有相通的地方，都是不需要专门的监督标签，依赖序列中的下一个元素作为标签。" class="headerlink" title="思考：自回归、自监督两个概念好像有相通的地方，都是不需要专门的监督标签，依赖序列中的下一个元素作为标签。"></a><u><em><strong>思考：自回归、自监督两个概念好像有相通的地方，都是不需要专门的监督标签，依赖序列中的下一个元素作为标签。</strong></em></u></h5><h5 id="处理序列数据，需要专门的统计工具，自回归模型，隐变量自回归模型，马尔可夫模型等等，那是不是这样，循环神经网络其实是基于隐变量自回归模型的深层模型，循环神经网络其实是处理序列数据的统计工具。"><a href="#处理序列数据，需要专门的统计工具，自回归模型，隐变量自回归模型，马尔可夫模型等等，那是不是这样，循环神经网络其实是基于隐变量自回归模型的深层模型，循环神经网络其实是处理序列数据的统计工具。" class="headerlink" title="处理序列数据，需要专门的统计工具，自回归模型，隐变量自回归模型，马尔可夫模型等等，那是不是这样，循环神经网络其实是基于隐变量自回归模型的深层模型，循环神经网络其实是处理序列数据的统计工具。"></a><em><strong><u>处理序列数据，需要专门的统计工具，自回归模型，隐变量自回归模型，马尔可夫模型等等，那是不是这样，循环神经网络其实是基于隐变量自回归模型的深层模型，循环神经网络其实是处理序列数据的统计工具。</u></strong></em></h5><ul>
+<li>对于时间是向前推进的因果模型，正向估计通常比反向估计更容易。</li>
+<li>对于直到时间步t的观测序列，其在时间步t+k的预测输出是“k步预测”。随着我们对预测时间k值的增加，会造成误差的快速累积和预测质量的极速下降。</li>
+</ul>
+<h1 id="8-2-文本预处理"><a href="#8-2-文本预处理" class="headerlink" title="8.2. 文本预处理"></a>8.2. 文本预处理</h1><p>一篇文章可以被简单地看作是一串单词序列，甚至是一串字符序列。 本节中，我们将解析文本的常见预处理步骤。 这些步骤通常包括：</p>
+<ol>
+<li>将文本作为字符串加载到内存中。</li>
+<li>将字符串拆分为词元（如单词和字符）。</li>
+<li>建立一个词表，将拆分的词元映射到数字索引。</li>
+<li>将文本转换为数字索引序列，方便模型操作。</li>
+</ol>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><ul>
+<li>文本是序列数据的一种最常见的形式之一。</li>
+<li>为了对文本进行预处理，我们通常将文本拆分为词元，构建词表将词元字符串映射为数字索引，并将文本数据转换为词元索引以供模型操作。</li>
+</ul>
+<h1 id="8-3-语言模型和数据集"><a href="#8-3-语言模型和数据集" class="headerlink" title="8.3. 语言模型和数据集"></a>8.3. 语言模型和数据集</h1><p>假设长度为T的文本序列中的词元依次为x1,x2,…,xT。 于是，xt（1≤t≤T） 可以被认为是文本序列在时间步t处的观测或标签。 在给定这样的文本序列时，<strong><em>语言模型</em>（language model）的目标是估计序列的联合概率</strong></p>
+<p>​                                                        <strong>P(x1,x2,…,xT).           (8.3.1)</strong></p>
+<p>例如，只需要一次抽取一个词元xt∼P(xt∣xt−1,…,x1)， 一个理想的语言模型就能够基于模型本身生成自然文本。</p>
+<p>——————————————————————————————————</p>
 <p><img src="0.jpg"></p>
-<h2 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h2><p> <a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_computer-vision/neural-style.html#fig-style-transfer-model">图13.12.2</a>用简单的例子阐述了基于卷积神经网络的风格迁移方法。 首先，我们初始化合成图像，例如将其初始化为内容图像。 该合成图像是风格迁移过程中唯一需要更新的变量，即风格迁移所需迭代的模型参数。 然后，我们选择一个预训练的卷积神经网络来抽取图像的特征，其中的模型参数在训练中无须更新。 这个深度卷积神经网络凭借多个层逐级抽取图像的特征，我们可以选择其中某些层的输出作为内容特征或风格特征。 以 <a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_computer-vision/neural-style.html#fig-style-transfer-model">图13.12.2</a>为例，这里选取的预训练的神经网络含有3个卷积层，其中第二层输出内容特征，第一层和第三层输出风格特征。 </p>
-<p><img src="1.jpg"></p>
-<p> 接下来，我们通过前向传播（实线箭头方向）计算风格迁移的损失函数，并通过反向传播（虚线箭头方向）迭代模型参数，即不断更新合成图像。 风格迁移常用的损失函数由3部分组成： （i）<em>内容损失</em>使合成图像与内容图像在内容特征上接近； （ii）<em>风格损失</em>使合成图像与风格图像在风格特征上接近； （iii）<em>全变分损失</em>则有助于减少合成图像中的噪点。 最后，当模型训练结束时，我们输出风格迁移的模型参数，即得到最终的合成图像。 </p>
+<p><strong>结合前面似然估计的博客来理解， 语言模型就是为语句的联合概率函数进行建模，希望模型对有意义的语句赋予较大的概率，对没意义的语句赋予较小的概率；</strong></p>
+<p><strong>概率函数本质上就是一个函数，比如正态分布函数。</strong></p>
+<p><strong>训练语言模型，就是用语料库（相当于似然估计中的观测点）去寻找观测点所隶属的概率分布（即似然）。其目的在于寻找一个最符合当前语料库的概率分布（语言模型）。</strong></p>
+<p>——————————————————————————————————</p>
+<h2 id="8-3-1-学习语言模型"><a href="#8-3-1-学习语言模型" class="headerlink" title="8.3.1. 学习语言模型"></a>8.3.1. 学习语言模型</h2><p><img src="1.jpg"></p>
+<p><img src="2.jpg"></p>
+<p><img src="3.jpg"></p>
+<p>——————————————————————————————————————————————</p>
+<p><strong>条件概率用 连续单词对的出现次数和单个单词出现次数之比 来计算是有道理的，直观理解就是，所有单个单词出现的地方 ，计算按该单个单词的下一个单词是不是就是连续单词对中对应的下一个单词（条件概率的含义，在已知单词的前提下，下一个单词是对应单词的概率）。这样的词频之比作为概率计算有一点道理，但并不完美。</strong></p>
+<p>——————————————————————————————————————————————</p>
+<p><em><u>语言模型分为统计模型和神经网络模型？</u></em></p>
+<p><em><u>统计模型如n-gram模型，马尔可夫模型，是根据词频之类的数据来计算概率，神经网络语言模型就是所谓的循环神经网络那一套东西？</u></em></p>
+<p>——————————————————————————————————————————————</p>
+<h2 id="8-3-2-马尔可夫模型与n元语法"><a href="#8-3-2-马尔可夫模型与n元语法" class="headerlink" title="8.3.2. 马尔可夫模型与n元语法"></a>8.3.2. 马尔可夫模型与n元语法</h2><p><img src="8.3.2.jpg"></p>
+<p>————————————————————————————————————</p>
+<p><strong>是不是这样的，其实，n-gram模型基于的原理就是马尔可夫模型原理？</strong></p>
+<p>————————————————————————————————————</p>
+<h2 id="8-3-4-读取长序列数据"><a href="#8-3-4-读取长序列数据" class="headerlink" title="8.3.4. 读取长序列数据"></a>8.3.4. 读取长序列数据</h2><p> 由于序列数据本质上是连续的，因此我们在处理数据时需要解决这个问题。 在 <a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_recurrent-neural-networks/sequence.html#sec-sequence">8.1节</a>中我们以一种相当特别的方式做到了这一点： 当序列变得太长而不能被模型一次性全部处理时， 我们可能希望拆分这样的序列方便模型读取。 </p>
+<p> 在介绍该模型之前，我们看一下总体策略。 假设我们将使用神经网络来训练语言模型， 模型中的网络一次处理具有预定义长度 （例如n个时间步）的一个小批量序列。  </p>
+<h2 id="8-3-5-小结"><a href="#8-3-5-小结" class="headerlink" title="8.3.5. 小结"></a>8.3.5. 小结</h2><ul>
+<li>语言模型是自然语言处理的关键。</li>
+<li>n元语法通过截断相关性，为处理长序列提供了一种实用的模型。</li>
+<li>长序列存在一个问题：它们很少出现或者从不出现。</li>
+<li>齐普夫定律支配着单词的分布，这个分布不仅适用于一元语法，还适用于其他n元语法。</li>
+<li>通过拉普拉斯平滑法可以有效地处理结构丰富而频率不足的低频词词组。</li>
+<li>读取长序列的主要方式是随机采样和顺序分区。在迭代过程中，后者可以保证来自两个相邻的小批量中的子序列在原始序列上也是相邻的。</li>
+</ul>
 
                 
             </div>
@@ -498,7 +551,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://huizhilei.github.io/2022/02/14/%E9%A3%8E%E6%A0%BC%E8%BF%81%E7%A7%BB/">https://huizhilei.github.io/2022/02/14/%E9%A3%8E%E6%A0%BC%E8%BF%81%E7%A7%BB/</a>
+                    <a href="https://huizhilei.github.io/2022/02/15/%E5%BE%AA%E7%8E%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/">https://huizhilei.github.io/2022/02/15/%E5%BE%AA%E7%8E%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -709,17 +762,18 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
-                <a href="/2022/02/14/%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E5%A4%84%E7%90%86%E6%A6%82%E5%BF%B5/">
+                <a href="/2022/02/15/%E5%BE%AA%E7%8E%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/20.jpg" class="responsive-img" alt="自然语言处理概念">
+                        <img src="/medias/featureimages/7.jpg" class="responsive-img" alt="循环神经网络">
                         
-                        <span class="card-title">自然语言处理概念</span>
+                        <span class="card-title">循环神经网络</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -729,9 +783,9 @@
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2022-02-14
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2022-02-15
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-user fa-fw"></i>
@@ -740,6 +794,7 @@
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
@@ -758,13 +813,13 @@
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2022/02/14/%E5%85%A8%E5%8D%B7%E7%A7%AF%E7%BD%91%E7%BB%9C/">
+                <a href="/2022/02/14/%E8%AF%8D%E5%B5%8C%E5%85%A5/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/21.jpg" class="responsive-img" alt="全卷积网络">
+                        <img src="/medias/featureimages/14.jpg" class="responsive-img" alt="词嵌入">
                         
-                        <span class="card-title">全卷积网络</span>
+                        <span class="card-title">词嵌入</span>
                     </div>
                 </a>
                 <div class="card-content article-content">

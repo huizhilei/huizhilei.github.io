@@ -4,8 +4,8 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="风格迁移, 寂寞沙洲冷">
-    <meta name="description" content="风格迁移 在本节中，我们将介绍如何使用卷积神经网络，自动将一个图像中的风格应用在另一图像之上，即风格迁移（style transfer） [Gatys et al., 2016]。 这里我们需要两张输入图像：一张是内容图像，另一张是风格图像">
+    <meta name="keywords" content="词嵌入, 寂寞沙洲冷">
+    <meta name="description" content="词嵌入（Word2vec） 自然语言是用来表达人脑思维的复杂系统。 在这个系统中，词是意义的基本单元。*顾名思义， 词向量是用于表示单词意义的向量， 并且还可以被认为是单词的特征向量或表示。 将单词映射到实向量的技术称为词嵌入。* 近年来，">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -17,7 +17,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>风格迁移 | 寂寞沙洲冷</title>
+    <title>词嵌入 | 寂寞沙洲冷</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.min.css">
@@ -309,12 +309,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/0.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/14.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">风格迁移</h1>
+                    <h1 class="description center-align post-title">词嵌入</h1>
                 </div>
             </div>
         </div>
@@ -467,12 +467,14 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="风格迁移"><a href="#风格迁移" class="headerlink" title="风格迁移"></a>风格迁移</h1><p> 在本节中，我们将介绍如何使用卷积神经网络，自动将一个图像中的风格应用在另一图像之上，即<em>风格迁移</em>（style transfer） [<a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_references/zreferences.html#gatys-ecker-bethge-2016">Gatys et al., 2016]</a>。 这里我们需要两张输入图像：一张是<em>内容图像</em>，另一张是<em>风格图像</em>。 我们将使用神经网络修改内容图像，使其在风格上接近风格图像。 例如， <a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_computer-vision/neural-style.html#fig-style-transfer">图13.12.1</a>中的内容图像为本书作者在西雅图郊区的雷尼尔山国家公园拍摄的风景照，而风格图像则是一幅主题为秋天橡树的油画。 最终输出的合成图像应用了风格图像的油画笔触让整体颜色更加鲜艳，同时保留了内容图像中物体主体的形状。 </p>
+                <h1 id="词嵌入（Word2vec）"><a href="#词嵌入（Word2vec）" class="headerlink" title="词嵌入（Word2vec）"></a>词嵌入（Word2vec）</h1><p> 自然语言是用来表达人脑思维的复杂系统。 在这个系统中，词是意义的基本单元。*<em>顾名思义， <em>词向量</em>是用于表示单词意义的向量， 并且还可以被认为是单词的特征向量或表示。 将单词映射到实向量的技术称为</em>词嵌入<em>。</em>* 近年来，词嵌入逐渐成为自然语言处理的基础知识。 </p>
+<h2 id="为何独热向量是一个糟糕的选择"><a href="#为何独热向量是一个糟糕的选择" class="headerlink" title="为何独热向量是一个糟糕的选择"></a>为何独热向量是一个糟糕的选择</h2><p> 我们使用独热向量来表示词（字符就是单词）。假设词典中不同词的数量（词典大小）为N，每个词对应一个从0到N−1的不同整数（索引）。为了得到索引为i的任意词的独热向量表示，我们创建了一个全为0的长度为N的向量，并将位置i的元素设置为1。这样，每个词都被表示为一个长度为N的向量，可以直接由神经网络使用。 </p>
+<p> 虽然独热向量很容易构建，但它们通常不是一个好的选择。**<u>一个主要原因是独热向量不能准确表达不同词之间的相似度</u>**，比如我们经常使用的“余弦相似度”。对于向量x,y∈Rd，它们的余弦相似度是它们之间角度的余弦： </p>
 <p><img src="0.jpg"></p>
-<h2 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h2><p> <a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_computer-vision/neural-style.html#fig-style-transfer-model">图13.12.2</a>用简单的例子阐述了基于卷积神经网络的风格迁移方法。 首先，我们初始化合成图像，例如将其初始化为内容图像。 该合成图像是风格迁移过程中唯一需要更新的变量，即风格迁移所需迭代的模型参数。 然后，我们选择一个预训练的卷积神经网络来抽取图像的特征，其中的模型参数在训练中无须更新。 这个深度卷积神经网络凭借多个层逐级抽取图像的特征，我们可以选择其中某些层的输出作为内容特征或风格特征。 以 <a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_computer-vision/neural-style.html#fig-style-transfer-model">图13.12.2</a>为例，这里选取的预训练的神经网络含有3个卷积层，其中第二层输出内容特征，第一层和第三层输出风格特征。 </p>
-<p><img src="1.jpg"></p>
-<p> 接下来，我们通过前向传播（实线箭头方向）计算风格迁移的损失函数，并通过反向传播（虚线箭头方向）迭代模型参数，即不断更新合成图像。 风格迁移常用的损失函数由3部分组成： （i）<em>内容损失</em>使合成图像与内容图像在内容特征上接近； （ii）<em>风格损失</em>使合成图像与风格图像在风格特征上接近； （iii）<em>全变分损失</em>则有助于减少合成图像中的噪点。 最后，当模型训练结束时，我们输出风格迁移的模型参数，即得到最终的合成图像。 </p>
-
+<h2 id="自监督的word2vec"><a href="#自监督的word2vec" class="headerlink" title="自监督的word2vec"></a>自监督的word2vec</h2><p> <a target="_blank" rel="noopener" href="https://code.google.com/archive/p/word2vec/">word2vec</a>工具是为了解决上述问题而提出的。它将每个词映射到一个固定长度的向量，这些向量能更好地表达不同词之间的相似性和类比关系。 </p>
+<p> word2vec工具包含两个模型，即<em>跳元模型</em>（skip-gram） [<a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_references/zreferences.html#mikolov-sutskever-chen-ea-2013">Mikolov et al., 2013b]</a>和<em>连续词袋</em>（CBOW） [<a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_references/zreferences.html#mikolov-chen-corrado-ea-2013">Mikolov et al., 2013a]</a>。<strong>对于在语义上有意义的表示，它们的训练依赖于条件概率，条件概率可以被看作是使用语料库中一些词来预测另一些单词。</strong></p>
+<p><strong>由于是不带标签的数据，因此跳元模型和连续词袋都是自监督模型。</strong> </p>
+<h2 id="跳元模型（Skip-Gram）"><a href="#跳元模型（Skip-Gram）" class="headerlink" title="跳元模型（Skip-Gram）"></a>跳元模型（Skip-Gram）</h2>
                 
             </div>
             <hr/>
@@ -498,7 +500,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://huizhilei.github.io/2022/02/14/%E9%A3%8E%E6%A0%BC%E8%BF%81%E7%A7%BB/">https://huizhilei.github.io/2022/02/14/%E9%A3%8E%E6%A0%BC%E8%BF%81%E7%A7%BB/</a>
+                    <a href="https://huizhilei.github.io/2022/02/14/%E8%AF%8D%E5%B5%8C%E5%85%A5/">https://huizhilei.github.io/2022/02/14/%E8%AF%8D%E5%B5%8C%E5%85%A5/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -713,13 +715,13 @@
             <div class="article-badge left-badge text-color">
                 <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/2022/02/14/%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E5%A4%84%E7%90%86%E6%A6%82%E5%BF%B5/">
+                <a href="/2022/02/15/%E5%BE%AA%E7%8E%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/20.jpg" class="responsive-img" alt="自然语言处理概念">
+                        <img src="/medias/featureimages/7.jpg" class="responsive-img" alt="循环神经网络">
                         
-                        <span class="card-title">自然语言处理概念</span>
+                        <span class="card-title">循环神经网络</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -730,7 +732,7 @@
                     </div>
                     <div class="publish-info">
                         <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2022-02-14
+                            <i class="far fa-clock fa-fw icon-date"></i>2022-02-15
                         </span>
                         <span class="publish-author">
                             
@@ -758,13 +760,13 @@
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2022/02/14/%E5%85%A8%E5%8D%B7%E7%A7%AF%E7%BD%91%E7%BB%9C/">
+                <a href="/2022/02/14/%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E5%A4%84%E7%90%86%E6%A6%82%E5%BF%B5/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/21.jpg" class="responsive-img" alt="全卷积网络">
+                        <img src="/medias/featureimages/20.jpg" class="responsive-img" alt="自然语言处理概念">
                         
-                        <span class="card-title">全卷积网络</span>
+                        <span class="card-title">自然语言处理概念</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
