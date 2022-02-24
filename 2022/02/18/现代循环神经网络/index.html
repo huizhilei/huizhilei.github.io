@@ -532,7 +532,44 @@
 <li>双向循环神经网络主要用于序列编码和给定双向上下文的观测估计。</li>
 <li>由于梯度链更长，因此双向循环神经网络的训练代价非常高。</li>
 </ul>
-
+<h1 id="9-5-机器翻译与数据集"><a href="#9-5-机器翻译与数据集" class="headerlink" title="9.5. 机器翻译与数据集"></a>9.5. 机器翻译与数据集</h1><p> 语言模型是自然语言处理的关键， 而<strong><em>机器翻译</em>是语言模型最成功的基准测试</strong>。 因为机器翻译正是将**输入序列转换成输出序列的 <em>序列转换模型</em>（sequence transduction）**的核心问题。 </p>
+<p> <em>机器翻译</em>（machine translation）指的是 将序列从一种语言自动翻译成另一种语言。  </p>
+<h2 id="9-5-6-小结"><a href="#9-5-6-小结" class="headerlink" title="9.5.6. 小结"></a>9.5.6. 小结</h2><ul>
+<li>机器翻译指的是将文本序列从一种语言自动翻译成另一种语言。</li>
+<li>使用单词级词元化时的词表大小，将明显大于使用字符级词元化时的词表大小。为了缓解这一问题，我们可以将低频词元视为相同的未知词元。</li>
+<li>通过截断和填充文本序列，可以保证所有的文本序列都具有相同的长度，以便以小批量的方式加载。</li>
+</ul>
+<h1 id="9-6-编码器-解码器架构"><a href="#9-6-编码器-解码器架构" class="headerlink" title="9.6. 编码器-解码器架构"></a>9.6. 编码器-解码器架构</h1><p>正如我们在 <a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_recurrent-modern/machine-translation-and-dataset.html#sec-machine-translation">9.5节</a>中所讨论的， 机器翻译是序列转换模型的一个核心问题， 其输入和输出都是长度可变的序列。 为了处理这种类型的输入和输出， 我们可以设计一个包含两个主要组件的架构： <strong>第一个组件是一个<em>编码器</em>（encoder）： 它接受一个长度可变的序列作为输入， 并将其转换为具有固定形状的编码状态。 第二个组件是<em>解码器</em>（decoder）： 它将固定形状的编码状态映射到长度可变的序列。</strong> 这被称为<em>编码器-解码器</em>（encoder-decoder）架构， 如 <a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_recurrent-modern/encoder-decoder.html#fig-encoder-decoder">图9.6.1</a> 所示。</p>
+<p><img src="p961.jpg"></p>
+<h2 id="9-6-4-小结¶"><a href="#9-6-4-小结¶" class="headerlink" title="9.6.4. 小结¶"></a>9.6.4. 小结<a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_recurrent-modern/encoder-decoder.html#id5">¶</a></h2><ul>
+<li>“编码器－解码器”架构可以将长度可变的序列作为输入和输出，因此适用于机器翻译等序列转换问题。</li>
+<li>编码器将长度可变的序列作为输入，并将其转换为具有固定形状的编码状态。</li>
+<li>解码器将具有固定形状的编码状态映射为长度可变的序列。</li>
+</ul>
+<h1 id="9-7-序列到序列学习（seq2seq）"><a href="#9-7-序列到序列学习（seq2seq）" class="headerlink" title="9.7. 序列到序列学习（seq2seq）"></a>9.7. 序列到序列学习（seq2seq）</h1><p> 本节，我们将使用两个循环神经网络的编码器和解码器， 并将其应用于<em>序列到序列</em>（sequence to sequence，seq2seq）类的学习任务 [<a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_references/zreferences.html#sutskever-vinyals-le-2014">Sutskever et al., 2014]</a>[<a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_references/zreferences.html#cho-van-merrienboer-gulcehre-ea-2014">Cho et al., 2014b]</a>。 </p>
+<p> <strong>遵循编码器－解码器架构的设计原则， 循环神经网络编码器使用长度可变的序列作为输入， 将其转换为固定形状的隐状态。 换言之，输入序列的信息被<em>编码</em>到循环神经网络编码器的隐状态中。</strong> </p>
+<p> <strong>为了连续生成输出序列的词元， 独立的循环神经网络解码器是基于输入序列的编码信息 和输出序列已经看见的或者生成的词元来预测下一个词元。</strong> </p>
+<p><img src="p971.jpg"></p>
+<p> 在 <a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_recurrent-modern/seq2seq.html#fig-seq2seq">图9.7.1</a>中， 特定的“<eos>”表示序列结束词元。 一旦输出序列生成此词元，模型就会停止预测。 在循环神经网络解码器的初始化时间步，有两个特定的设计决定： 首先，特定的“<bos>”表示序列开始词元，它是解码器的输入序列的第一个词元。 其次，<strong>使用循环神经网络编码器最终的隐状态来初始化解码器的隐状态。</strong> </p>
+<p>——————————————————————————————</p>
+<p>编码器的最终隐状态H属于R(n*h),是一个矩阵，隐状态是个矩阵，隐含整个输入序列的信息。</p>
+<p>——————————————————————————————</p>
+<h2 id="9-7-1-编码器"><a href="#9-7-1-编码器" class="headerlink" title="9.7.1. 编码器"></a>9.7.1. 编码器</h2><p> <strong>从技术上讲，编码器将长度可变的输入序列转换成 形状固定的上下文变量c， 并且将输入序列的信息在该上下文变量中进行编码。</strong></p>
+<p><img src="971.jpg"></p>
+<p> 到目前为止，我们使用的是一个单向循环神经网络来设计编码器， 其中隐状态只依赖于输入子序列， 这个子序列是由输入序列的开始位置到隐状态所在的时间步的位置 （包括隐状态所在的时间步）组成。 我们也可以使用双向循环神经网络构造编码器， 其中隐状态依赖于两个输入子序列， 两个子序列是由隐状态所在的时间步的位置之前的序列和之后的序列 （包括隐状态所在的时间步）， <strong>因此隐状态对整个序列的信息都进行了编码</strong>。 </p>
+<p> <em>现在，让我们实现循环神经网络编码器。 注意，我们使用了嵌入层（embedding layer） 来获得输入序列中每个词元的特征向量。 <strong>嵌入层的权重是一个矩阵， 其行数等于输入词表的大小（<code>vocab_size</code>）， 其列数等于特征向量的维度（<code>embed_size</code>）。 对于任意输入词元的索引i， 嵌入层获取权重矩阵的第i行（从0开始）以返回其特征向量。</strong></em> </p>
+<h2 id="9-7-2-解码器"><a href="#9-7-2-解码器" class="headerlink" title="9.7.2. 解码器"></a>9.7.2. 解码器</h2><p><img src="972.jpg"></p>
+<p>————————————————————————————</p>
+<p><strong>小思考：使用神经网络实例化（模型化）语言模型的条件概率，对于P(A|B)，就是使用B作为模型输入，A作为模型输出。</strong></p>
+<p>————————————————————————————</p>
+<h2 id="9-7-7-小结"><a href="#9-7-7-小结" class="headerlink" title="9.7.7. 小结"></a>9.7.7. 小结</h2><ul>
+<li>根据“编码器-解码器”架构的设计， 我们可以使用两个循环神经网络来设计一个序列到序列学习的模型。</li>
+<li>在实现编码器和解码器时，我们可以使用多层循环神经网络。</li>
+<li>我们可以使用遮蔽来过滤不相关的计算，例如在计算损失时。</li>
+<li>在“编码器－解码器”训练中，强制教学方法将原始输出序列（而非预测结果）输入解码器。</li>
+<li>BLEU是一种常用的评估方法，它通过测量预测序列和标签序列之间的nn元语法的匹配度来评估预测。</li>
+</ul>
+<h1 id="9-8-束搜索"><a href="#9-8-束搜索" class="headerlink" title="9.8. 束搜索"></a>9.8. 束搜索</h1>
                 
             </div>
             <hr/>
