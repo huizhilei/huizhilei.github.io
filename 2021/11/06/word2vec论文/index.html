@@ -472,16 +472,41 @@
 <p><strong>什么是马尔科夫假设？</strong></p>
 <p>马尔科夫假设是指，每个词出现的概率只跟它前面的少数几个词有关。引入了马尔科夫假设的语言模型，也可以叫做马尔科夫模型。 也就是说，应用了这个假设表明了当前这个词仅仅跟前面几个有限的词相关，因此也就不必追溯到最开始的那个词，这样便可以大幅缩减上述算式的长度。 </p>
 <h1 id=""><a href="#" class="headerlink" title=""></a></h1><h1 id="简化版本：N-gram模型："><a href="#简化版本：N-gram模型：" class="headerlink" title="简化版本：N-gram模型："></a><strong>简化版本：N-gram模型：</strong></h1><p>$$<br>p(w_t|w_1, w_2, …, w_{t-1}) \approx p(w_t|w_{t-n+1}, …, w_{t-1})<br>$$</p>
+<p> <strong>求解Ngram模型的参数——等价于去统计每个Ngram的条件词频 。</strong></p>
 <p>————————————————————————————————</p>
 <p>关于ngram小思考（不知道对不对），N-gram总共需要存储V^N个参数（概率值），其中V是词汇表中词元个数。</p>
 <p>————————————————————————————————</p>
-<p>不过，Ngram模型仍有其局限性。首先，由于参数空间的爆炸式增长，它无法处理更长程的context（N&gt;3）。其次，它没有考虑词与词之间内在的联系性。 </p>
+<p><strong>不过，Ngram模型仍有其局限性。首先，由于参数空间的爆炸式增长，它无法处理更长程的context（N&gt;3）。其次，它没有考虑词与词之间内在的联系性。</strong> </p>
 <p><strong>这是因为，Ngram本质上是将词当做一个个孤立的原子单元（atomic unit）去处理的。这种处理方式对应到数学上的形式是一个个离散的one-hot向量 。</strong></p>
 <p>————————————————————————————————</p>
 <p>关于Ngram算法atomic unit的小思考：Ngram算法关于每个词元的处理，并没有考虑其语义信息，只是简单粗暴地将所有词元以N为单位进行排列组合，计算各个gram后任意词元出现的频率，（语料库确定了，Ngram模型其实就确定了）其实，其本质上，是所谓的atomic unit。</p>
 <p>————————————————————————————————</p>
 <p> 于是，人们就自然而然地想到，能否用一个<strong>连续的稠密向量去刻画一个word的特征</strong>呢？ 如果可以， 我们就可以直接刻画词与词之间的相似度 。<strong>word2vec 将每个词映射到一个固定长度的向量，这些向量能更好地表达不同词之间的相似性和类比关系。</strong> </p>
-<h1 id="Word2vec"><a href="#Word2vec" class="headerlink" title="Word2vec"></a>Word2vec</h1><p><img src="00.png"></p>
+<h1 id="Neural-Network-Language-Model（NNLM）"><a href="#Neural-Network-Language-Model（NNLM）" class="headerlink" title="Neural Network Language Model（NNLM）"></a>Neural Network Language Model（NNLM）</h1><p>参考：<a target="_blank" rel="noopener" href="https://www.cnblogs.com/guoyaohua/p/9240336.html">https://www.cnblogs.com/guoyaohua/p/9240336.html</a></p>
+<p>鉴于Ngram等模型的不足，2003年，Bengio等人发表了一篇开创性的文章：A neural probabilistic language model[3]。  在这篇文章里，他们总结出了一套用神经网络建立统计语言模型的框架（Neural Network Language Model，以下简称NNLM） ， 奠定了包括word2vec在内后续研究word representation learning的基础。 </p>
+<p><strong>NNLM模型的基本思想可以概括如下：</strong></p>
+<ol>
+<li><strong>假定词表中的每一个word都对应着一个连续的特征向量；</strong></li>
+<li><strong>假定一个连续平滑的概率模型，输入一段词向量的序列，可以输出这段序列的联合概率；</strong></li>
+<li><strong>同时学习词向量的权重和概率模型里的参数。</strong></li>
+</ol>
+<p><img src="4.jpg"></p>
+<p><img src="5.png"></p>
+<p>我们可以将整个模型拆分成两部分加以理解：</p>
+<ol>
+<li>首先是一个线性的Embedding层。它将输入的N−1个one-hot词向量，通过一个共享的D×V的矩阵C，映射为N−1个分布式的词向量（distributed vector）。其中，V是词典的大小，D是Embedding向量的维度（一个先验参数）。<strong>C矩阵里存储了要学习的word vector。</strong></li>
+<li>其次是一个简单的前向反馈神经网络g。它由一个tanh隐层和一个softmax输出层组成。通过将Embedding层输出的N−1个词向量映射为一个长度为V的概率分布向量，从而对词典中的word在输入context下的条件概率做出预估：</li>
+</ol>
+<p>$$<br>p(w_i|w_1,w_2,…,w_{t-1}) \approx f(w_i, w_{t-1}, …, w_{t-n+1}) = g(w_i, C(w_{t-n+1}), …, C(w_{t-1}))<br>$$</p>
+<p><img src="6.jpg"></p>
+<h1 id="Word2vec"><a href="#Word2vec" class="headerlink" title="Word2vec"></a>Word2vec</h1><p>原始的NNLM模型的训练其实可以拆分成<strong>两个步骤</strong>：</p>
+<ol>
+<li>用一个简单模型训练出连续的词向量；</li>
+<li>基于词向量的表达，训练一个神经网络模型。<br><strong>而NNLM模型的计算瓶颈主要是在第二步。</strong></li>
+</ol>
+<p><strong>如果我们只是想得到word的连续特征向量，可以对第二步里的神经网络模型进行简化呢。</strong></p>
+<p> <strong>Mikolov 移除前向反馈神经网络中非线性的hidden layer，直接将中间层的Embedding layer与输出层的softmax layer连接；</strong></p>
+<p><img src="00.png"></p>
 <p><strong>当模型训练完后，最后得到的其实是神经网络的权重，比如现在输入一个 x 的 one-hot encoder: [1,0,0,…,0]，则在输入层到隐含层的权重里，只有对应 1 这个位置的权重被激活，这些权重的个数，跟隐含层节点数是一致的，从而这些权重组成一个向量 Wx 来表示x，而因为每个词语的 one-hot encoder 里面 1 的位置是不同的，所以，这个向量 Wx 就可以用来唯一表示 x。</strong></p>
 <p><em><strong>注意：上面这段话说的就是 Word2vec 的精髓！此处依靠矩阵和向量乘法的行列向量空间角度来理解，独热向量只会激活词向量矩阵中的某一列或者某一行。</strong></em></p>
 <p>————————————————————————————————————————</p>
