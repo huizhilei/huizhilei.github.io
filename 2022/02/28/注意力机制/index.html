@@ -511,6 +511,7 @@
 <p> 用数学语言描述，假设有一个查询 $\mathbf{q} \in \mathbb{R}^q$  和 m个“键－值”对 ,$(\mathbf{k}_1, \mathbf{v}_1), \ldots, (\mathbf{k}_m, \mathbf{v}_m)$ ,其中$\mathbf{k}_i \in \mathbb{R}^k$, $\mathbf{v}_i \in \mathbb{R}^v$</p>
 <p> 注意力汇聚函数f就被表示成值的加权和 :$f(\mathbf{q}, (\mathbf{k}_1, \mathbf{v}_1), \ldots, (\mathbf{k}_m, \mathbf{v}<em>m)) = \sum</em>{i=1}^m \alpha(\mathbf{q}, \mathbf{k}_i) \mathbf{v}_i \in \mathbb{R}^v,(10.3.1)$。</p>
 <p> <strong>其中查询 $\mathbf{q}$ 和键 $\mathbf{k}_i$ 的注意力权重（标量） 是通过注意力评分函数a将两个向量映射成标量</strong>， <strong>再经过softmax运算得到的：</strong> $\alpha(\mathbf{q}, \mathbf{k}_i) = \mathrm{softmax}(a(\mathbf{q}, \mathbf{k}_i)) = \frac{\exp(a(\mathbf{q}, \mathbf{k}<em>i))}{\sum</em>{j=1}^m \exp(a(\mathbf{q}, \mathbf{k}_j))} \in \mathbb{R}.\qquad\qquad(10.3.2)$,</p>
+<p><img src="1031.jpg"></p>
 <p>——————————————————————————————————————</p>
 <p>我们想要集中注意力观察某个地方，首先当然要能够接受到全局信息，然后才能用某种方法确定关注全局信息的局部重点信息，就是说，前提是你能接收到全局信息，这就是为什么我们要获取所有的键$k_i$ ，所有的键 就是全局信息，就是感官直接接受到的信息，就是所谓的 非自主性提示 。通过查询与所有键进行计算得出我们想要查询的键，接下来重点关注该键对应的值。</p>
 <p>——————————————————————————————————————</p>
