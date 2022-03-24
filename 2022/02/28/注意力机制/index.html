@@ -491,6 +491,7 @@
 <h1 id="10-2-注意力汇聚：Nadaraya-Watson-核回归"><a href="#10-2-注意力汇聚：Nadaraya-Watson-核回归" class="headerlink" title="10.2. 注意力汇聚：Nadaraya-Watson 核回归"></a>10.2. 注意力汇聚：Nadaraya-Watson 核回归</h1><p> <em><u><strong>上节我们介绍了框架下的注意力机制的主要成分 <a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_attention-mechanisms/attention-cues.html#fig-qkv">图10.1.3</a>： 查询（自主提示）和键（非自主提示）之间的交互形成了注意力汇聚， 注意力汇聚有选择地聚合了值（感官输入）以生成最终的输出。</strong></u></em> </p>
 <h2 id="10-2-1-生成数据集"><a href="#10-2-1-生成数据集" class="headerlink" title="10.2.1. 生成数据集"></a>10.2.1. 生成数据集</h2><h2 id="10-2-3-非参数注意力汇聚"><a href="#10-2-3-非参数注意力汇聚" class="headerlink" title="10.2.3. 非参数注意力汇聚"></a>10.2.3. 非参数注意力汇聚</h2><p> Nadaraya [<a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_references/zreferences.html#nadaraya-1964">Nadaraya, 1964]</a>和 Watson [<a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_references/zreferences.html#watson-1964">Watson, 1964]</a>提出了一个更好的想法， 根据输入的位置对输出yi进行加权：<br>$$<br>f(x) = \sum_{i=1}^n \frac{K(x - x_i)}{\sum_{j=1}^n K(x - x_j)} y_i,     \qquad\qquad\qquad\qquad（10.2.3）<br>$$<br> 其中K是<em>核</em>（kernel）。 公式 <a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_attention-mechanisms/nadaraya-waston.html#equation-eq-nadaraya-watson">(10.2.3)</a>所描述的估计器被称为 <em>Nadaraya-Watson核回归</em>（Nadaraya-Watson kernel regression） . 受此启发， 我们可以从 <a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_attention-mechanisms/attention-cues.html#fig-qkv">图10.1.3</a>中的注意力机制框架的角度 重写 <a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_attention-mechanisms/nadaraya-waston.html#equation-eq-nadaraya-watson">(10.2.3)</a>， 成为一个更加通用的<em>注意力汇聚</em>（attention pooling）公式：<br>$$<br>f(x) = \sum_{i=1}^n \alpha(x, x_i) y_i, \qquad\qquad\qquad (10.2.4)<br>$$<br> *<em>其中x是查询，(xi,yi)是键值对。 比较 <a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_attention-mechanisms/nadaraya-waston.html#equation-eq-attn-pooling">(10.2.4)</a>和 <a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_attention-mechanisms/nadaraya-waston.html#equation-eq-avg-pooling">(10.2.2)</a>， 注意力汇聚是yi的加权平均。 将查询x和键xi之间的关系建模为 <em>注意力权重</em>（attention weight）α(x,xi)， 如 <a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_attention-mechanisms/nadaraya-waston.html#equation-eq-attn-pooling">(10.2.4)</a>所示， 这个权重将被分配给每一个对应值yi。 对于任何查询，模型在所有键值对注意力权重都是一个有效的概率分布： 它们是非负的，并且总和为1。</em>* </p>
 <p> 我们考虑一个<em>高斯核</em>（Gaussian kernel），其定义为：<br>$$<br>K(u) = \frac{1}{\sqrt{2\pi}} \exp(-\frac{u^2}{2}).  \quad\qquad(10.2.5)<br>$$<br> 将高斯核代入 <a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_attention-mechanisms/nadaraya-waston.html#equation-eq-attn-pooling">(10.2.4)</a>和 <a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_attention-mechanisms/nadaraya-waston.html#equation-eq-nadaraya-watson">(10.2.3)</a>可以得到：<br>$$<br>\begin{split}\begin{aligned} f(x) &amp;=\sum_{i=1}^n \alpha(x, x_i) y_i\ &amp;= \sum_{i=1}^n \frac{\exp\left(-\frac{1}{2}(x - x_i)^2\right)}{\sum_{j=1}^n \exp\left(-\frac{1}{2}(x - x_j)^2\right)} y_i \&amp;= \sum_{i=1}^n \mathrm{softmax}\left(-\frac{1}{2}(x - x_i)^2\right) y_i. \end{aligned}\end{split}\qquad\qquad(10.2.6)<br>$$<br> <strong>如果一个键xi越是接近给定的查询x， 那么分配给这个键对应值yi的注意力权重就会越大， 也就“获得了更多的注意力”。</strong> </p>
+<p> 值得注意的是，Nadaraya-Watson核回归是一个<strong>非参数模型</strong>。 因此， <a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_attention-mechanisms/nadaraya-waston.html#equation-eq-nadaraya-watson-gaussian">(10.2.6)</a>是 <em>非参数的注意力汇聚</em>（nonparametric attention pooling）模型。 <u><strong>（10.2.6公式确实没有参数，只要数据集确定了，模型就确定了。非参数模型不用训练参数）</strong></u></p>
 <p>——————————————————————————————————</p>
 <p><strong>输入x，预测值为f(x)， 比起  基于平均汇聚来计算所有训练样本输出值的平均值 方法的估计器，10.2.6的公式中，当键xi取值正好等于查询x时，softmax取值最大，此时对应的yi恰好是查询x对应的标签，此时yi的权重最大。</strong></p>
 <p>——————————————————————————————————</p>
@@ -500,7 +501,7 @@
 <p>其实也就是，某个键xi，其距离查询x越近，那么其注意力评分越高，那么该键对应的值yi权重越大。</p>
 <p>通过这种方式来实现回归算法。</p>
 <p>——————————————————————————————————</p>
-<p> 例如，与 <a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_attention-mechanisms/nadaraya-waston.html#equation-eq-nadaraya-watson-gaussian">(10.2.6)</a>略有不同， 在下面的查询x和键xi之间的距离乘以可学习参数w：<br>$$<br>\begin{split}\begin{aligned}f(x) &amp;= \sum_{i=1}^n \alpha(x, x_i) y_i \&amp;= \sum_{i=1}^n \frac{\exp\left(-\frac{1}{2}((x - x_i)w)^2\right)}{\sum_{j=1}^n \exp\left(-\frac{1}{2}((x - x_j)w)^2\right)} y_i \&amp;= \sum_{i=1}^n \mathrm{softmax}\left(-\frac{1}{2}((x - x_i)w)^2\right) y_i.\end{aligned}\end{split}<br>$$</p>
+<p> 例如，与 <a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_attention-mechanisms/nadaraya-waston.html#equation-eq-nadaraya-watson-gaussian">(10.2.6)</a>略有不同， 在下面的查询x和键xi之间的距离乘以可学习参数w：  <strong>我们将通过训练这个模型 来学习注意力汇聚的参数。</strong>  <strong>训练带参数的注意力汇聚模型时，使用平方损失函数和随机梯度下降。</strong><br>$$<br>\begin{split}\begin{aligned}f(x) &amp;= \sum_{i=1}^n \alpha(x, x_i) y_i \&amp;= \sum_{i=1}^n \frac{\exp\left(-\frac{1}{2}((x - x_i)w)^2\right)}{\sum_{j=1}^n \exp\left(-\frac{1}{2}((x - x_j)w)^2\right)} y_i \&amp;= \sum_{i=1}^n \mathrm{softmax}\left(-\frac{1}{2}((x - x_i)w)^2\right) y_i.\end{aligned}\end{split}<br>$$</p>
 <h2 id="10-2-5-小结¶"><a href="#10-2-5-小结¶" class="headerlink" title="10.2.5. 小结¶"></a>10.2.5. 小结<a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_attention-mechanisms/nadaraya-waston.html#id10">¶</a></h2><ul>
 <li>Nadaraya-Watson核回归是具有注意力机制的机器学习范例。</li>
 <li>Nadaraya-Watson核回归的<strong>注意力汇聚是对训练数据中输出的加权平均</strong>。从注意力的角度来看，<strong>分配给每个值的注意力权重取决于将值所对应的键和查询作为输入的函数。</strong></li>
@@ -528,6 +529,11 @@
 <p> 其中可学习的参数是 $\mathbf W_q\in\mathbb R^{h\times q}$,$\mathbf W_k\in\mathbb R^{h\times k}$,$\mathbf w_v\in\mathbb R^{h}$, 将查询和键连结起来后输入到一个多层感知机（MLP）中， 感知机包含一个隐藏层，其隐藏单元数是一个超参数h。 通过使用tanh作为激活函数，并且禁用偏置项。 </p>
 <h2 id="10-3-3-缩放点积注意力"><a href="#10-3-3-缩放点积注意力" class="headerlink" title="10.3.3. 缩放点积注意力"></a>10.3.3. 缩放点积注意力</h2><p> <strong>使用点积可以得到计算效率更高的评分函数， 但是点积操作要求查询和键具有相同的长度d。</strong> </p>
 <p> 假设查询和键的所有元素都是独立的随机变量， 并且都满足零均值和单位方差， 那么两个向量的点积的均值为0，方差为d。 为确保无论向量长度如何， 点积的方差在不考虑向量长度的情况下仍然是1， 我们将点积除以 $\sqrt{d}$, 则<em>缩放点积注意力</em>（scaled dot-product attention）评分函数为：<br>$$<br>a(\mathbf q, \mathbf k) = \mathbf{q}^\top \mathbf{k}  /\sqrt{d}. \qquad\qquad(10.3.4)<br>$$<br> 在实践中，我们通常从小批量的角度来考虑提高效率， 例如基于n个查询和m个键－值对计算注意力， 其中查询和键的长度为d，值的长度为v。 查询 $\mathbf Q\in\mathbb R^{n\times d}$,  键 $ \mathbf K\in\mathbb R^{m\times d}$, 和 值$\mathbf V\in\mathbb R^{m\times v}$的缩放点积注意力是：<br>$$<br>\mathrm{softmax}\left(\frac{\mathbf Q \mathbf K^\top }{\sqrt{d}}\right) \mathbf V \in \mathbb{R}^{n\times v}.\qquad\qquad (10.3.5)<br>$$</p>
+<p>——————————————————————————————————</p>
+<p><u><strong>对这里的模型输入输出维度有了一点理解：如果不想要深入函数每个细节的维度变化，不妨从模型总体含义的角度理解，什么意思呢，如果模型输入为Q，只有一个样本，则Q是一个d维的向量，（模型内部根据键值一一对应的特性可知K和V矩阵必须都是m行的）模型最后是对V的各行向量进行加权组合，所以输入维度是v。</strong></u></p>
+<p><u><strong>如果n批量输入，Q维度是n*d，则输出维度相应变化为n*v</strong></u></p>
+<p>这个分析过程中，对模型内部细节维度不用分析。</p>
+<p>——————————————————————————————————</p>
 <h1 id="10-4-Bahdanau-注意力"><a href="#10-4-Bahdanau-注意力" class="headerlink" title="10.4. Bahdanau 注意力"></a>10.4. Bahdanau 注意力</h1><p> <strong>我们在 <a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_recurrent-modern/seq2seq.html#sec-seq2seq">9.7节</a>中探讨了机器翻译问题： 通过设计一个基于两个循环神经网络的编码器-解码器架构， 用于序列到序列学习。 具体来说，循环神经网络编码器将长度可变的序列转换为固定形状的上下文变量， 然后循环神经网络解码器根据生成的词元和上下文变量 按词元生成输出（目标）序列词元。 然而，即使并非所有输入（源）词元都对解码某个词元都有用</strong>， 在每个解码步骤中仍使用编码<em>相同</em>的上下文变量。 有什么方法能改变上下文变量呢？ </p>
 <h2 id="10-4-1-模型"><a href="#10-4-1-模型" class="headerlink" title="10.4.1. 模型"></a>10.4.1. 模型</h2><p> 下面描述的Bahdanau注意力模型 将遵循 <a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_recurrent-modern/seq2seq.html#sec-seq2seq">9.7节</a>中的相同符号表达。   这个新的基于注意力的模型与 <a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_recurrent-modern/seq2seq.html#sec-seq2seq">9.7节</a>中的模型相同， 只不过 <a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_recurrent-modern/seq2seq.html#equation-eq-seq2seq-s-t">(9.7.3)</a>中的上下文变量c在任何解码时间步t′都会被$\mathbf{c}<em>{t’}$替换。 假设输入序列中有T个词元， <strong>解码时间步t′的上下文变量是注意力集中的输出：</strong><br>$$<br>\mathbf{c}</em>{t’} = \sum_{t=1}^T \alpha(\mathbf{s}_{t’ - 1}, \mathbf{h}_t) \mathbf{h}<em>t,\qquad\qquad(10.4.1)<br>$$<br> 其中，时间步 $t’-1$ 时的解码器隐状态 $s</em>{t’-1}$ 是查询， 编码器隐状态 $h_t$ 既是键，也是值， 注意力权重 $\alpha$ 是使用 <a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_attention-mechanisms/attention-scoring-functions.html#equation-eq-attn-scoring-alpha">(10.3.2)</a> 所定义的加性注意力打分函数计算的。 </p>
 <p><img src="xx.jpg"></p>
@@ -540,7 +546,7 @@
 <li><strong>在预测词元时，如果不是所有输入词元都是相关的，那么具有Bahdanau注意力的循环神经网络编码器-解码器会有选择地统计输入序列的不同部分。这是通过将上下文变量视为加性注意力池化的输出来实现的。</strong></li>
 <li><strong>在循环神经网络编码器-解码器中，Bahdanau注意力将上一时间步的解码器隐状态视为查询，在所有时间步的编码器隐状态同时视为键和值。</strong></li>
 </ul>
-<h1 id="10-5-多头注意力"><a href="#10-5-多头注意力" class="headerlink" title="10.5. 多头注意力"></a>10.5. 多头注意力</h1><p>在实践中，当给定相同的查询、键和值的集合时， 我们希望模型可以基于相同的注意力机制学习到不同的行为， 然后将不同的行为作为知识组合起来， 捕获序列内各种范围的依赖关系 （例如，短距离依赖和长距离依赖关系）。 因此，允许注意力机制组合使用查询、键和值的不同 <em>子空间表示</em>（representation subspaces）可能是有益的。 </p>
+<h1 id="10-5-多头注意力（就是将键和值重新线性组合一下，传入多个注意力汇聚中，这样可以捕获序列内各种范围的依赖关系-（例如，短距离依赖和长距离依赖关系））"><a href="#10-5-多头注意力（就是将键和值重新线性组合一下，传入多个注意力汇聚中，这样可以捕获序列内各种范围的依赖关系-（例如，短距离依赖和长距离依赖关系））" class="headerlink" title="10.5. 多头注意力（就是将键和值重新线性组合一下，传入多个注意力汇聚中，这样可以捕获序列内各种范围的依赖关系 （例如，短距离依赖和长距离依赖关系））"></a>10.5. 多头注意力（就是将键和值重新线性组合一下，传入多个注意力汇聚中，这样可以捕获序列内各种范围的依赖关系 （例如，短距离依赖和长距离依赖关系））</h1><p>在实践中，当给定相同的查询、键和值的集合时， 我们希望模型可以基于相同的注意力机制学习到不同的行为， 然后将不同的行为作为知识组合起来， 捕获序列内各种范围的依赖关系 （例如，短距离依赖和长距离依赖关系）。 因此，允许注意力机制组合使用查询、键和值的不同 <em>子空间表示</em>（representation subspaces）可能是有益的。 </p>
 <p> 为此，与其只使用单独一个注意力汇聚， 我们可以*<em>用独立学习得到的h组不同的 <em>线性投影</em>（linear projections）来变换查询、键和值。 然后，这h组变换后的查询、键和值将并行地送到注意力汇聚中。 最后，将这h个注意力汇聚的输出拼接在一起， 并且通过另一个可以学习的线性投影进行变换， 以产生最终输出。</em>* 这种设计被称为<em>多头注意力</em>（multihead attention） [<a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_references/zreferences.html#vaswani-shazeer-parmar-ea-2017">Vaswani et al., 2017]</a>。 对于h个注意力汇聚输出，每一个注意力汇聚都被称作一个<em>头</em>（head）。 <a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_attention-mechanisms/multihead-attention.html#fig-multi-head-attention">图10.5.1</a> 展示了使用全连接层来实现可学习的线性变换的多头注意力。 </p>
 <p><img src="p1051.jpg"></p>
 <h2 id="10-5-1-模型"><a href="#10-5-1-模型" class="headerlink" title="10.5.1. 模型"></a>10.5.1. 模型</h2><p><img src="1051.jpg"></p>
@@ -555,10 +561,17 @@
 <h2 id="10-6-1-自注意力"><a href="#10-6-1-自注意力" class="headerlink" title="10.6.1. 自注意力"></a>10.6.1. 自注意力</h2><p>给定一个由词元组成的输入序列 $\mathbf{x}_1, \ldots, \mathbf{x}_n$,  其中任意 $\mathbf{x}_i \in \mathbb{R}^d \quad(1 \leq i \leq n)$, 该序列的自注意力输出为一个长度相同的序列 $\mathbf{y}_1, \ldots, \mathbf{y}_n$, 其中f是根据 <a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_attention-mechanisms/nadaraya-waston.html#equation-eq-attn-pooling">(10.2.4)</a>中定义的注意力池化（attention pooling就是注意力聚合）函数 ：<br>$$<br>\mathbf{y}_i = f(\mathbf{x}_i, (\mathbf{x}_1, \mathbf{x}_1), \ldots, (\mathbf{x}_n, \mathbf{x}_n)) \in \mathbb{R}^d\qquad\qquad(10.6.1)<br>$$<br>——————————————————————————————</p>
 <p><strong>xi是查询，（x1，x1）是键值对，该模型可以将学的原始序列的自注意力输出。自己就能知道自己哪些地方是重点，基于这些地方更大的权重。</strong></p>
 <p>——————————————————————————————</p>
-<h2 id="10-6-2-比较卷积神经网络、循环神经网络和自注意力-看不懂"><a href="#10-6-2-比较卷积神经网络、循环神经网络和自注意力-看不懂" class="headerlink" title="10.6.2. 比较卷积神经网络、循环神经网络和自注意力(看不懂)"></a>10.6.2. 比较卷积神经网络、循环神经网络和自注意力(看不懂)</h2><p> 让我们比较下面几个架构，目标都是将由n个词元组成的序列映射到另一个长度相等的序列，其中的每个输入词元或输出词元都由d维向量表示。 </p>
+<h2 id="10-6-2-比较卷积神经网络、循环神经网络和自注意力-看不懂–能读懂一点了2022-3-23"><a href="#10-6-2-比较卷积神经网络、循环神经网络和自注意力-看不懂–能读懂一点了2022-3-23" class="headerlink" title="10.6.2. 比较卷积神经网络、循环神经网络和自注意力(看不懂–能读懂一点了2022/3/23)"></a>10.6.2. 比较卷积神经网络、循环神经网络和自注意力(看不懂–能读懂一点了2022/3/23)</h2><p> 让我们比较下面几个架构，<strong>目标都是将由n个词元组成的序列映射到另一个长度相等的序列</strong>，其中的每个输入词元或输出词元都由d维向量表示。 </p>
 <p><img src="p1061.jpg"></p>
-<p> 总而言之，卷积神经网络和自注意力都拥有并行计算的优势， 而且自注意力的最大路径长度最短。 但是因为其计算复杂度是关于序列长度的二次方，所以在很长的序列中计算会非常慢。 </p>
-<h2 id="10-6-3-位置编码"><a href="#10-6-3-位置编码" class="headerlink" title="10.6.3. 位置编码"></a>10.6.3. 位置编码</h2><p> *<em>在处理词元序列时，循环神经网络是逐个的重复地处理词元的， 而自注意力则因为并行计算而放弃了顺序操作。 为了使用序列的顺序信息，我们通过在输入表示中添加 <em>位置编码</em>（positional encoding）来注入绝对的或相对的位置信息。 位置编码可以通过学习得到也可以直接固定得到。</em>* </p>
+<p><img src="123.jpg"></p>
+<p>————————————————————————</p>
+<p>循环神经网络需要顺序操作，不可并行化；</p>
+<p>自注意力 每个词元都通过自注意力直接连接到任何其他词元，其最大路径长度最短 ；</p>
+<p>卷积神经网络每个词元在每一层只连接部分词元；</p>
+<p> <strong>任意的序列位置组合之间的路径越短，则能更轻松地学习序列中的远距离依赖关系 [<a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_references/zreferences.html#hochreiter-bengio-frasconi-ea-2001">Hochreiter et al., 2001]</a>。</strong> </p>
+<p>————————————————————————</p>
+<p> <strong>总而言之，卷积神经网络和自注意力都拥有并行计算的优势， 而且自注意力的最大路径长度最短。 但是因为其计算复杂度是关于序列长度的二次方，所以在很长的序列中计算会非常慢。</strong> </p>
+<h2 id="10-6-3-位置编码（有一点点读懂了）"><a href="#10-6-3-位置编码（有一点点读懂了）" class="headerlink" title="10.6.3. 位置编码（有一点点读懂了）"></a>10.6.3. 位置编码（有一点点读懂了）</h2><p> *<em>在处理词元序列时，循环神经网络是逐个的重复地处理词元的， 而自注意力则因为并行计算而放弃了顺序操作。 为了使用序列的顺序信息，我们通过在输入表示中添加 <em>位置编码</em>（positional encoding）来注入绝对的或相对的位置信息。 位置编码可以通过学习得到也可以直接固定得到。</em>* </p>
 <h3 id="10-6-3-1-绝对位置信息"><a href="#10-6-3-1-绝对位置信息" class="headerlink" title="10.6.3.1. 绝对位置信息"></a>10.6.3.1. 绝对位置信息</h3><h3 id="10-6-3-2-相对位置信息"><a href="#10-6-3-2-相对位置信息" class="headerlink" title="10.6.3.2. 相对位置信息"></a>10.6.3.2. 相对位置信息</h3><h2 id="10-6-4-小结"><a href="#10-6-4-小结" class="headerlink" title="10.6.4. 小结"></a>10.6.4. 小结</h2><ul>
 <li>在自注意力中，查询、键和值都来自同一组输入。</li>
 <li>卷积神经网络和自注意力都拥有并行计算的优势，而且自注意力的最大路径长度最短。但是因为其计算复杂度是关于序列长度的二次方，所以在很长的序列中计算会非常慢。</li>
@@ -566,7 +579,7 @@
 </ul>
 <h1 id="10-7-Transformer"><a href="#10-7-Transformer" class="headerlink" title="10.7. Transformer"></a>10.7. Transformer</h1><p> <strong>我们在 <a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_attention-mechanisms/self-attention-and-positional-encoding.html#subsec-cnn-rnn-self-attention">10.6.2节</a>中比较了卷积神经网络（CNN）、循环神经网络（RNN）和自注意力（self-attention）。值得注意的是，自注意力同时具有并行计算和最短的最大路径长度这两个优势。因此，使用自注意力来设计深度架构是很有吸引力的。</strong></p>
 <p><strong>对比之前仍然依赖循环神经网络实现输入表示的自注意力模型 [<a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_references/zreferences.html#cheng-dong-lapata-2016">Cheng et al., 2016]</a>[<a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_references/zreferences.html#lin-feng-santos-ea-2017">Lin et al., 2017b]</a>[<a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_references/zreferences.html#paulus-xiong-socher-2017">Paulus et al., 2017]</a>，transformer模型完全基于注意力机制，没有任何卷积层或循环神经网络层 [<a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_references/zreferences.html#vaswani-shazeer-parmar-ea-2017">Vaswani et al., 2017]</a>。</strong>尽管transformer最初是应用于在文本数据上的序列到序列学习，但现在已经推广到各种现代的深度学习中，例如语言、视觉、语音和强化学习领域。 </p>
-<h2 id="10-7-1-模型"><a href="#10-7-1-模型" class="headerlink" title="10.7.1. 模型"></a>10.7.1. 模型</h2><p> Transformer作为编码器－解码器架构的一个实例，其整体架构图在 <a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_attention-mechanisms/transformer.html#fig-transformer">图10.7.1</a>中展示。正如所见到的，transformer是由编码器和解码器组成的。<strong>与 <a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_attention-mechanisms/bahdanau-attention.html#fig-s2s-attention-details">图10.4.1</a>中基于Bahdanau注意力实现的序列到序列的学习相比，transformer的编码器和解码器是基于自注意力的模块叠加而成的，源（输入）序列和目标（输出）序列的<em>嵌入</em>（embedding）表示将加上<em>位置编码</em>（positional encoding），再分别输入到编码器和解码器中。</strong> </p>
+<h2 id="10-7-1-模型"><a href="#10-7-1-模型" class="headerlink" title="10.7.1. 模型"></a>10.7.1. 模型</h2><p> <strong>Transformer作为编码器－解码器架构的一个实例</strong>，其整体架构图在 <a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_attention-mechanisms/transformer.html#fig-transformer">图10.7.1</a>中展示。正如所见到的，transformer是由编码器和解码器组成的。<strong>与 <a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_attention-mechanisms/bahdanau-attention.html#fig-s2s-attention-details">图10.4.1</a>中基于Bahdanau注意力实现的序列到序列的学习相比，transformer的编码器和解码器是基于自注意力的模块叠加而成的，源（输入）序列和目标（输出）序列的<em>嵌入</em>（embedding）表示将加上<em>位置编码</em>（positional encoding），再分别输入到编码器和解码器中。</strong> </p>
 <p><img src="p1071.jpg"></p>
 <p>  <strong><a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_attention-mechanisms/transformer.html#fig-transformer">图10.7.1</a>中概述了transformer的架构。从宏观角度来看，transformer的编码器是由多个相同的层叠加而成的，每个层都有两个子层（子层表示为sublayersublayer）。第一个子层是<em>多头自注意力</em>（multi-head self-attention）汇聚；第二个子层是<em>基于位置的前馈网络</em>（positionwise feed-forward network）。具体来说，在计算编码器的自注意力时，查询、键和值都来自前一个编码器层的输出。受 <a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_convolutional-modern/resnet.html#sec-resnet">7.6节</a>中残差网络的启发，每个子层都采用了<em>残差连接</em>（residual connection）。在transformer中，对于序列中任何位置的任何输入 $\mathbf{x} \in \mathbb{R}^d$, 都要求满足 $\mathrm{sublayer}(\mathbf{x}) \in \mathbb{R}^d$, 以便残差连接满足$\mathbf{x} + \mathrm{sublayer}(\mathbf{x}) \in \mathbb{R}^d$, 在残差连接的加法计算之后，紧接着应用<em>层规范化</em>（layer normalization） [<a target="_blank" rel="noopener" href="https://zh-v2.d2l.ai/chapter_references/zreferences.html#ba-kiros-hinton-2016">Ba et al., 2016]</a>。因此，输入序列对应的每个位置，transformer编码器都将输出一个d维表示向量。</strong> </p>
 <p> Transformer解码器也是由多个相同的层叠加而成的，并且层中使用了残差连接和层规范化。除了编码器中描述的两个子层之外，解码器还在这两个子层之间插入了第三个子层，称为<em>编码器－解码器注意力</em>（encoder-decoder attention）层。<strong>在编码器－解码器注意力中，查询来自前一个解码器层的输出，而键和值来自整个编码器的输出。在解码器自注意力中，查询、键和值都来自上一个解码器层的输出。</strong>但是，解码器中的每个位置只能考虑该位置之前的所有位置。这种<em>掩蔽</em>（masked）注意力保留了<em>自回归</em>（auto-regressive）属性，确保预测仅依赖于已生成的输出词元。 </p>
@@ -576,7 +589,7 @@
 <li>transformer是编码器－解码器架构的一个实践，尽管在实际情况中编码器或解码器可以单独使用。</li>
 <li>在transformer中，多头自注意力用于表示输入序列和输出序列，不过解码器必须通过掩蔽机制来保留自回归属性。</li>
 <li>transformer中的残差连接和层规范化是训练非常深度模型的重要工具。</li>
-<li>transformer模型中基于位置的前馈网络使用同一个多层感知机，作用是对所有序列位置的表示进行转换。</li>
+<li><strong>transformer模型中基于位置的前馈网络使用同一个多层感知机，作用是对所有序列位置的表示进行转换。</strong></li>
 </ul>
 
                 
@@ -815,18 +828,17 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="far fa-dot-circle"></i>&nbsp;本篇
-            </div>
+                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/2022/02/28/%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6/">
+                <a href="/2022/03/16/%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/8.jpg" class="responsive-img" alt="注意力机制">
+                        <img src="/medias/featureimages/19.jpg" class="responsive-img" alt="注意力机制论文阅读">
                         
-                        <span class="card-title">注意力机制</span>
+                        <span class="card-title">注意力机制论文阅读</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -836,9 +848,9 @@
                         
                     </div>
                     <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2022-02-28
-                            </span>
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2022-03-16
+                        </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-user fa-fw"></i>
@@ -846,15 +858,6 @@
                             
                         </span>
                     </div>
-                </div>
-
-                
-                <div class="card-action article-tags">
-                    
-                    <a href="/tags/%E6%9D%A5%E8%87%AA%E5%8A%A8%E6%89%8B%E5%AD%A6%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">
-                        <span class="chip bg-color">来自动手学深度学习</span>
-                    </a>
-                    
                 </div>
                 
             </div>
