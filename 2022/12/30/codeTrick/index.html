@@ -9,7 +9,9 @@
 1234d = dict()l = list()for i in l:    d[i] = len(d)
 
 随着d增加，其一项项往自己内部增加项，长度也随之增加，刚好建立映射。
-">
++++
+寻找最多的单词数
+1234max_coun">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -471,6 +473,10 @@
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">d = <span class="built_in">dict</span>()</span><br><span class="line">l = <span class="built_in">list</span>()</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> l:</span><br><span class="line">    d[i] = <span class="built_in">len</span>(d)</span><br></pre></td></tr></table></figure>
 
 <p>随着d增加，其一项项往自己内部增加项，长度也随之增加，刚好建立映射。</p>
+<p>+++</p>
+<p>寻找最多的单词数</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">max_count = <span class="number">0</span></span><br><span class="line"><span class="keyword">for</span> line <span class="keyword">in</span> self.data:</span><br><span class="line">	word_list = line[<span class="string">&quot;question&quot;</span>].split(<span class="string">&#x27; &#x27;</span>)</span><br><span class="line">	max_count = <span class="built_in">max</span>(max_count, <span class="built_in">len</span>(word_list))</span><br></pre></td></tr></table></figure>
+
 
                 
             </div>
