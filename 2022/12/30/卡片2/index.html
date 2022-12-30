@@ -4,9 +4,8 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="卡片, 寂寞沙洲冷">
-    <meta name="description" content="
-Speech and Language Processing question AnsweringTask IntroductionFactoid questions, questions that can be answered wit">
+    <meta name="keywords" content="卡片2, 寂寞沙洲冷">
+    <meta name="description" content="关于torch.utils.data12345DataLoader(dataset, batch_size=1, shuffle=False, sampler=None,           batch_sampler=None, num_">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -18,7 +17,7 @@ Speech and Language Processing question AnsweringTask IntroductionFactoid questi
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>卡片 | 寂寞沙洲冷</title>
+    <title>卡片2 | 寂寞沙洲冷</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.min.css">
@@ -310,12 +309,12 @@ Speech and Language Processing question AnsweringTask IntroductionFactoid questi
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/14.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/4.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">卡片</h1>
+                    <h1 class="description center-align post-title">卡片2</h1>
                 </div>
             </div>
         </div>
@@ -431,8 +430,8 @@ Speech and Language Processing question AnsweringTask IntroductionFactoid questi
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/test/">
-                                <span class="chip bg-color">test</span>
+                            <a href="/tags/%E4%B8%80%E4%BA%9B%E6%9D%82%E4%BA%8B/">
+                                <span class="chip bg-color">一些杂事</span>
                             </a>
                         
                     </div>
@@ -447,7 +446,7 @@ Speech and Language Processing question AnsweringTask IntroductionFactoid questi
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2022-12-23
+                    2022-12-30
                 </div>
                 
 
@@ -468,138 +467,26 @@ Speech and Language Processing question AnsweringTask IntroductionFactoid questi
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <hr>
-<h2 id="Speech-and-Language-Processing-question-Answering"><a href="#Speech-and-Language-Processing-question-Answering" class="headerlink" title="Speech and Language Processing question Answering"></a>Speech and Language Processing question Answering</h2><h3 id="Task-Introduction"><a href="#Task-Introduction" class="headerlink" title="Task Introduction"></a><strong>Task Introduction</strong></h3><p>Factoid questions, questions that can be answered with simple facts expressed in short texts, like the following: </p>
-<p> （1）Where is the Louvre Museum located?<br> （2）What is the average age of the onset of autism?  </p>
-<p><strong>Major paradigms for factoid question answering:</strong></p>
-<p>（1）Information-retrieval (IR) based QA, also called open domain QA</p>
-<p>（2）Knowledge-based question answering</p>
-<p><strong>Two key technologies for question answering:</strong></p>
-<p>（1）Information retrieval (a key component of IR-based QA)</p>
-<p>（2)  Entity linking (a key component for knowledge-based QA)</p>
-<hr>
-<h3 id="Information-Retrieval"><a href="#Information-Retrieval" class="headerlink" title="Information Retrieval"></a><strong>Information Retrieval</strong></h3><p>Information retrieval or IR is the name of the field encompassing the retrieval of all manner of media based on user information needs.</p>
-<p><img src="0.0.jpg"></p>
-<p>A user poses a query to a retrieval system, which then returns an ordered set of documents from some collection.</p>
-<p>The basic IR architecture uses the vector space model, in which we map queries and document to vectors based on unigram word counts, and use the cosine similarity between the vectors to rank potential documents (Salton, 1971).</p>
-<p><img src="0.1.jpg"></p>
-<p>The term frequency tells us how frequent the word is; words that occur more often in a document are likely to be informative about the document’s contents.</p>
-<p>The document frequency d_ft of a term t is the number of documents it occurs in. </p>
-<p>N is the total number of documents in the collection, and d_ft is the number of documents in which term t occurs.</p>
-<h4 id="Document-Scoring"><a href="#Document-Scoring" class="headerlink" title="Document Scoring"></a><strong>Document Scoring</strong></h4><p>We score document d by the cosine of its vector d with the query vector q:</p>
-<p><img src="0.2.jpg"></p>
-<p>Queries are usually very short, so each query word is likely to have a count of 1. </p>
-<p>And the cosine normalization for the query (the division by |q|) will be the same for all documents, so won’t change the ranking between any two documents $D_i and D_j$,</p>
-<h4 id="IR-with-Dense-Vectors"><a href="#IR-with-Dense-Vectors" class="headerlink" title="IR with Dense Vectors"></a><strong>IR with Dense Vectors</strong></h4><p>TF-IDF algorithms for IR have a conceptual flaw: </p>
-<p><strong>(vocabulary mismatch problem)</strong></p>
-<p>They work only if there is exact overlap of words between the query and document. </p>
-<p><strong>Example:</strong> The user might decide to search for a tragic love story but Shakespeare writes instead about star-crossed lovers.</p>
-<p>Solution to vocabulary mismatch problem : <strong>Handle synonymy.</strong></p>
-<p>Instead of (sparse) word-count vectors, using (dense) embeddings</p>
-<p><img src="0.3.jpg"></p>
-<p>For example, if we used BERT, we would have two encoders BERTQ and BERTD and we could represent the query and document as the [CLS] token of the respective encoders (Karpukhin et al., 2020)</p>
-<p><img src="0.4.jpg"></p>
-<h4 id="IR-based-Factoid-Question-Answering"><a href="#IR-based-Factoid-Question-Answering" class="headerlink" title="IR-based Factoid Question Answering"></a><strong>IR-based Factoid Question Answering</strong></h4><p>The goal of IR-based QA (sometimes called open domain QA) is to answer a user’s question by finding short text segments from the web or some other large collection of documents.</p>
-<p><img src="0.5.jpg"></p>
-<p>The dominant paradigm for IR-based QA is the <strong>retrieve and read</strong> model.</p>
-<p><img src="0.6.jpg"></p>
-<p><strong>Reading comprehension systems</strong> are given a factoid question <strong>q</strong> and a passage <strong>p</strong> that could contain the answer, and return an answer <strong>a</strong>.</p>
-<p>In the extractive QA we discuss here, the answer is a span of text in the passage.</p>
-<p>If each span <strong>a</strong> starts at position as and ends at position ae, we make the simplifying assumption that this probability can be estimated as $P(a|q,p)=P_{start}(a_s|q,p)P_{end}(a_e|q,p)$</p>
-<hr>
-<h3 id="Reading-comprehension"><a href="#Reading-comprehension" class="headerlink" title="Reading comprehension"></a><strong>Reading comprehension</strong></h3><p>A standard baseline algorithm for reading comprehension is to <strong>pass the question and passage to any encoder like BERT</strong> , as strings separated with a [SEP] token, resulting in an encoding token embedding for every passage token $p_i$ .</p>
-<p><img src="0.7.jpg"></p>
-<p>We’ll add two new special vectors: </p>
-<p><strong>span-start embedding S</strong> and <strong>span-end embedding E</strong>, </p>
-<p>which will be learned in fine-tuning.</p>
-<p>To get a span-start probability for each output token $p_i^{‘}$, we compute the dot product between S and $p_i^{‘}$</p>
-<p>and then use a softmax to normalize over all tokens $p_i^{‘}$ in the passage:</p>
-<p><img src="0.8.jpg"></p>
-<h3 id="Entity-Linking"><a href="#Entity-Linking" class="headerlink" title="Entity Linking"></a><strong>Entity Linking</strong></h3><p>Entity linking is the task of associating a <strong>mention</strong> in text with the representation of some real-world entity in an ontology (Ji and Grishman, 2011).</p>
-<p><strong>For example</strong>, given the sentence “Paris is the capital of France”, the idea is to determine that “Paris” refers to the city of <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Paris">Paris</a> and not to <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Paris_Hilton">Paris Hilton</a>(human name) or any other entity that could be referred to as “Paris”. </p>
-<p>Entity linking is done in (roughly) two stages: <strong>mention detection</strong> and <strong>mention disambiguation</strong>.</p>
-<p>Mention Disambiguation is the task of linking mentions of ambiguous entities to their referent entities in a knowledge base such as Wikipedia.</p>
-<h3 id="Knowledge-based-Question-Answering"><a href="#Knowledge-based-Question-Answering" class="headerlink" title="Knowledge-based Question Answering"></a><strong>Knowledge-based Question Answering</strong></h3><p>Knowledge-based question answering : answering a natural language question by mapping it to a query over a structured database.</p>
-<p>Two common paradigms for knowledge-based QA:</p>
-<p>(1) <strong>Graph based QA</strong>, models the knowledge base as a graph, often with entities as nodes and relations or propositions as edges between nodes. </p>
-<p>(2) QA by <strong>semantic parsing</strong>, using the semantic parsing methods.</p>
-<h3 id="QA-by-Semantic-Parsing"><a href="#QA-by-Semantic-Parsing" class="headerlink" title="QA by Semantic Parsing"></a><strong>QA by Semantic Parsing</strong></h3><p>Using a semantic parser to <strong>map the question to a structured program</strong> to produce an answer.</p>
-<p>Semantic Parsing task is to take pairs of <strong>training tuples</strong> and produce a system that maps from new questions to their logical forms.</p>
-<p><img src="0.14.jpg"></p>
-<h3 id="Using-Language-Models-to-do-QA"><a href="#Using-Language-Models-to-do-QA" class="headerlink" title="Using Language Models to do QA"></a><strong>Using Language Models to do QA</strong></h3><p>An alternative approach to doing QA is to query a pretrained language model, forcing a model to answer a question solely from information stored in its parameters.</p>
-<p>Fig. 23.16 shows the architecture; the deleted spans are marked by <M>, and the system is trained to have the decoder generating the missing spans (separated by<M> ).</p>
-<p>Language modeling is not yet a complete solution for question answering; </p>
-<p>For example in addition to not working quite as well, they suffer from <strong>poor interpretability</strong> (unlike standard QA systems, for example, they currently can’t give users more context by telling them what passage the answer came from) </p>
-<p><img src="0.15.jpg"></p>
-<p><img src="0.16.jpg"></p>
-<hr>
-<hr>
-<hr>
-<hr>
-<h2 id="Case-Based-Reasoning-for-Natural-Language-Queries论文阅读"><a href="#Case-Based-Reasoning-for-Natural-Language-Queries论文阅读" class="headerlink" title="Case-Based Reasoning for Natural Language Queries论文阅读"></a>Case-Based Reasoning for Natural Language Queries论文阅读</h2><p><img src="1.0.jpg"></p>
-<p>CBR模式：</p>
-<p><img src="1.1.jpg"></p>
-<p>1、 Retrieve 信息检索任务。</p>
-<p>计算q的嵌入，再通过点积计算q之间的相似度，以此获取k个case。</p>
-<p>2、 Reuse</p>
-<p>把q和k个case一块送入seq2seq模型，计算中间logical form。</p>
-<p>这里直觉理解一下，BigBird的输出是一个logical form（观看模型图），其就是把多个case中的关系和query中的entity进行组合，产生符合标签要求的logical form。</p>
-<p>这个就是通过transformer来实现的，注意力机制就是对各项进行加权组合，这里就是对q和case进行加权组合，从而实现（多个case中的关系和query中的entity进行组合，产生符合标签要求的logical form）。</p>
-<p><img src="1.2.jpg"></p>
-<p>3、 Revise</p>
-<p>通过transE对关系进行嵌入，从而计算中间logical form中的relation和KB中实际存在的relation之间的相似度，根据相似度转换成真实存在的relation。</p>
-<p>各个模块中还包括很多细节：</p>
-<p>Retrieve中如何使得案例检索 忽略entity的信息，而只根据relation来检索。（掩码）</p>
-<p>Reuse模块中使用bigbird模型，一种稀疏注意力的transformer。</p>
-<p>Reuse模块中，损失函数使用的正则化项（KL散度）</p>
-<p>Revise模块中的transE，其本质是对relation进行嵌入。嵌入之后就可以做很多事，比如相似度计算。</p>
-<hr>
-<hr>
-<hr>
-<hr>
-<h2 id="Document-level-Relation-Extraction-via-Subgraph-Reasoning论文阅读"><a href="#Document-level-Relation-Extraction-via-Subgraph-Reasoning论文阅读" class="headerlink" title="Document-level Relation Extraction via Subgraph Reasoning论文阅读"></a>Document-level Relation Extraction via Subgraph Reasoning论文阅读</h2><h3 id="总体介绍："><a href="#总体介绍：" class="headerlink" title="总体介绍："></a>总体介绍：</h3><p>Document-level 关系提取：在一个文档中（源文本）提取实体之间的语义关系。</p>
-<p><img src="2.0.jpg"></p>
-<p>现行大多数方法先构造一个document-level的graph，然后关注全局图结构或者关注图中实体之间的路径。</p>
-<p>本文提出了subgraph reasoning 架构（SGR），通过实体对间路径，整合产生一个子图结构，来进行关系推理。此外，启发式路径生成策略显式建模各种推理能力。</p>
-<h3 id="具体方法："><a href="#具体方法：" class="headerlink" title="具体方法："></a>具体方法：</h3><p><strong>Task formulation：</strong></p>
-<p> 关系提取，其实就是关系分类，给实体对进行分类  .</p>
-<p><img src="2.1.jpg"></p>
-<p><strong>Document Encoding：</strong></p>
-<p>拿到纯文本，肯定要进行嵌入，才能进行运算。  </p>
-<p><img src="2.2.jpg"></p>
-<p><strong>Subgraph Reasoning</strong></p>
-<p><strong>Document Graph Construction：</strong></p>
-<p>本文采用了三种图节点：entity nodes、mention nodes、sentence nodes。（启发式路径生成的方法依赖于这种节点的巧妙设计）。</p>
-<p>节点的嵌入方式（最大池化）：</p>
-<p><img src="2.3.jpg"></p>
-<p>显式建模entity、mention、sentence之间的交互关系：</p>
-<p>​    **Mention-Entity Edge:**建模共指关系（co-reference）</p>
-<p><strong>Mention-Sentence Edge：</strong>如果mention在某个句子中出现，则在对应的节点之间加入边。</p>
-<p>**Sentence-Sentence Edge:**之前的方法有将所有句子节点都连接起来的，本文只把相邻的句子对应的节点相连，以此来保持序列化信息。</p>
-<p><strong>Reasoning Path Generation：启发式：通过这种路径生成方式来显式的建模各种推理能力，这种启发式的路径生成基于上述三种节点的设计。</strong></p>
-<p><img src="2.4.jpg"></p>
-<p><strong>Intra-sentence Reasoning Path</strong>：两个entity同时出现在相同的句子中。</p>
-<p>The relation between two entities co-occurred in the same sentence can be formulated as a path in the form of E-M-S-M-E. “E”, “M”, and “S” are entity node, mention node, and sentence node, respectively, “-” denotes edge.</p>
-<p><img src="2.5.jpg"></p>
-<p><strong>Inter-sentence Reasoning Path</strong>:（在同一个句子中，两个entity没有mention同时出现）  </p>
-<p>Logical Reasoning Path：通过一个bridge entity来间接建立关系。</p>
-<p>It can be formulated as a path in the form of E-M-S-M-E-M-S-M-E, which models logical reasoning by performing reasoning over sentences containing the head, bridge, and tail entities, respectively.</p>
-<p>Co-reference Reasoning Path：两个实体在相邻的句子中。</p>
-<p>The relation between two entities in adjacent sentences is mostly established by a reference. It can be formulated as a path in the form of E-M-S-S-M-E, which models co-reference reasoning by performing reasoning over two adjacent sentences containing the head and tail entities respectively.</p>
-<p><strong>Subgraph Extraction：</strong></p>
-<p>​    之前的方法有独立使用各个推理路径来预测关系，最后聚合成最终结果。</p>
-<p>​    本文中，利用各种路径来<strong>构造子图。</strong></p>
-<p>{不管是在本篇论文中，还是在KBQA by CBR over subGraph方法中，子图的构建在本质上，都是先构造检索出路径，然后基于路径中出现的entity来构造子图，具体就是把路径中所有出现的entity都连起来，就生成了子图。</p>
-<p>只不过路径的生成方式不太同，在本文中是通过三种节点的巧妙设计方式，启发式生成了路径。</p>
-<p>而在KBQA by CBR over subGraph方法中，路径是通过深度优先搜索来实现的，我猜是，从答案节点出发，深度检索query中出现的其他节点，检索过程就产生了一条条路径，多条路径合起来就是子图。}</p>
-<p>​     Specifically, the subgraph G ′ is an induced subgraph of G, formed from the nodes that appear at least once on the paths and all of the edges in G among those nodes.</p>
-<p><strong>Subgraph Encoding:</strong></p>
-<p>​    <strong>采用</strong>L-layer stacked R-GCN [Schlichtkrull et al., 2018]对子图进行编码。</p>
-<p><img src="2.6.jpg"></p>
-<p><strong>Classification：</strong></p>
-<p>​    We formulate the document-level RE task as a multi-label classification task.</p>
-<p>​    把上述步骤中得到的各种全局信息（初始化的目标节点嵌入信息）、局部信息（图卷积输出）等信息拼接起来放到MLP中输出分类概率即可。</p>
-<p><img src="2.7.jpg"></p>
+                <h2 id="关于torch-utils-data"><a href="#关于torch-utils-data" class="headerlink" title="关于torch.utils.data"></a>关于torch.utils.data</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">DataLoader(dataset, batch_size=<span class="number">1</span>, shuffle=<span class="literal">False</span>, sampler=<span class="literal">None</span>,</span><br><span class="line">           batch_sampler=<span class="literal">None</span>, num_workers=<span class="number">0</span>, collate_fn=<span class="literal">None</span>,</span><br><span class="line">           pin_memory=<span class="literal">False</span>, drop_last=<span class="literal">False</span>, timeout=<span class="number">0</span>,</span><br><span class="line">           worker_init_fn=<span class="literal">None</span>, *, prefetch_factor=<span class="number">2</span>,</span><br><span class="line">           persistent_workers=<span class="literal">False</span>)</span><br></pre></td></tr></table></figure>
+
+<h2 id="Dataset-Types"><a href="#Dataset-Types" class="headerlink" title="Dataset Types"></a>Dataset Types</h2><h3 id="Map-style-datasets"><a href="#Map-style-datasets" class="headerlink" title="Map-style datasets"></a>Map-style datasets</h3><p> A map-style dataset is one that implements the <code>__getitem__()</code> and <code>__len__()</code> protocols, and represents a map from (possibly non-integral) indices/keys to data samples. </p>
+<p> For example, such a dataset, when accessed with <code>dataset[idx]</code>, could read the <code>idx</code>-th image and its corresponding label from a folder on the disk. </p>
+<h3 id="Iterable-style-datasets"><a href="#Iterable-style-datasets" class="headerlink" title="Iterable-style datasets"></a>Iterable-style datasets</h3><p> An iterable-style dataset is an instance of a subclass of <a target="_blank" rel="noopener" href="https://pytorch.org/docs/stable/data.html#torch.utils.data.IterableDataset"><code>IterableDataset</code></a> that implements the <code>__iter__()</code> protocol, and represents an iterable over data samples. This type of datasets is particularly suitable for cases where random reads are expensive or even improbable, and where the batch size depends on the fetched data. </p>
+<h3 id="torch-utils-data-Sampler"><a href="#torch-utils-data-Sampler" class="headerlink" title="torch.utils.data.Sampler"></a><a target="_blank" rel="noopener" href="https://pytorch.org/docs/stable/data.html#torch.utils.data.Sampler"><code>torch.utils.data.Sampler</code></a></h3><p> <a target="_blank" rel="noopener" href="https://pytorch.org/docs/stable/data.html#torch.utils.data.Sampler"><code>torch.utils.data.Sampler</code></a> classes are used to specify the sequence of indices/keys used in data loading.  </p>
+<p> A sequential or shuffled sampler will be automatically constructed based on the <code>shuffle</code> argument to a <a target="_blank" rel="noopener" href="https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader"><code>DataLoader</code></a>. </p>
+<p> Alternatively, users may use the <code>sampler</code> argument to specify a custom <a target="_blank" rel="noopener" href="https://pytorch.org/docs/stable/data.html#torch.utils.data.Sampler"><code>Sampler</code></a> object that at each time yields the next index/key to fetch. </p>
+<p>就是说，要么指定DataLoader的shuffle参数，其会自动创建sample；或者先创建一个sampler，直接传给DataLoader的sampler参数。</p>
+<h3 id="collate-fn"><a href="#collate-fn" class="headerlink" title="collate_fn"></a>collate_fn</h3><p> After fetching a list of samples using the indices from sampler, the function passed as the <code>collate_fn</code> argument is used to collate lists of samples into batches. </p>
+<p> In this case, loading from a map-style dataset is roughly equivalent with: </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> indices <span class="keyword">in</span> batch_sampler:</span><br><span class="line">    <span class="keyword">yield</span> collate_fn([dataset[i] <span class="keyword">for</span> i <span class="keyword">in</span> indices])</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="torch-utils-data-DataLoader"><a href="#torch-utils-data-DataLoader" class="headerlink" title="torch.utils.data.DataLoader"></a>torch.utils.data.DataLoader</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">CLASS</span><br><span class="line">torch.utils.data.DataLoader(dataset, batch_size=<span class="number">1</span>, shuffle=<span class="literal">None</span>, sampler=<span class="literal">None</span>, batch_sampler=<span class="literal">None</span>, num_workers=<span class="number">0</span>, collate_fn=<span class="literal">None</span>, pin_memory=<span class="literal">False</span>, drop_last=<span class="literal">False</span>, timeout=<span class="number">0</span>, worker_init_fn=<span class="literal">None</span>, multiprocessing_context=<span class="literal">None</span>, generator=<span class="literal">None</span>, *, prefetch_factor=<span class="number">2</span>, persistent_workers=<span class="literal">False</span>, pin_memory_device=<span class="string">&#x27;&#x27;</span>)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p> Data loader. Combines a dataset and a sampler, and provides an iterable over the given dataset. </p>
+<h3 id="torch-utils-data-Dataset"><a href="#torch-utils-data-Dataset" class="headerlink" title="torch.utils.data.Dataset"></a>torch.utils.data.Dataset</h3><p>An abstract class representing a <a target="_blank" rel="noopener" href="https://pytorch.org/docs/stable/data.html#torch.utils.data.Dataset"><code>Dataset</code></a>.</p>
+<p>All datasets that represent a map from keys to data samples should subclass it. All subclasses should overwrite <code>__getitem__()</code>, supporting fetching a data sample for a given key. Subclasses could also optionally overwrite <code>__len__()</code>, which is expected to return the size of the dataset by many <a target="_blank" rel="noopener" href="https://pytorch.org/docs/stable/data.html#torch.utils.data.Sampler"><code>Sampler</code></a> implementations and the default options of <a target="_blank" rel="noopener" href="https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader"><code>DataLoader</code></a>.</p>
 
                 
             </div>
@@ -626,7 +513,7 @@ Speech and Language Processing question AnsweringTask IntroductionFactoid questi
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://huizhilei.github.io/2022/12/23/%E5%8D%A1%E7%89%87/">https://huizhilei.github.io/2022/12/23/%E5%8D%A1%E7%89%87/</a>
+                    <a href="https://huizhilei.github.io/2022/12/30/%E5%8D%A1%E7%89%872/">https://huizhilei.github.io/2022/12/30/%E5%8D%A1%E7%89%872/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -664,8 +551,8 @@ Speech and Language Processing question AnsweringTask IntroductionFactoid questi
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/test/">
-                                    <span class="chip bg-color">test</span>
+                                <a href="/tags/%E4%B8%80%E4%BA%9B%E6%9D%82%E4%BA%8B/">
+                                    <span class="chip bg-color">一些杂事</span>
                                 </a>
                             
                         </div>
@@ -841,13 +728,13 @@ Speech and Language Processing question AnsweringTask IntroductionFactoid questi
             <div class="article-badge left-badge text-color">
                 <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/2022/12/30/%E5%8D%A1%E7%89%872/">
+                <a href="/2022/12/30/codeTrick/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/4.jpg" class="responsive-img" alt="卡片2">
+                        <img src="/medias/featureimages/2.jpg" class="responsive-img" alt="codeTrick">
                         
-                        <span class="card-title">卡片2</span>
+                        <span class="card-title">codeTrick</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -869,14 +756,6 @@ Speech and Language Processing question AnsweringTask IntroductionFactoid questi
                     </div>
                 </div>
                 
-                <div class="card-action article-tags">
-                    
-                    <a href="/tags/%E4%B8%80%E4%BA%9B%E6%9D%82%E4%BA%8B/">
-                        <span class="chip bg-color">一些杂事</span>
-                    </a>
-                    
-                </div>
-                
             </div>
         </div>
         
@@ -886,13 +765,13 @@ Speech and Language Processing question AnsweringTask IntroductionFactoid questi
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2022/03/31/thinkings/">
+                <a href="/2022/12/23/%E5%8D%A1%E7%89%87/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/21.jpg" class="responsive-img" alt="thinkings">
+                        <img src="/medias/featureimages/14.jpg" class="responsive-img" alt="卡片">
                         
-                        <span class="card-title">thinkings</span>
+                        <span class="card-title">卡片</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -903,7 +782,7 @@ Speech and Language Processing question AnsweringTask IntroductionFactoid questi
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2022-03-31
+                                <i class="far fa-clock fa-fw icon-date"></i>2022-12-23
                             </span>
                         <span class="publish-author">
                             
@@ -912,6 +791,14 @@ Speech and Language Processing question AnsweringTask IntroductionFactoid questi
                             
                         </span>
                     </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/test/">
+                        <span class="chip bg-color">test</span>
+                    </a>
+                    
                 </div>
                 
             </div>
